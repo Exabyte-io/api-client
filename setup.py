@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='pyexapi',
+    name='exabyte-api-client',
     description='Exabyte Python Client for RESTful API',
     version='0.1.0',
-    url='http://github.com/Exabyte-io/exabyte-pyexapi',
+    url='http://github.com/Exabyte-io/exabyte-api-client',
     author='Mohammad Mohammadi',
     author_email='mohammad@exabyte.io',
     license='Exabyte Inc.',
@@ -16,7 +16,7 @@ setup(
     classifiers=[
         'Programming Language :: Python',
         'Development Status :: 3 - Alpha',
-        'Intended Audience :: Exabyte Development Team',
+        'Intended Audience :: Developers',
         'Topic :: Software Development'
     ],
 )
