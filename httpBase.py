@@ -120,6 +120,7 @@ class ExabyteConnection(ExabyteBaseConnection):
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
         version (str): Exabyte API version. Defaults to v1.
+        secure (bool): whether to use secure port, https or http. Defaults to True.
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.
 
@@ -127,8 +128,8 @@ class ExabyteConnection(ExabyteBaseConnection):
         preamble (str): common part of URL endpoints, e.g. https://platform.exabyte.io:3000/api/v1.
     """
 
-    def __init__(self, host, port, version='v1', **kwargs):
-        self.preamble = 'http://{}:{}/api/{}/'.format(host, port, version)
+    def __init__(self, host, port, version='v1', secure=True, **kwargs):
+        self.preamble = '{}://{}:{}/api/{}/'.format('https' if secure else 'http', host, port, version)
         super(ExabyteConnection, self).__init__(**kwargs)
 
     def request(self, method, endpoint_path, params=None, data=None, headers=None):
