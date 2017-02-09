@@ -79,7 +79,7 @@ class ExabyteBaseConnection(object):
         Returns:
             str
         """
-        return self.response.content()
+        return self.response.content
 
     def json(self):
         """
@@ -97,7 +97,7 @@ class ExabyteBaseConnection(object):
         Returns:
             str
         """
-        return self.response.text()
+        return self.response.text
 
     def __enter__(self):
         """
@@ -119,16 +119,16 @@ class ExabyteConnection(ExabyteBaseConnection):
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
-        version (str): Exabyte API version. Defaults to v1.
-        secure (bool): whether to use secure port, https or http. Defaults to True.
+        version (str): Exabyte API version.
+        secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.
 
     Attributes:
-        preamble (str): common part of URL endpoints, e.g. https://platform.exabyte.io:3000/api/v1.
+        preamble (str): common part of URL endpoints, e.g. https://platform.exabyte.io:4000/api/v1/.
     """
 
-    def __init__(self, host, port, version='v1', secure=True, **kwargs):
+    def __init__(self, host, port, version, secure, **kwargs):
         self.preamble = '{}://{}:{}/api/{}/'.format('https' if secure else 'http', host, port, version)
         super(ExabyteConnection, self).__init__(**kwargs)
 

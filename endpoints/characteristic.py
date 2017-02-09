@@ -10,6 +10,10 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
         port (int): Exabyte API port number.
         user_id (str): user ID.
         auth_token (str): authentication token.
+        version (str): Exabyte API version. Defaults to v1.
+        secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
+        kwargs (dict): a dictionary of HTTP session options.
+            timeout (int): session timeout in seconds.
 
     Attributes:
         name (str): endpoint name.
@@ -18,25 +22,26 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
         headers (dict): default HTTP headers.
     """
 
-    def __init__(self, host, port, user_id, auth_token):
+    def __init__(self, host, port, user_id, auth_token, version='v1', secure=True, **kwargs):
         self.name = 'characteristic'
         self.user_id = user_id
         self.auth_token = auth_token
-        super(ExabyteCharacteristicEndpoint, self).__init__(host, port)
+        super(ExabyteCharacteristicEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
         self.headers = {'X-User-Id': self.user_id, 'X-Auth-Token': self.auth_token}
 
-    def get_characteristics(self, page_index=0, page_size=20):
+    def get_characteristics(self, params=None):
         """
         Returns a list of characteristics.
 
         Args:
-            page_index (int): page index to return. Defaults to 0.
-            page_size (int): page size. Defaults to 20.
+            params (dict): a dictionary of parameters passed to materials endpoint.
+                pageSize (int): page size. Defaults to 20.
+                pageIndex (int): page index to return. Defaults to 0.
+                mongoQuery (dict): mongo query to filter the results.
 
         Returns:
             list[dict]
         """
-        params = {'pageIndex': page_index, 'pageSize': page_size}
         return self.request('GET', self.name, params=params, headers=self.headers)
 
     def get_characteristic(self, cid):

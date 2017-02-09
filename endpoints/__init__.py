@@ -8,15 +8,15 @@ class ExabyteBaseEndpoint(object):
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
+        version (str): Exabyte API version. Defaults to v1.
+        secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
 
     Attributes:
         conn (httplib.ExabyteConnection): ExabyteConnection instance.
     """
 
-    def __init__(self, host, port):
-        self.name = None
-        self.headers = None
-        self.conn = ExabyteConnection(host, port)
+    def __init__(self, host, port, version='v1', secure=True, **kwargs):
+        self.conn = ExabyteConnection(host, port, version=version, secure=secure, **kwargs)
 
     def request(self, method, endpoint_path, params=None, data=None, headers=None):
         """
@@ -34,17 +34,4 @@ class ExabyteBaseEndpoint(object):
         """
         with self.conn:
             self.conn.request(method, endpoint_path, params, data, headers)
-            # check exabyte-related errors
             return self.conn.json()
-
-    def query(self, mongo_query):
-        """
-        Sends a mongo-query to the endpoint.
-
-        Args:
-            mongo_query (dict): mongo-like query.
-
-        Returns:
-            json: response
-        """
-        return self.request('POST', self.name, data={'query': mongo_query}, headers=self.headers)
