@@ -52,7 +52,7 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
             cid (str): characteristic ID.
 
         Returns:
-             dict
+             dict: characteristic.
         """
         return self.request('GET', '/'.join((self.name, cid)), headers=self.headers)
 
@@ -65,8 +65,27 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
         """
         return self.request('DELETE', '/'.join((self.name, cid)), headers=self.headers)
 
-    def update_characteristic(self, *args, **kwargs):
-        pass
+    def update_characteristic(self, cid, kwargs):
+        """
+        Updates a characteristic with given key-values in kwargs.
 
-    def create_characteristic(self, *args, **kwargs):
-        pass
+        Args:
+            cid (str): characteristic ID.
+            kwargs (dict): a dictionary of key-values to update.
+
+        Returns:
+             dict: updated characteristic.
+        """
+        return self.request('PATCH', '/'.join((self.name, cid)), data=kwargs, headers=self.headers)
+
+    def create_characteristic(self, characteristic):
+        """
+        Creates a new material.
+
+        Args:
+            characteristic (dict): characteristic object.
+
+        Returns:
+             dict: new characteristic.
+        """
+        return self.request('POST', self.name, data=characteristic, headers=self.headers)

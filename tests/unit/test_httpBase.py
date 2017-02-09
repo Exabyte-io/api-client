@@ -18,15 +18,15 @@ class HTTPBaseUnitTest(unittest.TestCase):
         self.port = 4000
 
     def test_preamble_secure(self):
-        conn = ExabyteConnection(self.host, self.port)
+        conn = ExabyteConnection(self.host, self.port, version='v1', secure=True)
         self.assertEqual(conn.preamble, 'https://{}:{}/api/v1/'.format(self.host, self.port))
 
     def test_preamble_unsecure(self):
-        conn = ExabyteConnection(self.host, self.port, secure=False)
+        conn = ExabyteConnection(self.host, self.port, version='v1', secure=False)
         self.assertEqual(conn.preamble, 'http://{}:{}/api/v1/'.format(self.host, self.port))
 
     def test_preamble_version(self):
-        conn = ExabyteConnection(self.host, self.port, version='v2')
+        conn = ExabyteConnection(self.host, self.port, version='v2', secure=True)
         self.assertEqual(conn.preamble, 'https://{}:{}/api/v2/'.format(self.host, self.port))
 
     @mock.patch('requests.sessions.Session.request')
@@ -35,5 +35,5 @@ class HTTPBaseUnitTest(unittest.TestCase):
         mock_response.status_code = 401
         mock_session.return_value = mock_response
         with self.assertRaises(HTTPError):
-            conn = ExabyteConnection(self.host, self.port)
+            conn = ExabyteConnection(self.host, self.port, version='v1', secure=True)
             conn.request('POST', 'login', data={'username': '', 'password': ''})

@@ -55,7 +55,7 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
                 includeCharacteristics (bool): whether to include material's characteristics.
 
         Returns:
-             dict
+             dict: material.
         """
         return self.request('GET', '/'.join((self.name, mid)), params=params, headers=self.headers)
 
@@ -86,8 +86,18 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
         """
         return self.request('DELETE', '/'.join((self.name, mid)), headers=self.headers)
 
-    def update_material(self, *args, **kwargs):
-        pass
+    def update_material(self, mid, kwargs):
+        """
+        Updates a material inside materials-bank with given key-values in kwargs.
+
+        Args:
+            mid (str): material ID.
+            kwargs (dict): a dictionary of key-values to update.
+
+        Returns:
+             dict: updated material.
+        """
+        return self.request('PATCH', '/'.join((self.name, mid)), data=kwargs, headers=self.headers)
 
     def create_material(self, material):
         """
@@ -96,7 +106,7 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
         Args:
             material (dict): material object.
 
-        Returns:`
-             dict
+        Returns:
+             dict: new material.
         """
         return self.request('POST', self.name, data=material, headers=self.headers)
