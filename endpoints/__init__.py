@@ -39,4 +39,7 @@ class ExabyteBaseEndpoint(object):
             if params and params.get('query'):
                 params['query'] = json.dumps(params['query'])
             self.conn.request(method, endpoint_path, params, data, headers)
-            return self.conn.json()
+            response = self.conn.json()
+            if response['status'] != 'success':
+                raise BaseException(response['data']['message'])
+            return response['data']

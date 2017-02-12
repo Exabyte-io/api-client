@@ -18,12 +18,6 @@ class EndpointLogoutUnitTest(EndpointBaseUnitTest):
     @mock.patch('requests.sessions.Session.request')
     def test_logout(self, mock_request):
         mock_request.return_value = self.mock_response(self.get_content('logout.json'))
-        expected_result = {
-            "status": "success",
-            "data": {
-                "message": "You've been logged out!"
-            }
-        }
-        self.assertEqual(self.logout_endpoint.logout(), expected_result)
+        self.assertEqual(self.logout_endpoint.logout(), {"message": "You've been logged out!"})
         self.assertEqual(mock_request.call_args[1]['headers']['X-User-Id'], self.user_id)
         self.assertEqual(mock_request.call_args[1]['headers']['X-Auth-Token'], self.auth_token)

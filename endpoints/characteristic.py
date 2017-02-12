@@ -25,7 +25,7 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
     """
 
     def __init__(self, host, port, user_id, auth_token, version='v1', secure=True, **kwargs):
-        self.name = 'characteristic'
+        self.name = 'characteristics'
         self.user_id = user_id
         self.auth_token = auth_token
         super(ExabyteCharacteristicEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)

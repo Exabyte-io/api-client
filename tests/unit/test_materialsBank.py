@@ -17,19 +17,19 @@ class EndpointMaterialsBankUnitTest(EndpointBaseUnitTest):
 
     @mock.patch('requests.sessions.Session.request')
     def test_get_materials(self, mock_request):
-        mock_request.return_value = self.mock_response('[]')
+        mock_request.return_value = self.mock_response('{"status": "success", "data": []}')
         self.assertEqual(self.materials_bank_endpoint.get_materials(), [])
         self.assertEqual(mock_request.call_args[1]['method'], 'get')
 
     @mock.patch('requests.sessions.Session.request')
     def test_get_material(self, mock_request):
-        mock_request.return_value = self.mock_response('{}')
+        mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
         self.assertEqual(self.materials_bank_endpoint.get_material('28FMvD5knJZZx452H'), {})
         expected_url = 'https://{}:{}/api/v1/materials-bank/28FMvD5knJZZx452H'.format(self.host, self.port)
         self.assertEqual(mock_request.call_args[1]['url'], expected_url)
 
     @mock.patch('requests.sessions.Session.request')
     def test_get_material_by_formula(self, mock_request):
-        mock_request.return_value = self.mock_response('[]')
+        mock_request.return_value = self.mock_response('{"status": "success", "data": []}')
         self.assertEqual(self.materials_bank_endpoint.get_materials_by_formula('Si'), [])
         self.assertEqual(mock_request.call_args[1]['params'], {'query': '{"formula": "Si"}'})

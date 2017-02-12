@@ -17,25 +17,25 @@ class EndpointCharacteristicUnitTest(EndpointBaseUnitTest):
 
     @mock.patch('requests.sessions.Session.request')
     def test_get_characteristics(self, mock_request):
-        mock_request.return_value = self.mock_response('[]')
+        mock_request.return_value = self.mock_response('{"status": "success", "data": []}')
         self.assertEqual(self.char_endpoint.get_characteristics(), [])
         self.assertEqual(mock_request.call_args[1]['method'], 'get')
 
     @mock.patch('requests.sessions.Session.request')
     def test_get_characteristic(self, mock_request):
-        mock_request.return_value = self.mock_response('{}')
+        mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
         self.assertEqual(self.char_endpoint.get_characteristic('28FMvD5knJZZx452H'), {})
-        expected_url = 'https://{}:{}/api/v1/characteristic/28FMvD5knJZZx452H'.format(self.host, self.port)
+        expected_url = 'https://{}:{}/api/v1/characteristics/28FMvD5knJZZx452H'.format(self.host, self.port)
         self.assertEqual(mock_request.call_args[1]['url'], expected_url)
 
     @mock.patch('requests.sessions.Session.request')
     def test_create_characteristic(self, mock_request):
-        mock_request.return_value = self.mock_response(self.get_content('new-characteristic.json'))
+        mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
         self.char_endpoint.create_characteristic(self.get_content_in_json('new-characteristic.json'))
         self.assertEqual(mock_request.call_args[1]['headers']['Content-Type'], 'application/json')
 
     @mock.patch('requests.sessions.Session.request')
     def test_delete_characteristic(self, mock_request):
-        mock_request.return_value = self.mock_response('{}')
+        mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
         self.assertEqual(self.char_endpoint.delete_characteristic('28FMvD5knJZZx452H'), {})
         self.assertEqual(mock_request.call_args[1]['method'], 'delete')

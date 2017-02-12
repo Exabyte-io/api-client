@@ -40,4 +40,4 @@ class ExabyteLoginEndpoint(ExabyteBaseEndpoint):
         data = {'username': self.username, 'password': self.password}
         data.update({'hashed': 'true'}) if self.hashed else data
         response = self.request('POST', self.name, data=data)
-        return {'user_id': response['data']['userId'], 'auth_token': response['data']['authToken']}
+        return {'user_id': response['userId'], 'auth_token': response['authToken']}
