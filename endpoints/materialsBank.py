@@ -37,7 +37,7 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
             params (dict): a dictionary of parameters passed to materials endpoint.
                 pageSize (int): page size. Defaults to 20.
                 pageIndex (int): page index to return. Defaults to 0.
-                mongoQuery (dict): mongo query to filter the results.
+                query (dict): mongo query to filter the results.
                 includeCharacteristics (bool): whether to include material's characteristics.
 
         Returns:
@@ -73,6 +73,6 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
         Returns:
             list[dict]
         """
-        query = {'mongoQuery': {'formula': formula}}
+        query = {'query': {'formula': formula}}
         params = params.update(query) if params else query
         return self.request('GET', self.name, params=params, headers=self.headers)

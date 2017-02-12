@@ -39,7 +39,7 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
             params (dict): a dictionary of parameters passed to materials endpoint.
                 pageSize (int): page size. Defaults to 20.
                 pageIndex (int): page index to return. Defaults to 0.
-                mongoQuery (dict): mongo query to filter the results.
+                query (dict): mongo query to filter the results.
 
         Returns:
             list[dict]
