@@ -44,19 +44,17 @@ class EndpointMaterialsIntegrationTest(EndpointMaterialsBaseIntegrationTest):
 
     def test_get_material_by_id(self):
         material = self.create_material()
-        response = self.materials_endpoint.get_material(material['_id'])
-        self.assertEqual(response['_id'], material['_id'])
+        self.assertEqual(self.materials_endpoint.get_material(material['_id'])['_id'], material['_id'])
 
     def test_get_material_by_id_with_characteristics(self):
         material = self.create_material()
         response = self.materials_endpoint.get_material(material['_id'], {'includeCharacteristics': True})
         self.assertEqual(response['_id'], material['_id'])
-        self.assertTrue(hasattr(response, 'characteristics'))
+        self.assertIsNotNone(response.get('characteristics'))
 
     def test_get_material_by_formula(self):
         material = self.create_material()
-        materials = self.materials_endpoint.get_materials_by_formula('Si')
-        self.assertIn(material['_id'], [m['_id'] for m in materials])
+        self.assertIn(material['_id'], [m['_id'] for m in self.materials_endpoint.get_materials_by_formula('Si')])
 
     def test_create_material(self):
         material = self.create_material()
@@ -65,8 +63,7 @@ class EndpointMaterialsIntegrationTest(EndpointMaterialsBaseIntegrationTest):
     def test_delete_material(self):
         material = self.create_material()
         self.materials_endpoint.delete_material(material['_id'])
-        materials = self.materials_endpoint.get_materials()
-        self.assertNotIn(material['_id'], [m['_id'] for m in materials])
+        self.assertNotIn(material['_id'], [m['_id'] for m in self.materials_endpoint.get_materials()])
 
     def test_update_material(self):
         material = self.create_material()

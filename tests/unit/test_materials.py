@@ -39,3 +39,9 @@ class EndpointMaterialsUnitTest(EndpointBaseUnitTest):
         mock_request.return_value = self.mock_response(self.get_content('new-material.json'))
         self.materials_endpoint.create_material(self.get_content_in_json('new-material.json'))
         self.assertEqual(mock_request.call_args[1]['headers']['Content-Type'], 'application/json')
+
+    @mock.patch('requests.sessions.Session.request')
+    def test_delete_material(self, mock_request):
+        mock_request.return_value = self.mock_response('{}')
+        self.assertEqual(self.materials_endpoint.delete_material('28FMvD5knJZZx452H'), {})
+        self.assertEqual(mock_request.call_args[1]['method'], 'delete')
