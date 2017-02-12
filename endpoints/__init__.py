@@ -1,3 +1,5 @@
+import json
+
 from httpBase import ExabyteConnection
 
 
@@ -33,5 +35,8 @@ class ExabyteBaseEndpoint(object):
             json: response
         """
         with self.conn:
+            # serialize mongo query to be passed via HTTP params
+            if params and params.get('query'):
+                params['query'] = json.dumps(params['query'])
             self.conn.request(method, endpoint_path, params, data, headers)
             return self.conn.json()

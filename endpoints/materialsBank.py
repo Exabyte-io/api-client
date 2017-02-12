@@ -76,37 +76,3 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
         query = {'mongoQuery': {'formula': formula}}
         params = params.update(query) if params else query
         return self.request('GET', self.name, params=params, headers=self.headers)
-
-    def delete_material(self, mid):
-        """
-        Deletes a given material from materials-bank.
-
-        Args:
-            mid (str): material ID.
-        """
-        return self.request('DELETE', '/'.join((self.name, mid)), headers=self.headers)
-
-    def update_material(self, mid, kwargs):
-        """
-        Updates a material inside materials-bank with given key-values in kwargs.
-
-        Args:
-            mid (str): material ID.
-            kwargs (dict): a dictionary of key-values to update.
-
-        Returns:
-             dict: updated material.
-        """
-        return self.request('PATCH', '/'.join((self.name, mid)), data=kwargs, headers=self.headers)
-
-    def create_material(self, material):
-        """
-        Creates a new material inside materials-bank.
-
-        Args:
-            material (dict): material object.
-
-        Returns:
-             dict: new material.
-        """
-        return self.request('POST', self.name, data=material, headers=self.headers)

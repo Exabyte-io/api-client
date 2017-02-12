@@ -1,11 +1,11 @@
-import os
-import json
-import unittest
+from requests import Response
+
+from tests import EndpointBaseTest
 
 
-class EndpointBaseUnitTest(unittest.TestCase):
+class EndpointBaseUnitTest(EndpointBaseTest):
     """
-    Base class for testing endpoints.
+    Base class for endpoints unit tests.
     """
 
     def __init__(self, *args, **kwargs):
@@ -13,9 +13,9 @@ class EndpointBaseUnitTest(unittest.TestCase):
         self.host = 'platform.exabyte.io'
         self.port = 4000
 
-    def get_file_path(self, filename):
-        return os.path.join(os.path.dirname(__file__), '..', 'data', filename)
-
-    def get_content_in_json(self, filename):
-        with open(self.get_file_path(filename)) as f:
-            return json.loads(f.read())
+    def mock_response(self, content, status_code=200, reason='OK'):
+        response = Response()
+        response._content = content
+        response.status_code = status_code
+        response.reason = reason
+        return response

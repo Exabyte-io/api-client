@@ -1,3 +1,5 @@
+import json
+
 from endpoints import ExabyteBaseEndpoint
 
 
@@ -37,7 +39,7 @@ class ExabyteMaterialsEndpoint(ExabyteBaseEndpoint):
             params (dict): a dictionary of parameters passed to materials endpoint.
                 pageSize (int): page size. Defaults to 20.
                 pageIndex (int): page index to return. Defaults to 0.
-                mongoQuery (dict): mongo query to filter the results.
+                query (dict): mongo query to filter the results.
                 includeCharacteristics (bool): whether to include material's characteristics.
 
         Returns:
@@ -73,7 +75,7 @@ class ExabyteMaterialsEndpoint(ExabyteBaseEndpoint):
         Returns:
             list[dict]
         """
-        query = {'mongoQuery': {'formula': formula}}
+        query = {"query": {"formula": formula}}
         params = params.update(query) if params else query
         return self.request('GET', self.name, params=params, headers=self.headers)
 
@@ -97,11 +99,13 @@ class ExabyteMaterialsEndpoint(ExabyteBaseEndpoint):
         Returns:
              dict: updated material.
         """
-        return self.request('PATCH', '/'.join((self.name, mid)), data=kwargs, headers=self.headers)
+        headers = dict([('Content-Type', 'application/json')])
+        headers.update(self.headers)
+        return self.request('PATCH', '/'.join((self.name, mid)), data=json.dumps(kwargs), headers=headers)
 
     def create_material(self, material):
         """
-        Creates a new material.
+        Creates a new material.7
 
         Args:
             material (dict): material object.
@@ -109,4 +113,6 @@ class ExabyteMaterialsEndpoint(ExabyteBaseEndpoint):
         Returns:
              dict: new material.
         """
-        return self.request('POST', self.name, data=material, headers=self.headers)
+        headers = dict([('Content-Type', 'application/json')])
+        headers.update(self.headers)
+        return self.request('POST', self.name, data=json.dumps(material), headers=headers)

@@ -1,3 +1,5 @@
+import json
+
 from endpoints import ExabyteBaseEndpoint
 
 
@@ -76,7 +78,9 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
         Returns:
              dict: updated characteristic.
         """
-        return self.request('PATCH', '/'.join((self.name, cid)), data=kwargs, headers=self.headers)
+        headers = dict([('Content-Type', 'application/json')])
+        headers.update(self.headers)
+        return self.request('PATCH', '/'.join((self.name, cid)), data=json.dumps(kwargs), headers=headers)
 
     def create_characteristic(self, characteristic):
         """
@@ -88,4 +92,6 @@ class ExabyteCharacteristicEndpoint(ExabyteBaseEndpoint):
         Returns:
              dict: new characteristic.
         """
-        return self.request('POST', self.name, data=characteristic, headers=self.headers)
+        headers = dict([('Content-Type', 'application/json')])
+        headers.update(self.headers)
+        return self.request('POST', self.name, data=json.dumps(characteristic), headers=headers)

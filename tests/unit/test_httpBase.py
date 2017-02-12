@@ -1,21 +1,18 @@
 import mock
-import unittest
 
-from requests.models import Response
 from requests.exceptions import HTTPError
 
 from httpBase import ExabyteConnection
+from tests.unit import EndpointBaseUnitTest
 
 
-class HTTPBaseUnitTest(unittest.TestCase):
+class HTTPBaseUnitTest(EndpointBaseUnitTest):
     """
     Class for testing functionality implemented inside HTTPBase module.
     """
 
     def __init__(self, *args, **kwargs):
         super(HTTPBaseUnitTest, self).__init__(*args, **kwargs)
-        self.host = 'platform.exabyte.io'
-        self.port = 4000
 
     def test_preamble_secure(self):
         conn = ExabyteConnection(self.host, self.port, version='v1', secure=True)
@@ -30,10 +27,8 @@ class HTTPBaseUnitTest(unittest.TestCase):
         self.assertEqual(conn.preamble, 'https://{}:{}/api/v2/'.format(self.host, self.port))
 
     @mock.patch('requests.sessions.Session.request')
-    def test_raise_http_error(self, mock_session):
-        mock_response = Response()
-        mock_response.status_code = 401
-        mock_session.return_value = mock_response
+    def test_raise_http_error(self, mock_request):
+        mock_request.return_value = self.mock_response('', 401, reason='Unauthorized')
         with self.assertRaises(HTTPError):
             conn = ExabyteConnection(self.host, self.port, version='v1', secure=True)
             conn.request('POST', 'login', data={'username': '', 'password': ''})
