@@ -1,4 +1,4 @@
-from endpoints.characteristic import ExabyteCharacteristicEndpoint
+from endpoints.characteristics import ExabyteCharacteristicEndpoint
 from tests.integration import EndpointBaseIntegrationTest
 
 

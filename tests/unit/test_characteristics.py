@@ -1,6 +1,6 @@
 import mock
 
-from endpoints.characteristic import ExabyteCharacteristicEndpoint
+from endpoints.characteristics import ExabyteCharacteristicEndpoint
 from tests.unit import EndpointBaseUnitTest
 
 
