@@ -105,7 +105,7 @@ class ExabyteMaterialsEndpoint(ExabyteBaseEndpoint):
 
     def create_material(self, material):
         """
-        Creates a new material.7
+        Creates a new material.
 
         Args:
             material (dict): material object.
