@@ -1,0 +1,12 @@
+{
+  "access": {
+    "level": 10,
+    "type": 0
+  },
+  "data": {
+    "name": "pressure",
+    "units": "kbar",
+    "value": 73.71
+  },
+  "exabyteId": "Wq9EEjugjGQ2S3ShG"
+}
