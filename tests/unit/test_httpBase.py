@@ -2,7 +2,7 @@ import mock
 
 from requests.exceptions import HTTPError
 
-from httpBase import ExabyteConnection
+from http_base import ExabyteConnection
 from tests.unit import EndpointBaseUnitTest
 
 
