@@ -4,7 +4,7 @@ from tests.integration import EndpointBaseIntegrationTest
 
 class EndpointMaterialsBaseIntegrationTest(EndpointBaseIntegrationTest):
     """
-    Bae class for testing materials endpoint.
+    Base class for testing materials endpoint.
     """
 
     def __init__(self, *args, **kwargs):
