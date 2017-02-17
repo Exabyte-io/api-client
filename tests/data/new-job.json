@@ -1,85 +1,23 @@
 {
   "_material": {
-    "_id": "gyfPHZk56QAxRpAqv",
-    "exabyteId": "ixAXcDT9DJcCP4GrY",
-    "name": "Silicon FCC"
-  },
-  "_project": {
-    "_id": "Wk8F7azNhP3R5j6GG",
-    "access": {
-      "level": 10,
-      "type": 0
-    },
-    "goldName": "exadmin",
-    "name": "exadmin",
-    "owner": {
-      "_id": "k8uubJNniCHuydoNF",
-      "name": "exadmin",
-      "type": 0
-    },
-    "slug": "exadmin"
+    "_id": "gyfPHZk56QAxRpAqv"
   },
   "compute": {
-    "arguments": {},
     "cluster": {
-      "fqdn": "master-vagrant-cluster-001.exabyte.io",
-      "jid": "2.master-vagrant-cluster-001.exabyte.io"
+      "fqdn": "master-vagrant-cluster-001.exabyte.io"
     },
-    "email": "admin@exabyte.io",
     "nodes": 1,
     "notify": "n",
     "ppn": 1,
     "queue": "D",
     "timeLimit": "01:00:00"
   },
-  "createdAt": "2017-02-15T15:03:02.032Z",
-  "creator": {
-    "_id": "k8uubJNniCHuydoNF",
-    "username": "exadmin"
-  },
-  "friendlySlugs": {
-    "titleSlug": {
-      "base": "new-job-feb-15th-2017-18-32-pm",
-      "index": 0
-    }
-  },
   "model": {
-    "accuracy": 200,
     "method": {
       "data": {
         "pseudo": [
           {
-            "_id": "58947f5efe450067c9c92e24",
-            "access": {
-              "level": 0,
-              "type": 0
-            },
-            "apps": [
-              "espresso"
-            ],
-            "characteristics": [
-              {
-                "name": "total_energy",
-                "units": "eV",
-                "value": -130.568347569
-              },
-              {
-                "name": "zero_point_energy",
-                "units": "eV",
-                "value": -0.04545053892
-              }
-            ],
-            "element": "Si",
-            "exchangeCorrelation": {
-              "approximation": "gga",
-              "functional": "pbe"
-            },
-            "filename": "si_pbe_gbrv_1.0.upf",
-            "path": "/export/share/pseudo/si/gga/pbe/gbrv/1.0/us/si_pbe_gbrv_1.0.upf",
-            "source": "gbrv",
-            "textHeading": "0                   Version Number\n  Si                   Element\n   US                  Ultrasoft pseudopotential\n    T                  Nonlinear Core Correction\nSLA  PW   PBE  PBE     PBE  Exchange-Correlation functional\n    4.00000000000      Z valence\n   -9.19868380872      Total energy\n    0.00000    0.00000 Suggested cutoff for wfc and rho\n    2                  Max angular momentum component\n  899                  Number of points in mesh\n    2    6             Number of Wavefunctions, Number of Projectors\n Wavefunctions         nl  l   occ\n                       3S  0  2.00\n                       3P  1  2.00",
-            "type": "us",
-            "version": "1.0"
+            "_id": "58947f5efe450067c9c92e24"
           }
         ]
       },
@@ -95,156 +33,12 @@
             "y": 2,
             "z": 2
           }
-        },
-        "kppra": 16
+        }
       },
-      "subtype": "us",
-      "type": "pseudo",
       "workflow": {
-        "_id": "7GSofzPcxZryR8YiL",
-        "app": "espresso",
-        "ignore": false,
-        "name": "Total Energy",
-        "units": [
-          {
-            "execution": {
-              "app": {
-                "exec": "pw.x",
-                "flavor": "pw_scf",
-                "name": "espresso",
-                "summary": "Quantum Espresso",
-                "version": "5.4.0"
-              },
-              "input": [
-                {
-                  "content": "&CONTROL\n    calculation= 'scf'\n    title= ''\n    verbosity= 'low'\n    restart_mode= 'from_scratch'\n    wf_collect= .true.\n    tstress= .true.\n    tprnfor= .true.\n    outdir= '$OUTPUT_DIR/'\n    wfcdir= '$OUTPUT_DIR/'\n    prefix= '__prefix__'\n    pseudo_dir= '$PSEUDO_DIR'\n/\n&SYSTEM\n    ibrav=0\n    nat=2\n    ntyp=1\n    ecutwfc= 40\n    ecutrho= 200\n    occupations= 'smearing'\n    degauss= 0.005\n/\n&ELECTRONS\n    diagonalization= 'david'\n    diago_david_ndim= 4\n    diago_full_acc= .true.\n    mixing_beta= 0.3\n    startingwfc='atomic+random'\n/\n&IONS\n/\n&CELL\n/\nATOMIC_SPECIES\nSi 28.0855 si_pbe_gbrv_1.0.upf\nCELL_PARAMETERS angstrom\n3.867000000 0.000000000 0.000000000\n1.933500000 3.348920236 0.000000000\n1.933500000 1.116306745 3.157392278\nATOMIC_POSITIONS crystal\nSi 0.000000000 0.000000000 0.000000000\nSi 0.250000000 0.250000000 0.250000000\nK_POINTS automatic\n2 2 2 0 0 0",
-                  "name": "pw_scf.in"
-                }
-              ]
-            },
-            "flowchartId": "pw-scf",
-            "head": true,
-            "monitors": [
-              {
-                "data": [
-                  1.4026394168011649,
-                  0.5946081794827971,
-                  0.006968158142486594,
-                  0.000969405970227804,
-                  0.00003891229578738975,
-                  0.000007347076826989673
-                ],
-                "name": "electronic",
-                "units": "eV"
-              },
-              {
-                "name": "standard_output"
-              }
-            ],
-            "name": "pw_scf",
-            "postProcessors": [],
-            "preProcessors": [],
-            "results": [
-              {
-                "name": "total_energy",
-                "units": "eV",
-                "value": -258.62939528928314
-              },
-              {
-                "ewald": {
-                  "name": "ewald",
-                  "value": -226.941256604257
-                },
-                "exchangeCorrelation": {
-                  "name": "exchange_correlation",
-                  "value": -118.06522851215864
-                },
-                "harrisFoulkes": {
-                  "name": "harris_foulkes",
-                  "value": -258.62938957489007
-                },
-                "hartree": {
-                  "name": "hartree",
-                  "value": 17.723393566555778
-                },
-                "name": "total_energy_contributions",
-                "oneElectron": {
-                  "name": "one_electron",
-                  "value": 68.65369626057674
-                },
-                "smearing": {
-                  "name": "smearing",
-                  "value": 0
-                },
-                "units": "eV"
-              },
-              {
-                "name": "pressure",
-                "units": "kbar",
-                "value": 73.71
-              },
-              {
-                "name": "fermi_energy",
-                "units": "eV",
-                "value": 6.607916337990446
-              },
-              {
-                "name": "atomic_forces",
-                "units": "eV",
-                "value": [
-                  [
-                    0,
-                    0,
-                    -0.00000116
-                  ],
-                  [
-                    0,
-                    0,
-                    0.00000116
-                  ]
-                ]
-              },
-              {
-                "name": "total_forces",
-                "units": "eV",
-                "value": 0.000002
-              },
-              {
-                "name": "stress_tensor",
-                "units": "kbar",
-                "value": [
-                  [
-                    0.00050111,
-                    0,
-                    0
-                  ],
-                  [
-                    0,
-                    0.00050111,
-                    0
-                  ],
-                  [
-                    0,
-                    0,
-                    0.00050096
-                  ]
-                ]
-              }
-            ],
-            "status": "complete",
-            "type": "execution"
-          }
-        ]
+        "_id": "7GSofzPcxZryR8YiL"
       }
-    },
-    "subsubtype": "PBE",
-    "subtype": "GGA",
-    "type": "DFT"
-  },
-  "owner": {
-    "_id": "k8uubJNniCHuydoNF",
-    "name": "exadmin",
-    "type": 0
+    }
   },
   "title": "New Job Feb 15th 2017, 18:32 PM"
 }
