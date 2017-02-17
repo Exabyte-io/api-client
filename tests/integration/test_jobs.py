@@ -1,3 +1,7 @@
+import time
+
+from requests import HTTPError
+
 from endpoints.jobs import ExabyteJobsEndpoint
 from tests.integration import EndpointBaseIntegrationTest
 
@@ -20,6 +24,16 @@ class EndpointJobsIntegrationTest(EndpointBaseIntegrationTest):
         job.update(kwargs if kwargs is not None else {})
         return self.jobs_endpoint.create_job(job)
 
+    def get_compute_params(self, nodes=1, notify='n', ppn=1, queue='D', time_limit='00:05:00'):
+        return {
+            "cluster": {"fqdn": "master-vagrant-cluster-001.exabyte.io"},
+            "nodes": nodes,
+            "notify": notify,
+            "ppn": ppn,
+            "queue": queue,
+            "timeLimit": time_limit
+        }
+
     def test_get_jobs(self):
         job = self.create_job()
         self.assertIn(job['_id'], [m['_id'] for m in self.jobs_endpoint.get_jobs()])
@@ -38,8 +52,25 @@ class EndpointJobsIntegrationTest(EndpointBaseIntegrationTest):
         self.assertEqual(self.jobs_endpoint.get_job(job['_id'])['_id'], job['_id'])
 
     def test_create_job(self):
-        job = self.create_job()
+        title = "job-{}".format(time.time())
+        job = self.create_job({"title": title})
+        self.assertEqual(job['title'], title)
         self.assertIsNotNone(job['_id'])
+
+    def test_create_job_d_queue_with_2_nodes(self):
+        with self.assertRaises(HTTPError):
+            self.create_job({"compute": self.get_compute_params(nodes=2)})
+
+    def test_create_job_timeLimit(self):
+        time_limit = "00:10:00"
+        job = self.create_job({"compute": self.get_compute_params(time_limit=time_limit)})
+        self.assertEqual(self.jobs_endpoint.get_job(job['_id'])['_id'], job['_id'])
+        self.assertEqual(self.jobs_endpoint.get_job(job['_id'])['compute']['timeLimit'], time_limit)
+
+    def test_create_job_notify(self):
+        job = self.create_job({"compute": self.get_compute_params(notify='abe')})
+        self.assertEqual(self.jobs_endpoint.get_job(job['_id'])['_id'], job['_id'])
+        self.assertEqual(self.jobs_endpoint.get_job(job['_id'])['compute']['notify'], 'abe')
 
     def test_delete_job(self):
         job = self.create_job()
@@ -48,5 +79,5 @@ class EndpointJobsIntegrationTest(EndpointBaseIntegrationTest):
 
     def test_update_job(self):
         job = self.create_job()
-        updated_job = self.jobs_endpoint.update_job(job['_id'], {'tittle': 'NEW TITTLE'})
-        self.assertEqual(updated_job['tittle'], 'NEW TITTLE')
+        updated_job = self.jobs_endpoint.update_job(job['_id'], {'title': 'NEW TITTLE'})
+        self.assertEqual(updated_job['title'], 'NEW TITTLE')
