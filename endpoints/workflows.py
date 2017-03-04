@@ -3,9 +3,9 @@ import json
 from endpoints import ExabyteBaseEndpoint
 
 
-class ExabyteJobsEndpoint(ExabyteBaseEndpoint):
+class ExabyteWorkflowsEndpoint(ExabyteBaseEndpoint):
     """
-    Exabyte jobs endpoint.
+    Exabyte workflows endpoint.
 
     Args:
         host (str): Exabyte API hostname.
@@ -25,18 +25,18 @@ class ExabyteJobsEndpoint(ExabyteBaseEndpoint):
     """
 
     def __init__(self, host, port, user_id, auth_token, version='v1', secure=True, **kwargs):
-        self.name = 'jobs'
+        self.name = 'workflows'
         self.user_id = user_id
         self.auth_token = auth_token
-        super(ExabyteJobsEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
+        super(ExabyteWorkflowsEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
         self.headers = {'X-User-Id': self.user_id, 'X-Auth-Token': self.auth_token}
 
-    def get_jobs(self, params=None):
+    def get_workflows(self, params=None):
         """
-        Returns a list of jobs.
+        Returns a list of workflows.
 
         Args:
-            params (dict): a dictionary of parameters passed to jobs endpoint.
+            params (dict): a dictionary of parameters passed to workflows endpoint.
                 pageSize (int): page size. Defaults to 20.
                 pageIndex (int): page index to return. Defaults to 0.
                 query (dict): mongo query to filter the results.
@@ -46,61 +46,52 @@ class ExabyteJobsEndpoint(ExabyteBaseEndpoint):
         """
         return self.request('GET', self.name, params=params, headers=self.headers)
 
-    def get_job(self, jid):
+    def get_workflow(self, wid):
         """
-        Returns a job with a given ID.
+        Returns a workflow with a given ID.
 
         Args:
-            jid (str): job ID.
+            wid (str): workflow ID.
 
         Returns:
-             dict: job.
+             dict: workflow.
         """
-        return self.request('GET', '/'.join((self.name, jid)), headers=self.headers)
+        return self.request('GET', '/'.join((self.name, wid)), headers=self.headers)
 
-    def delete_job(self, jid):
+    def delete_workflow(self, wid):
         """
-        Deletes a given job.
-
-        Args:
-            jid (str): job ID.
-        """
-        return self.request('DELETE', '/'.join((self.name, jid)), headers=self.headers)
-
-    def update_job(self, jid, kwargs):
-        """
-        Updates a job with given key-values in kwargs.
+        Deletes a given workflow.
 
         Args:
-            jid (str): job ID.
+            wid (str): workflow ID.
+        """
+        return self.request('DELETE', '/'.join((self.name, wid)), headers=self.headers)
+
+    def update_workflow(self, wid, kwargs):
+        """
+        Updates a workflow with given key-values in kwargs.
+
+        Args:
+            wid (str): workflow ID.
             kwargs (dict): a dictionary of key-values to update.
 
         Returns:
-             dict: updated job.
+             dict: updated workflow.
         """
         headers = dict([('Content-Type', 'application/json')])
         headers.update(self.headers)
-        return self.request('PATCH', '/'.join((self.name, jid)), data=json.dumps(kwargs), headers=headers)
+        return self.request('PATCH', '/'.join((self.name, wid)), data=json.dumps(kwargs), headers=headers)
 
-    def create_job(self, job):
+    def create_workflow(self, workflow):
         """
-        Creates a new job.
+        Creates a new Workflow.
 
         Args:
-            job (dict): job object.
+            workflow (dict): workflow object.
 
         Returns:
-             dict: new job.
+             dict: new workflow.
         """
         headers = dict([('Content-Type', 'application/json')])
         headers.update(self.headers)
-        return self.request('POST', self.name, data=json.dumps(job), headers=headers)
-
-    def submit_job(self, jid):
-        """
-        Submits a given job.
-
-        Args:
-            jid (str): job ID.
-        """
-        self.request('GET', '/'.join((self.name, jid)), headers=self.headers, params={'submit': True})
+        return self.request('POST', self.name, data=json.dumps(workflow), headers=headers)

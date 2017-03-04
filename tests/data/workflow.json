@@ -1,0 +1,59 @@
+{
+  "app": "espresso",
+  "name": "TEST WORKFLOW",
+  "units": [
+    {
+      "execution": {
+        "app": {
+          "exec": "pw.x",
+          "flavor": "pw_scf",
+          "name": "espresso",
+          "summary": "Quantum Espresso",
+          "version": "5.4.0"
+        },
+        "input": [
+          {
+            "content": "&CONTROL\n    calculation = 'scf'\n    title = ''\n    verbosity = 'low'\n    restart_mode = 'from_scratch'\n    wf_collect = .true.\n    tstress = .true.\n    tprnfor = .true.\n    outdir = '$OUTPUT_DIR/'\n    wfcdir = '$OUTPUT_DIR/'\n    prefix = '__prefix__'\n    pseudo_dir = '$PSEUDO_DIR'\n/\n&SYSTEM\n    ibrav = 0\n    nat = 2\n    ntyp = 1\n    ecutwfc = 40\n    ecutrho = 200\n    occupations = 'smearing'\n    degauss = 0.005\n/\n&ELECTRONS\n    diagonalization = 'david'\n    diago_david_ndim = 4\n    diago_full_acc = .true.\n    mixing_beta = 0.3\n    startingwfc='atomic+random'\n/\n&IONS\n/\n&CELL\n/\nATOMIC_SPECIES\nSi 28.0855 si_pbe_gbrv_1.0.upf\nATOMIC_POSITIONS crystal\nSi 0 0 0\nSi 0.25 0.25 0.25\nCELL_PARAMETERS angstrom\n3.867000000 0.000000000 0.000000000\n1.933500000 3.348920236 0.000000000\n1.933500000 1.116306745 3.157392278\nK_POINTS automatic\n1 1 1 0 0 0",
+            "name": "pw_scf.in"
+          }
+        ]
+      },
+      "flowchartId": "pw-scf",
+      "head": true,
+      "monitors": [
+        {
+          "name": "electronic"
+        },
+        {
+          "name": "standard_output"
+        }
+      ],
+      "name": "pw_scf",
+      "postProcessors": [],
+      "preProcessors": [],
+      "results": [
+        {
+          "name": "total_energy"
+        },
+        {
+          "name": "total_energy_contributions"
+        },
+        {
+          "name": "pressure"
+        },
+        {
+          "name": "fermi_energy"
+        },
+        {
+          "name": "atomic_forces"
+        },
+        {
+          "name": "total_forces"
+        },
+        {
+          "name": "stress_tensor"
+        }
+      ]
+    }
+  ]
+}
