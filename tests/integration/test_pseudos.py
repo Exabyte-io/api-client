@@ -2,13 +2,13 @@ from endpoints.pseudos import ExabytePseudosEndpoint
 from tests.integration import EndpointBaseIntegrationTest
 
 
-class EndpointPseudosBaseIntegrationTest(EndpointBaseIntegrationTest):
+class EndpointPseudosIntegrationTest(EndpointBaseIntegrationTest):
     """
     Class for testing pseudos endpoint.
     """
 
     def __init__(self, *args, **kwargs):
-        super(EndpointPseudosBaseIntegrationTest, self).__init__(*args, **kwargs)
+        super(EndpointPseudosIntegrationTest, self).__init__(*args, **kwargs)
         self.pseudos_endpoint = ExabytePseudosEndpoint(**self.endpoint_kwargs)
         self.pseudo = self.pseudos_endpoint.upload_pseudo(self.get_file_path('pseudo'))
 
