@@ -31,7 +31,7 @@ class EndpointCharacteristicUnitTest(EndpointBaseUnitTest):
     @mock.patch('requests.sessions.Session.request')
     def test_create_characteristic(self, mock_request):
         mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
-        self.char_endpoint.create_characteristic(self.get_content_in_json('new-characteristic.json'))
+        self.char_endpoint.create_characteristic(self.get_content_in_json('characteristic.json'))
         self.assertEqual(mock_request.call_args[1]['headers']['Content-Type'], 'application/json')
 
     @mock.patch('requests.sessions.Session.request')

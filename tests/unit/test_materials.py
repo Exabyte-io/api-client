@@ -37,7 +37,7 @@ class EndpointMaterialsUnitTest(EndpointBaseUnitTest):
     @mock.patch('requests.sessions.Session.request')
     def test_create_material(self, mock_request):
         mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
-        self.materials_endpoint.create_material(self.get_content_in_json('new-material.json'))
+        self.materials_endpoint.create_material(self.get_content_in_json('material.json'))
         self.assertEqual(mock_request.call_args[1]['headers']['Content-Type'], 'application/json')
 
     @mock.patch('requests.sessions.Session.request')
