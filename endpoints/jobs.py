@@ -103,4 +103,4 @@ class ExabyteJobsEndpoint(ExabyteBaseEndpoint):
         Args:
             jid (str): job ID.
         """
-        self.request('GET', '/'.join((self.name, jid)), headers=self.headers, params={'submit': True})
+        self.request('POST', '/'.join((self.name, jid)), headers=self.headers, params={'submit': True})

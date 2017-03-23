@@ -3,9 +3,6 @@
     "_id": "Jfw9NzXsko3FkQFEz"
   },
   "compute": {
-    "cluster": {
-      "fqdn": "master-vagrant-cluster-001.exabyte.io"
-    },
     "nodes": 1,
     "notify": "n",
     "ppn": 1,

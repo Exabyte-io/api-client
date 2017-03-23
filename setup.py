@@ -8,7 +8,7 @@ setup(
     author='Mohammad Mohammadi',
     author_email='mohammad@exabyte.io',
     license='Exabyte Inc.',
-    packages=find_packages(exclude=['examples', 'docs', 'tests*']),
+    packages=find_packages(exclude=['examples', 'docs', 'tests']),
     install_requires=[
         'mock==1.3.0',
         'requests==2.13.0',
