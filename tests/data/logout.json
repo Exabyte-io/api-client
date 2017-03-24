@@ -1,6 +1,6 @@
 {
-  "status": "success",
-  "data": {
-    "message": "You've been logged out!"
-  }
+    "status": "success",
+    "data": {
+        "message": "You've been logged out!"
+    }
 }
