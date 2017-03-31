@@ -29,6 +29,6 @@ pip install -e .
 
 # Usage
 
-"examples" directory contains a few examples to interact with Exabyte REST API. For more information, see [Exabyte REST API documentation](https://docs.exabyte.io/rest-api/rest-api-python-client/).
+"examples" directory contains a few examples to interact with Exabyte.io API. For more information, see [API documentation](https://docs.exabyte.io/rest-api/rest-api-python-client/).
 
 © 2017 Exabyte Inc.
