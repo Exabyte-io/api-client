@@ -2,7 +2,7 @@
 
 Python package that provides access to Exabyte.io [REST API](https://docs.exabyte.io/rest-api/query-structure/).
 
-## Installation
+# Installation
 
 It is recommended to create a Python virtual environment before installing exabyte-api-client Python package:
 
@@ -29,6 +29,6 @@ You can install exabyte-api-client via pip:
 
 "examples" directory contains a few examples to interact with Exabyte REST API. For more information, see [Exabyte REST API documentation](https://docs.exabyte.io/rest-api/rest-api-python-client/).
 
-<hr>
+--
 
 © 2017 Exabyte Inc.
