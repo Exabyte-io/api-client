@@ -1,6 +1,6 @@
 import json
 
-from http_base import ExabyteConnection
+from lib.http_base import ExabyteConnection
 
 
 class ExabyteBaseEndpoint(object):

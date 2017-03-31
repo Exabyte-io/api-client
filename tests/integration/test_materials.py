@@ -4,7 +4,7 @@ from tests.integration import EndpointBaseIntegrationTest
 
 class EndpointMaterialsBaseIntegrationTest(EndpointBaseIntegrationTest):
     """
-    Bae class for testing materials endpoint.
+    Base class for testing materials endpoint.
     """
 
     def __init__(self, *args, **kwargs):
@@ -16,7 +16,7 @@ class EndpointMaterialsBaseIntegrationTest(EndpointBaseIntegrationTest):
             self.materials_endpoint.delete_material(material['_id'])
 
     def create_material(self, kwargs=None):
-        material = self.get_content_in_json('new-material.json')
+        material = self.get_content_in_json('material.json')
         material.update(kwargs if kwargs is not None else {})
         return self.materials_endpoint.create_material(material)
 

@@ -1,7 +1,7 @@
 {
-  "status": "success",
-  "data": {
-    "authToken": "XihOnUA8EqytSui1icz6fYhsJ2tUsJGGTlV03upYPSF",
-    "userId": "ubxMkAyx37Rjn8qK9"
-  }
+    "status": "success",
+    "data": {
+        "authToken": "XihOnUA8EqytSui1icz6fYhsJ2tUsJGGTlV03upYPSF",
+        "userId": "ubxMkAyx37Rjn8qK9"
+    }
 }

@@ -16,7 +16,7 @@ class EndpointCharacteristicIntegrationTest(EndpointBaseIntegrationTest):
             self.char_endpoint.delete_characteristic(char['_id'])
 
     def create_characteristic(self, kwargs=None):
-        characteristic = self.get_content_in_json('new-characteristic.json')
+        characteristic = self.get_content_in_json('characteristic.json')
         characteristic.update(kwargs if kwargs is not None else {})
         return self.char_endpoint.create_characteristic(characteristic)
 
