@@ -1,8 +1,8 @@
 # exabyte-api-client
 
-exabyte-api-client is a Python package that provides access to Exabyte REST API via Python.
+Python package that provides access to Exabyte.io [REST API](https://docs.exabyte.io/rest-api/query-structure/).
 
-## How to install
+## Installation
 
 It is recommended to create a Python virtual environment before installing exabyte-api-client Python package:
 
@@ -11,7 +11,7 @@ virtualenv my-virtualenv
 source my-virtualenv/bin/activate
 ```
 
-You can install exabyte-api-client via pip in two ways:
+You can install exabyte-api-client via pip:
 
 - Install it via PyPI:
     ```bash
@@ -25,6 +25,10 @@ You can install exabyte-api-client via pip in two ways:
     pip install -e .
     ```
 
-## How to use
+# Usage
 
-examples directory contains a few examples to interact with Exabyte REST API. For more information about available endpoints, please see [Exabyte REST API documentation](https://docs.exabyte.io).
+"examples" directory contains a few examples to interact with Exabyte REST API. For more information, see [Exabyte REST API documentation](https://docs.exabyte.io/rest-api/rest-api-python-client/).
+
+<hr>
+
+© 2017 Exabyte Inc.
