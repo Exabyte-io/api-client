@@ -32,7 +32,7 @@ class ExabyteLoginEndpoint(ExabyteBaseEndpoint):
 
     def login(self):
         """
-        Calls Exabyte login endpoint to retrieve X-Auth-Token and X-User-Id.
+        Calls Exabyte login endpoint to retrieve X-Auth-Token and X-Account-Id.
 
         Returns:
              dict: {'user_id': user_id, 'auth_token': auth_token}

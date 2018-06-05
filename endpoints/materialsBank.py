@@ -8,7 +8,7 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
-        user_id (str): user ID.
+        account_id (str): account ID.
         auth_token (str): authentication token.
         version (str): Exabyte API version. Defaults to v1.
         secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
@@ -17,17 +17,15 @@ class ExabyteMaterialsBankEndpoint(ExabyteBaseEndpoint):
 
     Attributes:
         name (str): endpoint name.
-        user_id (str): user ID.
+        account_id (str): account ID.
         auth_token (str): authentication token.
         headers (dict): default HTTP headers.
     """
 
-    def __init__(self, host, port, user_id, auth_token, version='v1', secure=True, **kwargs):
+    def __init__(self, host, port, account_id, auth_token, version='v1', secure=True, **kwargs):
         self.name = 'materials-bank'
-        self.user_id = user_id
-        self.auth_token = auth_token
         super(ExabyteMaterialsBankEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
-        self.headers = {'X-User-Id': self.user_id, 'X-Auth-Token': self.auth_token}
+        self.headers = {'X-Account-Id': account_id, 'X-Auth-Token': auth_token}
 
     def get_materials(self, params=None):
         """
