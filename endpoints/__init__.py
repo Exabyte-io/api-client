@@ -36,7 +36,7 @@ class ExabyteBaseEndpoint(object):
         """
         with self.conn:
             # serialize mongo query to be passed via HTTP params
-            if params and params.get('query'):
+            if params and params.get('query') and isinstance(params.get('query'), dict):
                 params['query'] = json.dumps(params['query'])
             self.conn.request(method, endpoint_path, params, data, headers)
             response = self.conn.json()
