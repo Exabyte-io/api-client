@@ -10,14 +10,14 @@ class ExabyteBaseEndpoint(object):
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
-        version (str): Exabyte API version. Defaults to v1.
+        version (str): Exabyte API version. Defaults to 2018-10-1.
         secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
 
     Attributes:
         conn (httplib.ExabyteConnection): ExabyteConnection instance.
     """
 
-    def __init__(self, host, port, version='v1', secure=True, **kwargs):
+    def __init__(self, host, port, version='2018-10-1', secure=True, **kwargs):
         self.conn = ExabyteConnection(host, port, version=version, secure=secure, **kwargs)
 
     def request(self, method, endpoint_path, params=None, data=None, headers=None):
