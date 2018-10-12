@@ -1,12 +1,10 @@
 from endpoints.entity import EntityEndpoint
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.set import EntitySetEndpointsMixin
-from endpoints.mixins.default import DefaultableEntityEndpointsMixin
 
 
-class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
+class BankWorkflowEndpoints(EntityEndpoint):
     """
-    Material endpoints.
+    Bank workflow endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -23,5 +21,5 @@ class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(MaterialEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'materials'
+        super(BankWorkflowEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
+        self.name = 'bank-workflows'

@@ -1,11 +1,11 @@
 import json
 
-from lib.http_base import ExabyteConnection
+from lib.http_base import Connection
 
 
-class ExabyteBaseEndpoint(object):
+class BaseEndpoint(object):
     """
-    Base class for Exabyte endpoints.
+    Base class for Exabyte RESTful API endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -18,7 +18,7 @@ class ExabyteBaseEndpoint(object):
     """
 
     def __init__(self, host, port, version='2018-10-1', secure=True, **kwargs):
-        self.conn = ExabyteConnection(host, port, version=version, secure=secure, **kwargs)
+        self.conn = Connection(host, port, version=version, secure=secure, **kwargs)
 
     def request(self, method, endpoint_path, params=None, data=None, headers=None):
         """
@@ -35,11 +35,11 @@ class ExabyteBaseEndpoint(object):
             json: response
         """
         with self.conn:
-            # serialize mongo query to be passed via HTTP params
-            if params and params.get('query') and isinstance(params.get('query'), dict):
-                params['query'] = json.dumps(params['query'])
             self.conn.request(method, endpoint_path, params, data, headers)
             response = self.conn.json()
             if response['status'] != 'success':
                 raise BaseException(response['data']['message'])
             return response['data']
+
+    def get_headers(self, account_id, auth_token, content_type="application/json"):
+        return {'X-Account-Id': account_id, 'X-Auth-Token': auth_token, 'Content-Type': content_type}

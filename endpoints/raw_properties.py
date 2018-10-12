@@ -4,9 +4,9 @@ from endpoints.mixins.set import EntitySetEndpointsMixin
 from endpoints.mixins.default import DefaultableEntityEndpointsMixin
 
 
-class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
+class RawPropertiesEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
     """
-    Material endpoints.
+    RawProperties endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -20,8 +20,11 @@ class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin
 
     Attributes:
         name (str): endpoint name.
+        user_id (str): user ID.
+        auth_token (str): authentication token.
+        headers (dict): default HTTP headers.
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(MaterialEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'materials'
+        super(RawPropertiesEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
+        self.name = 'raw-properties'
