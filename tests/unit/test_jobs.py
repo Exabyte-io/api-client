@@ -1,41 +1,31 @@
 import mock
 
-from endpoints.jobs import ExabyteJobsEndpoint
-from tests.unit import EndpointBaseUnitTest
+from endpoints.jobs import JobEndpoints
+from tests.unit.entity import EntityEndpointsUnitTest
 
 
-class EndpointJobsUnitTest(EndpointBaseUnitTest):
+class EndpointJobsUnitTest(EntityEndpointsUnitTest):
     """
     Class for testing jobs endpoint.
     """
 
     def __init__(self, *args, **kwargs):
         super(EndpointJobsUnitTest, self).__init__(*args, **kwargs)
-        self.user_id = 'ubxMkAyx37Rjn8qK9'
-        self.auth_token = 'XihOnUA8EqytSui1icz6fYhsJ2tUsJGGTlV03upYPSF'
-        self.jobs_endpoint = ExabyteJobsEndpoint(self.host, self.port, self.user_id, self.auth_token)
+        self.endpoint_name = "jobs"
+        self.endpoints = JobEndpoints(self.host, self.port, self.account_id, self.auth_token)
 
     @mock.patch('requests.sessions.Session.request')
-    def test_get_materials(self, mock_request):
-        mock_request.return_value = self.mock_response('{"status": "success", "data": []}')
-        self.assertEqual(self.jobs_endpoint.get_jobs(), [])
-        self.assertEqual(mock_request.call_args[1]['method'], 'get')
+    def test_list(self, mock_request):
+        self.list(mock_request)
 
     @mock.patch('requests.sessions.Session.request')
-    def test_get_material(self, mock_request):
-        mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
-        self.assertEqual(self.jobs_endpoint.get_job('28FMvD5knJZZx452H'), {})
-        expected_url = 'https://{}:{}/api/v1/jobs/28FMvD5knJZZx452H'.format(self.host, self.port)
-        self.assertEqual(mock_request.call_args[1]['url'], expected_url)
+    def test_get(self, mock_request):
+        self.get(mock_request)
 
     @mock.patch('requests.sessions.Session.request')
-    def test_create_material(self, mock_request):
-        mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
-        self.jobs_endpoint.create_job(self.get_content_in_json('job.json'))
-        self.assertEqual(mock_request.call_args[1]['headers']['Content-Type'], 'application/json')
+    def test_create(self, mock_request):
+        self.create(mock_request)
 
     @mock.patch('requests.sessions.Session.request')
-    def test_delete_material(self, mock_request):
-        mock_request.return_value = self.mock_response('{"status": "success", "data": {}}')
-        self.assertEqual(self.jobs_endpoint.delete_job('28FMvD5knJZZx452H'), {})
-        self.assertEqual(mock_request.call_args[1]['method'], 'delete')
+    def test_delete(self, mock_request):
+        self.create(mock_request)

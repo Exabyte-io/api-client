@@ -1,6 +1,6 @@
 {
     "status": "success",
     "data": {
-        "message": "You've been logged out!"
+        "message": "You are successfully logged out"
     }
 }
