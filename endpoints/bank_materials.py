@@ -23,3 +23,12 @@ class BankMaterialEndpoints(EntityEndpoint):
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(BankMaterialEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
         self.name = 'bank-materials'
+
+    def delete(self, id_):
+        raise NotImplemented
+
+    def update(self, id_, modifier):
+        raise NotImplemented
+
+    def create(self, config):
+        raise NotImplemented

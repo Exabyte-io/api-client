@@ -28,3 +28,12 @@ class RefinedPropertiesEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpo
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(RefinedPropertiesEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
         self.name = 'refined-properties'
+
+    def delete(self, id_):
+        raise NotImplemented
+
+    def update(self, id_, modifier):
+        raise NotImplemented
+
+    def create(self, config):
+        raise NotImplemented
