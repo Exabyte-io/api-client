@@ -1,11 +1,12 @@
 import json
 import argparse
 
-from endpoints.login import ExabyteLoginEndpoint
-from endpoints.materials import ExabyteMaterialsEndpoint
+from endpoints.login import LoginEndpoint
+from endpoints.materials import MaterialEndpoints
 
 HOST = 'platform.exabyte.io'
 PORT = 443
+SECURE = True
 
 
 def parse_arguments():
@@ -17,8 +18,12 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
-    login_endpoint = ExabyteLoginEndpoint(HOST, PORT, args.username, args.password)
-    auth_params = login_endpoint.login()
-    materials_endpoint = ExabyteMaterialsEndpoint(HOST, PORT, **auth_params)
-    materials = materials_endpoint.get_materials()
+
+    login_endpoint = LoginEndpoint(HOST, PORT, args.username, args.password, secure=SECURE)
+    response = login_endpoint.login()
+    account_id = response["X-Account-Id"]
+    auth_token = response["X-Auth-Token"]
+
+    materials_endpoint = MaterialEndpoints(HOST, PORT, account_id=account_id, auth_token=auth_token, secure=SECURE)
+    materials = materials_endpoint.list()
     print json.dumps(materials, indent=4)

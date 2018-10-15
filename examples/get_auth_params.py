@@ -1,10 +1,11 @@
 import json
 import argparse
 
-from endpoints.login import ExabyteLoginEndpoint
+from endpoints.login import LoginEndpoint
 
 HOST = 'platform.exabyte.io'
 PORT = 443
+SECURE = True
 
 
 def parse_arguments():
@@ -16,6 +17,6 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
-    login_endpoint = ExabyteLoginEndpoint(HOST, PORT, args.username, args.password)
+    login_endpoint = LoginEndpoint(HOST, PORT, args.username, args.password, secure=SECURE)
     auth_params = login_endpoint.login()
     print json.dumps(auth_params, indent=4)
