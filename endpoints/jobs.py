@@ -52,13 +52,10 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         """
         self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
 
-    def get_config(self, material_id, workflow_id, project_id, owner_id, compute, name):
-        return {
+    def get_config(self, material_ids, workflow_id, project_id, owner_id, name, compute=None, is_multi_material=False):
+        config = {
             "_project": {
                 "_id": project_id
-            },
-            "_material": {
-                "_id": material_id
             },
             "workflow": {
                 "_id": workflow_id
@@ -66,9 +63,15 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             "owner": {
                 "_id": owner_id
             },
-            "compute": compute,
             "name": name
         }
+
+        if compute: config.update({"compute": compute})
+        if is_multi_material:
+            config.update({"_materials": [{"_id": id} for id in material_ids]})
+        else:
+            config.update({"_material": {"_id": material_ids[0]}})
+        return config
 
     def get_compute(self, cluster, ppn=1, nodes=1, queue="D", time_limit="01:00:00", notify="abe"):
         return {
@@ -83,7 +86,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             "arguments": {}
         }
 
-    def create_by_ids(self, materials, workflow_id, project_id, owner_id, compute, prefix):
+    def create_by_ids(self, materials, workflow_id, project_id, owner_id, prefix, compute=None):
         """
         Creates jobs from the given materials
 
@@ -94,6 +97,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             owner_id (str): owner ID.
             compute (dict): compute configuration.
             prefix (str): job prefix.
+            is_multi_material (bool): whether job is multi-material, e.g ML job. Defaults to False.
 
         Returns:
             list
@@ -101,6 +105,6 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         jobs = []
         for material in materials:
             job_name = "-".join((prefix, material["formula"])),
-            job_config = self.get_config(material["_id"], workflow_id, project_id, owner_id, compute, job_name)
+            job_config = self.get_config([material["_id"]], workflow_id, project_id, owner_id, job_name, compute)
             jobs.append(self.create(job_config))
         return jobs

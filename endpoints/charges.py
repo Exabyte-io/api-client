@@ -37,4 +37,4 @@ class ChargeEndpoints(EntityEndpoint):
         raise NotImplemented
 
     def get_by_job(self, job):
-        return self.list(query={"jid": job["compute"]["cluster"]["jid"]})[0]
+        return next(iter(self.list(query={"jid": job["compute"]["cluster"]["jid"]})), None)
