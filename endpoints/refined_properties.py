@@ -1,10 +1,8 @@
-from endpoints.entity import EntityEndpoint
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.set import EntitySetEndpointsMixin
-from endpoints.mixins.default import DefaultableEntityEndpointsMixin
+from endpoints.raw_properties import BasePropertiesEndpoints
 
 
-class RefinedPropertiesEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
+class RefinedPropertiesEndpoints(BasePropertiesEndpoints):
     """
     RefinedProperties endpoints.
 

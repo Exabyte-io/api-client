@@ -1,9 +1,8 @@
 from endpoints.entity import EntityEndpoint
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.default import DefaultableEntityEndpointsMixin
 
 
-class ChargeEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
+class ChargeEndpoints(EntityEndpoint):
     """
     Charge endpoints.
 
@@ -36,3 +35,6 @@ class ChargeEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
 
     def create(self, config):
         raise NotImplemented
+
+    def get_by_job(self, job):
+        return self.list(query={"jid": job["compute"]["cluster"]["jid"]})[0]

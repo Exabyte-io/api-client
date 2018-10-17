@@ -1,10 +1,27 @@
 from endpoints.entity import EntityEndpoint
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.set import EntitySetEndpointsMixin
-from endpoints.mixins.default import DefaultableEntityEndpointsMixin
 
 
-class RawPropertiesEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
+class BasePropertiesEndpoints(EntityEndpoint):
+    def get_property_selector(self, job_id, unit_flowchart_id, property_slug):
+        return {"source.info.jobId": job_id, "source.info.unitId": unit_flowchart_id, "slug": property_slug}
+
+    def get_property(self, job_id, unit_flowchart_id, property_slug):
+        selector = self.get_property_selector(job_id, unit_flowchart_id, property_slug)
+        return self.list(query=selector)[0]
+
+    def get_band_gap_by_type(self, job_id, unit_flowchart_id, type):
+        band_gaps = self.get_property(job_id, unit_flowchart_id, "band_gaps")["data"]
+        return next((v for v in band_gaps["values"] if v["type"] == type), None)["value"]
+
+    def get_indirect_band_gap(self, job_id, unit_flowchart_id):
+        return self.get_band_gap_by_type(job_id, unit_flowchart_id, "indirect")
+
+    def get_direct_band_gap(self, job_id, unit_flowchart_id):
+        return self.get_band_gap_by_type(job_id, unit_flowchart_id, "direct")
+
+
+class RawPropertiesEndpoints(BasePropertiesEndpoints):
     """
     RawProperties endpoints.
 

@@ -14,58 +14,19 @@ def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument('-H', '--host', default="platform.exabyte.io", help='RESTful API hostname')
     parser.add_argument('-P', '--port', type=int, default=443, help='RESTful API port')
-    parser.add_argument('-S', '--insecure', action="store_true", default=False, help='Whether to use SSL')
     parser.add_argument('-u', '--username', required=True, help='Your Exabyte username')
     parser.add_argument('-p', '--password', required=True, help='Your Exabyte password')
     parser.add_argument('-k', '--key', required=True, help='materialsproject key')
     parser.add_argument('-mi', '--material-id', dest="material_ids", action="append", required=True, help='material ID')
+    parser.add_argument('-oi', '--owner-id', dest="owner_id", help='owner ID')
     parser.add_argument('-wi', '--workflow-id', dest="workflow_id", help='workflow ID')
     parser.add_argument('-pi', '--project-id', dest="project_id", help='project id')
     parser.add_argument('-t', '--tag', dest="tags", action="append", help='material/job tag')
     parser.add_argument('-j', '--job-prefix', dest="job_prefix", default="job", help='job name prefix')
-    parser.add_argument('-ms', '--materials-set', dest="materials_set", default="new-set", help='materials set name')
-    parser.add_argument('-js', '--jobs-set', dest="jobs_set", default="new-set", help='jobs set name')
+    parser.add_argument('-ms', '--materials-set', dest="materials_set", default="set", help='materials set name')
+    parser.add_argument('-js', '--jobs-set', dest="jobs_set", default="set", help='jobs set name')
+    parser.add_argument('-c', '--cluster', help='cluster name')
     return parser.parse_args()
-
-
-def login(host, port, username, password, insecure):
-    """
-    Logs in with given parameters and returns credentials to use for further calls to the API.
-
-    Returns:
-        dict
-    """
-    endpoint = LoginEndpoint(host, port, username, password, secure=not insecure)
-    response = endpoint.login()
-    return {
-        "host": host,
-        "port": port,
-        "secure": not insecure,
-        "auth_token": response["X-Auth-Token"],
-        "account_id": response["X-Account-Id"],
-    }
-
-
-def create_submit_jobs(job_endpoints, materials, workflow_id, project_id, job_prefix, tags, jobs_set):
-    jobs = []
-    for material in materials:
-        job = job_endpoints.create({
-            "_project": {
-                "_id": project_id
-            },
-            "_material": {
-                "_id": material["_id"]
-            },
-            "workflow": {
-                "_id": workflow_id
-            },
-            "name": "-".join((job_prefix, material["name"])),
-            "tags": tags
-        })
-        jobs.append(job)
-        job_endpoints.move_to_set(job["_id"], "", jobs_set["_id"])
-        job_endpoints.submit(job['_id'])
-    return jobs
 
 
 def get_jobs_in_state(jobs, state):
@@ -91,94 +52,71 @@ def wait_for_jobs_to_finish(job_endpoints, jobs):
         time.sleep(10)
 
 
-def get_material_info(material):
-    lattice = material["lattice"]
-    return [
-        material["_id"],
-        lattice["a"],
-        lattice["b"],
-        lattice["c"],
-        lattice["alpha"],
-        lattice["beta"],
-        lattice["gamma"],
-    ]
-
-
 if __name__ == '__main__':
     args = parse_arguments()
 
-    endpoint_kwargs = login(args.host, args.port, args.username, args.password, args.insecure)
-
     # params
     tags = args.tags or []
+    cluster = args.cluster
+    owner_id = args.owner_id
     job_prefix = args.job_prefix
     project_id = args.project_id
     workflow_id = args.workflow_id
 
+    endpoint_options = LoginEndpoint.get_endpoint_options(args.host, args.port, args.username, args.password)
+
     # endpoints
-    job_endpoints = JobEndpoints(**endpoint_kwargs)
-    charge_endpoints = ChargeEndpoints(**endpoint_kwargs)
-    material_endpoints = MaterialEndpoints(**endpoint_kwargs)
-    raw_property_endpoints = RawPropertiesEndpoints(**endpoint_kwargs)
+    job_endpoints = JobEndpoints(**endpoint_options)
+    charge_endpoints = ChargeEndpoints(**endpoint_options)
+    material_endpoints = MaterialEndpoints(**endpoint_options)
+    raw_property_endpoints = RawPropertiesEndpoints(**endpoint_options)
 
-    # import materials
-    materials = material_endpoints.import_from_materialsproject(args.key, args.material_ids, tags)
+    # import materials and move them into a set
+    materials = material_endpoints.import_from_materialsproject(args.key, args.material_ids, owner_id, tags)
+    materials_set = material_endpoints.create_set({"name": args.materials_set, "owner": {"_id": owner_id}})
+    [material_endpoints.move_to_set(m["_id"], "", materials_set["_id"]) for m in materials]
 
-    # create a materials set and move materials into it
-    materials_set = material_endpoints.create_set({"name": args.materials_set})
-    for material in materials:
-        material_endpoints.move_to_set(material["_id"], "", materials_set["_id"])
+    # create jobs in a set and submit them
+    compute = job_endpoints.get_compute(cluster)
+    jobs_set = job_endpoints.create_set({"name": args.jobs_set, "projectId": project_id, "owner": {"_id": owner_id}})
+    jobs = job_endpoints.create_by_ids(materials, workflow_id, project_id, owner_id, compute, job_prefix)
+    job_endpoints.move_to_set_by_ids([j["_id"] for j in jobs], "", jobs_set["_id"])
+    [job_endpoints.submit(id) for id in [j["_id"] for j in jobs]]
 
-    # create jobs set
-    jobs_set = job_endpoints.create_set({"name": args.jobs_set, "projectId": project_id})
-
-    # create and submit jobs
-    jobs = create_submit_jobs(job_endpoints, materials, workflow_id, project_id, job_prefix, tags, jobs_set)
-
-    # wait for jobs to finish
+    # wait for jobs to finish and get the final jobs
     wait_for_jobs_to_finish(job_endpoints, jobs)
+    jobs = job_endpoints.list(query={"_id": {"_id": [j["_id"] for j in jobs]}})
 
-    # extract properties
-    headers = [
-        "NAME", "TAGS", "COORDINATES-LENGTH",
-        "INI-ID", "INI-LAT-A", "INI-LAT-B", "INI-LAT-C", "INI-LAT-ALPHA", "INI-LAT-BETA", "INI-LAT-GAMMA",
-        "FIN-ID", "FIN-LAT-A", "FIN-LAT-B", "FIN-LAT-C", "FIN-LAT-ALPHA", "FIN-LAT-BETA", "FIN-LAT-GAMMA",
-        "PRESSURE", "DIRECT-GAP", "INDIRECT-GAP", "RUN-TIME", "COST"
-    ]
+    # form final table
+    keys = ["ID", "NAME", "TAGS", "N-SITES", "LAT-A", "LAT-B", "LAT-C", "LAT-ALPHA", "LAT-BETA", "LAT-GAMMA"]
+    headers = ["-".join(("INI", key)) for key in keys]
+    headers.extend(["-".join(("FIN", key)) for key in keys])
+    headers.extend(["PRESSURE", "DIRECT-GAP", "INDIRECT-GAP", "WALL-DURATION", "CHARGE"])
+
     rows = []
     for job in jobs:
         initial_structure = material_endpoints.get(job["_material"]["_id"])
 
         # extract final structure
         unit_flowchart_id = job["workflow"]["subworkflows"][0]["units"][0]["flowchartId"]
-        selector = {"source.info.jobId": job["_id"], "source.info.unitId": unit_flowchart_id, "slug": "final_structure"}
-        final_structure = raw_property_endpoints.list(query=selector)[0]["data"]
+        final_structure = raw_property_endpoints.get_property(job["_id"], unit_flowchart_id, "final_structure")["data"]
 
         # extract pressure
         unit_flowchart_id = job["workflow"]["subworkflows"][0]["units"][0]["flowchartId"]
-        selector = {"source.info.jobId": job["_id"], "source.info.unitId": unit_flowchart_id, "slug": "pressure"}
-        pressure = raw_property_endpoints.list(query=selector)[0]["data"]["value"]
+        pressure = raw_property_endpoints.get_property(job["_id"], unit_flowchart_id, "pressure")["data"]["value"]
 
-        # extract band_gaps
+        # extract band gaps
         unit_flowchart_id = job["workflow"]["subworkflows"][1]["units"][1]["flowchartId"]
-        selector = {"source.info.jobId": job["_id"], "source.info.unitId": unit_flowchart_id, "slug": "band_gaps"}
-        band_gaps = raw_property_endpoints.list(query=selector)[0]["data"]
-        band_gaps_direct = next((v for v in band_gaps["values"] if v["type"] == "direct"), None)["value"]
-        band_gaps_indirect = next((v for v in band_gaps["values"] if v["type"] == "indirect"), None)["value"]
+        band_gap_direct = raw_property_endpoints.get_direct_band_gap(job["_id"], unit_flowchart_id)
+        band_gap_indirect = raw_property_endpoints.get_indirect_band_gap(job["_id"], unit_flowchart_id)
 
         # extract charge
-        charge = charge_endpoints.list(query={"jid": job["compute"]["cluster"]["jid"]})[0]
+        charge = charge_endpoints.get_by_job(job)
 
-        # form data
-        data = [
-            initial_structure["name"],
-            ", ".join(initial_structure["tags"]),
-            len(initial_structure["basis"]["coordinates"])
-        ]
-        data.extend(get_material_info(initial_structure))
-        data.extend(get_material_info(final_structure))
-        data.append(pressure)
-        data.extend([band_gaps_direct, band_gaps_indirect])
+        # form table
+        data = material_endpoints.flatten_material(initial_structure)
+        data.extend(material_endpoints.flatten_material(final_structure))
+        data.extend([pressure, band_gap_direct, band_gap_indirect])
         data.extend([charge["wallDuration"], charge["charge"]])
 
         rows.append(data)

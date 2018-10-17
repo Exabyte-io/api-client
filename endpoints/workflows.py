@@ -1,10 +1,9 @@
 from endpoints.entity import EntityEndpoint
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.set import EntitySetEndpointsMixin
 from endpoints.mixins.default import DefaultableEntityEndpointsMixin
 
 
-class WorkflowEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
+class WorkflowEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
     """
     Workflow endpoints.
 

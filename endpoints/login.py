@@ -11,7 +11,6 @@ class LoginEndpoint(BaseEndpoint):
         port (int): Exabyte API port number.
         username (str): username.
         password (str): password.
-        hashed (bool): whether a given password is SHA-256 hash. Defaults to False.
         version (str): Exabyte API version.
         secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
@@ -38,3 +37,30 @@ class LoginEndpoint(BaseEndpoint):
         """
         data = {'username': self.username, 'password': self.password}
         return self.request('POST', self.name, data=data)
+
+    @staticmethod
+    def get_endpoint_options(host, port, username, password, version=DEFAULT_API_VERSION, secure=SECURE):
+        """
+        Logs in with given parameters and returns options to use for further calls to the RESTful API.
+
+        Args:
+            host (str): Exabyte API hostname.
+            port (int): Exabyte API port number.
+            username (str): username.
+            password (str): password.
+            version (str): Exabyte API version.
+            secure (bool): whether to use secure http protocol (https vs http).
+
+        Returns:
+            dict
+        """
+        endpoint = LoginEndpoint(host, port, username, password, version, secure)
+        response = endpoint.login()
+        return {
+            "host": host,
+            "port": port,
+            "secure": secure,
+            "version": version,
+            "auth_token": response["X-Auth-Token"],
+            "account_id": response["X-Account-Id"],
+        }
