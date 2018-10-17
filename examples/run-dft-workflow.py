@@ -80,12 +80,12 @@ if __name__ == '__main__':
     compute = job_endpoints.get_compute(cluster)
     jobs_set = job_endpoints.create_set({"name": args.jobs_set, "projectId": project_id, "owner": {"_id": owner_id}})
     jobs = job_endpoints.create_by_ids(materials, workflow_id, project_id, owner_id, compute, job_prefix)
-    job_endpoints.move_to_set_by_ids([j["_id"] for j in jobs], "", jobs_set["_id"])
+    [job_endpoints.move_to_set(j["_id"], "", jobs_set["_id"]) for j in jobs]
     [job_endpoints.submit(id) for id in [j["_id"] for j in jobs]]
 
     # wait for jobs to finish and get the final jobs
     wait_for_jobs_to_finish(job_endpoints, jobs)
-    jobs = job_endpoints.list(query={"_id": {"_id": [j["_id"] for j in jobs]}})
+    jobs = job_endpoints.list(query={"_id": {"$in": [j["_id"] for j in jobs]}})
 
     # form final table
     keys = ["ID", "NAME", "TAGS", "N-SITES", "LAT-A", "LAT-B", "LAT-C", "LAT-ALPHA", "LAT-BETA", "LAT-GAMMA"]
