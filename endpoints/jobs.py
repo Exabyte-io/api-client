@@ -53,6 +53,21 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
 
     def get_config(self, material_ids, workflow_id, project_id, owner_id, name, compute=None, is_multi_material=False):
+        """
+        Returns a job config based on the given parameters.
+
+        Args:
+            material_ids (list): list of material IDs.
+            workflow_id (str): workflow ID.
+            project_id (str): project ID.
+            owner_id (str): owner ID.
+            name (str): job name
+            compute (dict): job compute configuration. Default config is used if not passed.
+            is_multi_material (bool): whether the job is multi-material. Defaults to False.
+
+        Returns:
+            dict
+        """
         config = {
             "_project": {
                 "_id": project_id
@@ -74,6 +89,20 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         return config
 
     def get_compute(self, cluster, ppn=1, nodes=1, queue="D", time_limit="01:00:00", notify="abe"):
+        """
+        Returns job compute configuration.
+
+        Args:
+            cluster (str): cluster FQDN.
+            ppn (int): processors per node.
+            nodes (int): number of nodes.
+            queue (str): queue name.
+            time_limit (str): human walltime. Defaults to one hour.
+            notify (str): RMS notification directives. Defaults to "abe" to receive email on abort, begin and end.
+
+        Returns:
+            dict
+        """
         return {
             "ppn": ppn,
             "nodes": nodes,
@@ -97,14 +126,13 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             owner_id (str): owner ID.
             compute (dict): compute configuration.
             prefix (str): job prefix.
-            is_multi_material (bool): whether job is multi-material, e.g ML job. Defaults to False.
 
         Returns:
             list
         """
         jobs = []
         for material in materials:
-            job_name = "-".join((prefix, material["formula"])),
+            job_name = "-".join((prefix, material["formula"]))
             job_config = self.get_config([material["_id"]], workflow_id, project_id, owner_id, job_name, compute)
             jobs.append(self.create(job_config))
         return jobs

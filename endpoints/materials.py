@@ -1,12 +1,11 @@
 import json
-import urlparse
 
 from lib.http_base import BaseConnection
 from endpoints.entity import EntityEndpoint
+from endpoints.utils import get_materialsproject_url
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
 from endpoints.mixins.set import EntitySetEndpointsMixin
 from endpoints.mixins.default import DefaultableEntityEndpointsMixin
-from endpoints.enums import MATERIALSPROJECT_HOST, MATERIALSPROJECT_PORT, MATERIALSPROJECT_VERSION
 
 
 class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
@@ -48,41 +47,25 @@ class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin
         data = {"name": name, "content": content, "format": format, "ownerId": owner_id, "tags": tags}
         return self.request('POST', "/".join((self.name, "import")), headers=self.headers, data=json.dumps(data))
 
-    def _get_materialsproject_url(self, material_id):
+    def import_from_materialsproject(self, api_key, material_ids, owner_id=None, tags=()):
         """
-        Constructs the URL to access a material with given ID from materialsproject.
+        Imports a given material from materialsproject
 
         Args:
-            material_id (str): materialsproject ID.
+            api_key (str): materialsproject API key.
+            material_ids (list): a list of materialsproject IDs.
+            owner_id (str): material owner Id.
+            tags (list): material tags,
 
         Returns:
-            str
+            list[dict]: list of imported materials
         """
-        url = ":".join((MATERIALSPROJECT_HOST, str(MATERIALSPROJECT_PORT)))
-        return urlparse.urljoin(url, "/".join(("rest", MATERIALSPROJECT_VERSION, "materials", material_id, "vasp")))
-
-    def import_from_materialsproject(self, api_key, material_ids, owner_id=None, tags=()):
         materials = []
         conn = BaseConnection()
         with conn:
             for material_id in material_ids:
-                conn.request("GET", self._get_materialsproject_url(material_id), params={"API_KEY": api_key})
+                conn.request("GET", get_materialsproject_url(material_id), params={"API_KEY": api_key})
                 material = conn.json()["response"][0]
                 tags.extend(material.get("tags", []))
                 materials.append(self.import_from_file(material["material_id"], material["cif"], owner_id, "cif", tags))
         return materials
-
-    def flatten_material(self, material):
-        lattice = material["lattice"]
-        return [
-            material["_id"],
-            material["name"],
-            ", ".join(material["tags"]),
-            len(material["basis"]["coordinates"]),
-            lattice["a"],
-            lattice["b"],
-            lattice["c"],
-            lattice["alpha"],
-            lattice["beta"],
-            lattice["gamma"]
-        ]

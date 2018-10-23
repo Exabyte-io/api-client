@@ -4,6 +4,7 @@ from tabulate import tabulate
 
 from endpoints.jobs import JobEndpoints
 from endpoints.login import LoginEndpoint
+from endpoints.utils import flatten_material
 from endpoints.materials import MaterialEndpoints
 from examples.utils import wait_for_jobs_to_finish
 from endpoints.raw_properties import RawPropertiesEndpoints
@@ -87,8 +88,8 @@ if __name__ == '__main__':
         band_gap_indirect = raw_property_endpoints.get_indirect_band_gap(job["_id"], unit_flowchart_id)
 
         # form table
-        data = material_endpoints.flatten_material(initial_structure)
-        data.extend(material_endpoints.flatten_material(final_structure))
+        data = flatten_material(initial_structure)
+        data.extend(flatten_material(final_structure))
         data.extend([pressure, band_gap_direct, band_gap_indirect])
 
         rows.append(data)
