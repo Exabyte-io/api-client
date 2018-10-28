@@ -1,18 +1,18 @@
-from endpoints import ExabyteBaseEndpoint
+from endpoints import BaseEndpoint
+from endpoints.enums import DEFAULT_API_VERSION, SECURE
 
 
-class ExabyteLoginEndpoint(ExabyteBaseEndpoint):
+class LoginEndpoint(BaseEndpoint):
     """
-    Exabyte login endpoint.
+    Login endpoint.
 
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
         username (str): username.
         password (str): password.
-        hashed (bool): whether a given password is SHA-256 hash. Defaults to False.
-        version (str): Exabyte API version. Defaults to v1.
-        secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
+        version (str): Exabyte API version.
+        secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.
 
@@ -20,24 +20,47 @@ class ExabyteLoginEndpoint(ExabyteBaseEndpoint):
         name (str): endpoint name.
         username (str): username.
         password (str): password.
-        hashed (bool): whether a given password is SHA-256 hash. Defaults to False.
     """
 
-    def __init__(self, host, port, username, password, hashed=False, version='v1', secure=True, **kwargs):
+    def __init__(self, host, port, username, password, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
+        super(LoginEndpoint, self).__init__(host, port, version, secure, **kwargs)
         self.name = 'login'
         self.username = username
         self.password = password
-        self.hashed = hashed
-        super(ExabyteLoginEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
 
     def login(self):
         """
-        Calls Exabyte login endpoint to retrieve X-Auth-Token and X-Account-Id.
+        Logs in as a given user and generates an API token.
 
         Returns:
-             dict: {'user_id': user_id, 'auth_token': auth_token}
+             dict
         """
         data = {'username': self.username, 'password': self.password}
-        data.update({'hashed': 'true'}) if self.hashed else data
-        response = self.request('POST', self.name, data=data)
-        return {'user_id': response['userId'], 'auth_token': response['authToken']}
+        return self.request('POST', self.name, data=data)
+
+    @staticmethod
+    def get_endpoint_options(host, port, username, password, version=DEFAULT_API_VERSION, secure=SECURE):
+        """
+        Logs in with given parameters and returns options to use for further calls to the RESTful API.
+
+        Args:
+            host (str): Exabyte API hostname.
+            port (int): Exabyte API port number.
+            username (str): username.
+            password (str): password.
+            version (str): Exabyte API version.
+            secure (bool): whether to use secure http protocol (https vs http).
+
+        Returns:
+            dict
+        """
+        endpoint = LoginEndpoint(host, port, username, password, version, secure)
+        response = endpoint.login()
+        return {
+            "host": host,
+            "port": port,
+            "secure": secure,
+            "version": version,
+            "auth_token": response["X-Auth-Token"],
+            "account_id": response["X-Account-Id"],
+        }

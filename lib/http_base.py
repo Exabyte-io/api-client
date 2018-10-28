@@ -2,7 +2,7 @@ import urlparse
 import requests
 
 
-class ExabyteBaseConnection(object):
+class BaseConnection(object):
     """
     Base connection class to inherit from. This class should not be instantiated directly.
 
@@ -31,7 +31,7 @@ class ExabyteBaseConnection(object):
             data (dict): the body to attach to the request.
             params (dict): URL parameters to append to the URL.
         """
-        self.response = self.session.request(method=method.lower(), url=url, params=params, data=data, headers=headers)
+        self.response = self.session.request(method=method.lower(), url=url, params=params, data=data, headers=headers, verify=False)
         self.response.raise_for_status()
 
     def get_response(self):
@@ -112,7 +112,7 @@ class ExabyteBaseConnection(object):
         self.session.close()
 
 
-class ExabyteConnection(ExabyteBaseConnection):
+class Connection(BaseConnection):
     """
     Exabyte connection class.
 
@@ -130,7 +130,7 @@ class ExabyteConnection(ExabyteBaseConnection):
 
     def __init__(self, host, port, version, secure, **kwargs):
         self.preamble = '{}://{}:{}/api/{}/'.format('https' if secure else 'http', host, port, version)
-        super(ExabyteConnection, self).__init__(**kwargs)
+        super(Connection, self).__init__(**kwargs)
 
     def request(self, method, endpoint_path, params=None, data=None, headers=None):
         """
@@ -144,4 +144,4 @@ class ExabyteConnection(ExabyteBaseConnection):
             params (dict): URL parameters to append to the URL.
         """
         url = urlparse.urljoin(self.preamble, endpoint_path)
-        super(ExabyteConnection, self).request(method, url, params, data, headers)
+        super(Connection, self).request(method, url, params, data, headers)

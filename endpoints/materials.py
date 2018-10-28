@@ -1,116 +1,71 @@
 import json
 
-from endpoints import ExabyteBaseEndpoint
+from lib.http_base import BaseConnection
+from endpoints.entity import EntityEndpoint
+from endpoints.utils import get_materialsproject_url
+from endpoints.enums import DEFAULT_API_VERSION, SECURE
+from endpoints.mixins.set import EntitySetEndpointsMixin
+from endpoints.mixins.default import DefaultableEntityEndpointsMixin
 
 
-class ExabyteMaterialsEndpoint(ExabyteBaseEndpoint):
+class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):
     """
-    Exabyte materials endpoint.
+    Material endpoints.
 
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
         account_id (str): account ID.
         auth_token (str): authentication token.
-        version (str): Exabyte API version. Defaults to v1.
-        secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
+        version (str): Exabyte API version.
+        secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.
 
     Attributes:
         name (str): endpoint name.
-        user_id (str): user ID.
-        auth_token (str): authentication token.
-        headers (dict): default HTTP headers.
     """
 
-    def __init__(self, host, port, account_id, auth_token, version='v1', secure=True, **kwargs):
+    def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
+        super(MaterialEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
         self.name = 'materials'
-        super(ExabyteMaterialsEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
-        self.headers = {'X-Account-Id': account_id, 'X-Auth-Token': auth_token}
 
-    def get_materials(self, params=None):
+    def import_from_file(self, name, content, owner_id=None, format="poscar", tags=()):
         """
-        Returns a list of materials.
+        Imports a material from the given file.
 
         Args:
-            params (dict): a dictionary of parameters passed to materials endpoint.
-                pageSize (int): page size. Defaults to 20.
-                pageIndex (int): page index to return. Defaults to 0.
-                query (dict): mongo query to filter the results.
-                includeCharacteristics (bool): whether to include material's characteristics.
+            name (str): material name.
+            content (str): material as string.
+            format (str): material format, either cif or poscar.
+            owner_id (str): owner ID. Material is created under user's default account by default.
+            tags (tuple[str]) a list of tags that should be assigned to the material.
 
         Returns:
-            list[dict]
+            dict
         """
-        return self.request('GET', self.name, params=params, headers=self.headers)
+        data = {"name": name, "content": content, "format": format, "ownerId": owner_id, "tags": tags}
+        return self.request('POST', "/".join((self.name, "import")), headers=self.headers, data=json.dumps(data))
 
-    def get_material(self, mid, params=None):
+    def import_from_materialsproject(self, api_key, material_ids, owner_id=None, tags=()):
         """
-        Returns a material with a given ID.
+        Imports a given material from materialsproject
 
         Args:
-            mid (str): material ID.
-            params (dict): a dictionary of parameters passed to materials endpoint.
-                includeCharacteristics (bool): whether to include material's characteristics.
+            api_key (str): materialsproject API key.
+            material_ids (list): a list of materialsproject IDs.
+            owner_id (str): material owner Id.
+            tags (list): material tags,
 
         Returns:
-             dict: material.
+            list[dict]: list of imported materials
         """
-        return self.request('GET', '/'.join((self.name, mid)), params=params, headers=self.headers)
-
-    def get_materials_by_formula(self, formula, params=None):
-        """
-        Returns a list of materials with a given formula.
-
-        Args:
-            formula (str): material's formula.
-            params (dict): a dictionary of parameters passed to materials endpoint.
-                pageSize (int): page size. Defaults to 20.
-                pageIndex (int): page index to return. Defaults to 0.
-                includeCharacteristics (bool): whether to include material's characteristics.
-
-        Returns:
-            list[dict]
-        """
-        query = {"query": {"formula": formula}}
-        params = params.update(query) if params else query
-        return self.request('GET', self.name, params=params, headers=self.headers)
-
-    def delete_material(self, mid):
-        """
-        Deletes a given material.
-
-        Args:
-            mid (str): material ID.
-        """
-        return self.request('DELETE', '/'.join((self.name, mid)), headers=self.headers)
-
-    def update_material(self, mid, kwargs):
-        """
-        Updates a material with given key-values in kwargs.
-
-        Args:
-            mid (str): material ID.
-            kwargs (dict): a dictionary of key-values to update.
-
-        Returns:
-             dict: updated material.
-        """
-        headers = dict([('Content-Type', 'application/json')])
-        headers.update(self.headers)
-        return self.request('PATCH', '/'.join((self.name, mid)), data=json.dumps(kwargs), headers=headers)
-
-    def create_material(self, material):
-        """
-        Creates a new material.
-
-        Args:
-            material (dict): material object.
-
-        Returns:
-             dict: new material.
-        """
-        headers = dict([('Content-Type', 'application/json')])
-        headers.update(self.headers)
-        return self.request('POST', self.name, data=json.dumps(material), headers=headers)
+        materials = []
+        conn = BaseConnection()
+        with conn:
+            for material_id in material_ids:
+                conn.request("GET", get_materialsproject_url(material_id), params={"API_KEY": api_key})
+                material = conn.json()["response"][0]
+                tags.extend(material.get("tags", []))
+                materials.append(self.import_from_file(material["material_id"], material["cif"], owner_id, "cif", tags))
+        return materials

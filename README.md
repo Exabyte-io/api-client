@@ -1,4 +1,4 @@
-This package provides access to Exabyte.io [API](https://docs.exabyte.io/rest-api/query-structure/).
+This package provides access to Exabyte.io [RESTful API](https://docs.exabyte.io/rest-api/overview/).
 
 # Installation
 
@@ -29,4 +29,4 @@ pip install -e .
 
 `examples` directory contains example usage scenarios. For more information, see [API documentation](https://docs.exabyte.io/rest-api/rest-api-python-client/).
 
-© 2017 Exabyte Inc.
+© 2018 Exabyte Inc.

@@ -64,12 +64,5 @@
             "alat": 1,
             "units": "angstrom"
         }
-    },
-    "access": {
-        "level": 0,
-        "type": 0
-    },
-    "tags": [
-        "API"
-    ]
+    }
 }

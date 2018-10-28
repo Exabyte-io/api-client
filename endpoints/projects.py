@@ -3,9 +3,9 @@ from endpoints.enums import DEFAULT_API_VERSION, SECURE
 from endpoints.mixins.default import DefaultableEntityEndpointsMixin
 
 
-class WorkflowEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
+class ProjectEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
     """
-    Workflow endpoints.
+    Project endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -25,5 +25,14 @@ class WorkflowEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(WorkflowEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'workflows'
+        super(ProjectEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
+        self.name = 'projects'
+
+    def delete(self, id_):
+        raise NotImplemented
+
+    def update(self, id_, modifier):
+        raise NotImplemented
+
+    def create(self, config):
+        raise NotImplemented

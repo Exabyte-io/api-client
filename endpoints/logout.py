@@ -1,34 +1,33 @@
-from endpoints import ExabyteBaseEndpoint
+from endpoints import BaseEndpoint
+from endpoints.enums import DEFAULT_API_VERSION, SECURE
 
 
-class ExabyteLogoutEndpoint(ExabyteBaseEndpoint):
+class LogoutEndpoint(BaseEndpoint):
     """
-    Exabyte logout endpoint.
+    Logout endpoint.
 
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
         account_id (str): account ID.
         auth_token (str): authentication token.
-        version (str): Exabyte API version. Defaults to v1.
-        secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
+        version (str): Exabyte API version.
+        secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.
 
     Attributes:
         name (str): endpoint name.
-        user_id (str): user ID.
-        auth_token (str): authentication token.
         headers (dict): default HTTP headers.
     """
 
-    def __init__(self, host, port, account_id, auth_token, version='v1', secure=True, **kwargs):
+    def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
+        super(LogoutEndpoint, self).__init__(host, port, version, secure, **kwargs)
         self.name = 'logout'
-        super(ExabyteLogoutEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
-        self.headers = {'X-Account-Id': account_id, 'X-Auth-Token': auth_token}
+        self.headers = self.get_headers(account_id, auth_token)
 
     def logout(self):
         """
-        Calls Exabyte logout endpoint to invalidate authentication token.
+        Deletes current API token.
         """
         return self.request('POST', self.name, headers=self.headers)

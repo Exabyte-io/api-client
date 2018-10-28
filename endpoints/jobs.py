@@ -1,104 +1,138 @@
-import json
+from endpoints.entity import EntityEndpoint
+from endpoints.enums import DEFAULT_API_VERSION, SECURE
+from endpoints.mixins.set import EntitySetEndpointsMixin
 
-from endpoints import ExabyteBaseEndpoint
 
-
-class ExabyteJobsEndpoint(ExabyteBaseEndpoint):
+class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
     """
-    Exabyte jobs endpoint.
+    Job endpoints.
 
     Args:
         host (str): Exabyte API hostname.
         port (int): Exabyte API port number.
         account_id (str): account ID.
         auth_token (str): authentication token.
-        version (str): Exabyte API version. Defaults to v1.
-        secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
+        version (str): Exabyte API version.
+        secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.
 
     Attributes:
         name (str): endpoint name.
-        user_id (str): user ID.
-        auth_token (str): authentication token.
-        headers (dict): default HTTP headers.
     """
 
-    def __init__(self, host, port, account_id, auth_token, version='v1', secure=True, **kwargs):
+    def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
+        super(JobEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
         self.name = 'jobs'
-        super(ExabyteJobsEndpoint, self).__init__(host, port, version=version, secure=secure, **kwargs)
-        self.headers = {'X-Account-Id': account_id, 'X-Auth-Token': auth_token}
 
-    def get_jobs(self, params=None):
-        """
-        Returns a list of jobs.
-
-        Args:
-            params (dict): a dictionary of parameters passed to jobs endpoint.
-                pageSize (int): page size. Defaults to 20.
-                pageIndex (int): page index to return. Defaults to 0.
-                query (dict): mongo query to filter the results.
-
-        Returns:
-            list[dict]
-        """
-        return self.request('GET', self.name, params=params, headers=self.headers)
-
-    def get_job(self, jid):
-        """
-        Returns a job with a given ID.
-
-        Args:
-            jid (str): job ID.
-
-        Returns:
-             dict: job.
-        """
-        return self.request('GET', '/'.join((self.name, jid)), headers=self.headers)
-
-    def delete_job(self, jid):
-        """
-        Deletes a given job.
-
-        Args:
-            jid (str): job ID.
-        """
-        return self.request('DELETE', '/'.join((self.name, jid)), headers=self.headers)
-
-    def update_job(self, jid, kwargs):
-        """
-        Updates a job with given key-values in kwargs.
-
-        Args:
-            jid (str): job ID.
-            kwargs (dict): a dictionary of key-values to update.
-
-        Returns:
-             dict: updated job.
-        """
-        headers = dict([('Content-Type', 'application/json')])
-        headers.update(self.headers)
-        return self.request('PATCH', '/'.join((self.name, jid)), data=json.dumps(kwargs), headers=headers)
-
-    def create_job(self, job):
-        """
-        Creates a new job.
-
-        Args:
-            job (dict): job object.
-
-        Returns:
-             dict: new job.
-        """
-        headers = dict([('Content-Type', 'application/json')])
-        headers.update(self.headers)
-        return self.request('POST', self.name, data=json.dumps(job), headers=headers)
-
-    def submit_job(self, jid):
+    def submit(self, id_):
         """
         Submits a given job.
 
         Args:
-            jid (str): job ID.
+            id_ (str): job ID.
         """
-        self.request('POST', '/'.join((self.name, jid)), headers=self.headers, params={'submit': True})
+        self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
+
+    def purge(self, id_):
+        """
+        Purges a given job.
+
+        Args:
+            id_ (str): job ID.
+        """
+        self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
+
+    def terminate(self, id_):
+        """
+        Terminates a given job.
+
+        Args:
+            id_ (str): job ID.
+        """
+        self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
+
+    def get_config(self, material_ids, workflow_id, project_id, owner_id, name, compute=None, is_multi_material=False):
+        """
+        Returns a job config based on the given parameters.
+
+        Args:
+            material_ids (list): list of material IDs.
+            workflow_id (str): workflow ID.
+            project_id (str): project ID.
+            owner_id (str): owner ID.
+            name (str): job name
+            compute (dict): job compute configuration. Default config is used if not passed.
+            is_multi_material (bool): whether the job is multi-material. Defaults to False.
+
+        Returns:
+            dict
+        """
+        config = {
+            "_project": {
+                "_id": project_id
+            },
+            "workflow": {
+                "_id": workflow_id
+            },
+            "owner": {
+                "_id": owner_id
+            },
+            "name": name
+        }
+
+        if compute: config.update({"compute": compute})
+        if is_multi_material:
+            config.update({"_materials": [{"_id": id} for id in material_ids]})
+        else:
+            config.update({"_material": {"_id": material_ids[0]}})
+        return config
+
+    def get_compute(self, cluster, ppn=1, nodes=1, queue="D", time_limit="01:00:00", notify="abe"):
+        """
+        Returns job compute configuration.
+
+        Args:
+            cluster (str): cluster FQDN.
+            ppn (int): processors per node.
+            nodes (int): number of nodes.
+            queue (str): queue name.
+            time_limit (str): human walltime. Defaults to one hour.
+            notify (str): RMS notification directives. Defaults to "abe" to receive email on abort, begin and end.
+
+        Returns:
+            dict
+        """
+        return {
+            "ppn": ppn,
+            "nodes": nodes,
+            "queue": queue,
+            "timeLimit": time_limit,
+            "notify": notify,
+            "cluster": {
+                "fqdn": cluster
+            },
+            "arguments": {}
+        }
+
+    def create_by_ids(self, materials, workflow_id, project_id, owner_id, prefix, compute=None):
+        """
+        Creates jobs from the given materials
+
+        Args:
+            materials (list[dict]): list of materials.
+            workflow_id (str): workflow ID.
+            project_id (str): project ID.
+            owner_id (str): owner ID.
+            compute (dict): compute configuration.
+            prefix (str): job prefix.
+
+        Returns:
+            list
+        """
+        jobs = []
+        for material in materials:
+            job_name = "-".join((prefix, material["formula"]))
+            job_config = self.get_config([material["_id"]], workflow_id, project_id, owner_id, job_name, compute)
+            jobs.append(self.create(job_config))
+        return jobs

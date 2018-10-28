@@ -1,11 +1,10 @@
-from endpoints.entity import EntityEndpoint
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.default import DefaultableEntityEndpointsMixin
+from endpoints.raw_properties import BasePropertiesEndpoints
 
 
-class WorkflowEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
+class RefinedPropertiesEndpoints(BasePropertiesEndpoints):
     """
-    Workflow endpoints.
+    RefinedProperties endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -25,5 +24,14 @@ class WorkflowEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(WorkflowEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'workflows'
+        super(RefinedPropertiesEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
+        self.name = 'refined-properties'
+
+    def delete(self, id_):
+        raise NotImplemented
+
+    def update(self, id_, modifier):
+        raise NotImplemented
+
+    def create(self, config):
+        raise NotImplemented
