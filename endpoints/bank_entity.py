@@ -43,4 +43,5 @@ class BankEntityEndpoints(EntityEndpoint):
         Returns:
              dict: new entity.
         """
-        self.request('POST', '/'.join((self.name, id_, "copy")), params={"accountId": account_id}, headers=self.headers)
+        params = {"accountId": account_id}
+        return self.request('POST', '/'.join((self.name, id_, "copy")), params=params, headers=self.headers)
