@@ -31,7 +31,7 @@ class BaseConnection(object):
             data (dict): the body to attach to the request.
             params (dict): URL parameters to append to the URL.
         """
-        self.response = self.session.request(method=method.lower(), url=url, params=params, data=data, headers=headers, verify=False)
+        self.response = self.session.request(method=method.lower(), url=url, params=params, data=data, headers=headers)
         self.response.raise_for_status()
 
     def get_response(self):
