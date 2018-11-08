@@ -25,8 +25,8 @@ cd exabyte-api-client
 pip install -e .
 ```
 
-# Usage
+# Examples
 
-`examples` directory contains example usage scenarios. For more information, see [API documentation](https://docs.exabyte.io/rest-api/rest-api-python-client/).
+[exabyte-api-examples](https://github.com/Exabyte-io/exabyte-api-examples) repository contains examples for performing most-common tasks in the Exabyte.io platform through its RESTful API in Jupyter Notebook format.
 
 © 2018 Exabyte Inc.
