@@ -47,7 +47,7 @@ class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin
         data = {"name": name, "content": content, "format": format, "ownerId": owner_id, "tags": tags}
         return self.request('POST', "/".join((self.name, "import")), headers=self.headers, data=json.dumps(data))
 
-    def import_from_materialsproject(self, api_key, material_ids, owner_id=None, tags=()):
+    def import_from_materialsproject(self, api_key, material_ids, owner_id=None, tags=[]):
         """
         Imports a given material from materialsproject
 

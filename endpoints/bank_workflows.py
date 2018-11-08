@@ -1,8 +1,8 @@
-from endpoints.entity import EntityEndpoint
+from endpoints.bank_entity import BankEntityEndpoints
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
 
 
-class BankWorkflowEndpoints(EntityEndpoint):
+class BankWorkflowEndpoints(BankEntityEndpoints):
     """
     Bank workflow endpoints.
 
@@ -23,12 +23,3 @@ class BankWorkflowEndpoints(EntityEndpoint):
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(BankWorkflowEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
         self.name = 'bank-workflows'
-
-    def delete(self, id_):
-        raise NotImplemented
-
-    def update(self, id_, modifier):
-        raise NotImplemented
-
-    def create(self, config):
-        raise NotImplemented

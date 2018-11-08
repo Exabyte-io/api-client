@@ -98,4 +98,4 @@ class EntityEndpoint(BaseEndpoint):
         Returns:
              dict: new entity.
         """
-        self.request('POST', '/'.join((self.name, id_, "copy")), headers=self.headers)
+        return self.request('POST', '/'.join((self.name, id_, "copy")), headers=self.headers)
