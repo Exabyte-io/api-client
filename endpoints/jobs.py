@@ -132,7 +132,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         """
         jobs = []
         for material in materials:
-            job_name = "-".join((prefix, material["formula"]))
+            job_name = " ".join((prefix, material["formula"]))
             job_config = self.get_config([material["_id"]], workflow_id, project_id, owner_id, job_name, compute)
             jobs.append(self.create(job_config))
         return jobs
