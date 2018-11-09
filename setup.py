@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='exabyte-api-client',
     description='Exabyte Python Client for RESTful API',
-    version='2018-10-01',
+    version='2018.10.01',
     url='http://github.com/Exabyte-io/exabyte-api-client',
     author='Mohammad Mohammadi',
     author_email='mohammad@exabyte.io',
