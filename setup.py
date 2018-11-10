@@ -11,7 +11,7 @@ setup(
     packages=find_packages(exclude=['tests*']),
     install_requires=[
         'mock==1.3.0',
-        'requests==2.13.0',
+        'requests==2.20.1',
 
     ],
     classifiers=[
