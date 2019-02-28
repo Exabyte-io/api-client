@@ -51,6 +51,3 @@ class RawPropertiesEndpoints(BasePropertiesEndpoints):
 
     def update(self, id_, modifier):
         raise NotImplemented
-
-    def create(self, config):
-        raise NotImplemented
