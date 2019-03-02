@@ -1,3 +1,5 @@
+import json
+
 from endpoints.entity import EntityEndpoint
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
 from endpoints.mixins.set import EntitySetEndpointsMixin
@@ -136,3 +138,18 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             job_config = self.get_config([material["_id"]], workflow_id, project_id, owner_id, job_name, compute)
             jobs.append(self.create(job_config))
         return jobs
+
+    def get_presigned_urls(self, id_, files):
+        """
+        Returns presigned URLS to upload given job files.
+
+        Args:
+            id_ (str): job ID.
+            files (list): list of paths relative to the job working directory.
+
+        Returns:
+            list: [{"file": "", "URL": ""}]
+        """
+        data = json.dumps({"files": files})
+        response = self.request('POST', '/'.join((self.name, id_, "presigned-urls")), data=data, headers=self.headers)
+        return response["presignedURLs"]
