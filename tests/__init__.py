@@ -16,8 +16,8 @@ class EndpointBaseTest(unittest.TestCase):
 
     def get_content(self, filename):
         with open(self.get_file_path(filename)) as f:
-            return f.read()
+            return f.read().encode()
 
     def get_content_in_json(self, filename):
         with open(self.get_file_path(filename)) as f:
-            return json.loads(f.read())
+            return json.loads(f.read().encode())
