@@ -49,7 +49,8 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         end = time.time() + timeout
         while time.time() < end:
             job = self.endpoints.get(id_)
-            if job["status"] == "finished": return
+            if job["status"] == "finished":
+                return
             time.sleep(5)
         raise BaseException("job with ID {} did not finish within {} seconds".format(id_, timeout))
 

@@ -83,7 +83,8 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             "name": name
         }
 
-        if compute: config.update({"compute": compute})
+        if compute:
+            config.update({"compute": compute})
         if is_multi_material:
             config.update({"_materials": [{"_id": id} for id in material_ids]})
         else:

@@ -1,7 +1,6 @@
 import mock
-
-from tests.unit.entity import EntityEndpointsUnitTest
 from endpoints.bank_materials import BankMaterialEndpoints
+from tests.unit.entity import EntityEndpointsUnitTest
 
 
 class EndpointMaterialsBankUnitTest(EntityEndpointsUnitTest):

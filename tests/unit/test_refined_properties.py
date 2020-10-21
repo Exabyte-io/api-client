@@ -1,7 +1,6 @@
 import mock
-
-from tests.unit.entity import EntityEndpointsUnitTest
 from endpoints.refined_properties import RefinedPropertiesEndpoints
+from tests.unit.entity import EntityEndpointsUnitTest
 
 
 class EndpointCharacteristicUnitTest(EntityEndpointsUnitTest):

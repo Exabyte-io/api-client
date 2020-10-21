@@ -1,5 +1,5 @@
-import urlparse
 import requests
+import urlparse
 
 
 class BaseConnection(object):

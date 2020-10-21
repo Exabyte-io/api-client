@@ -1,7 +1,6 @@
 import mock
-
-from tests.unit.entity import EntityEndpointsUnitTest
 from endpoints.bank_workflows import BankWorkflowEndpoints
+from tests.unit.entity import EntityEndpointsUnitTest
 
 
 class EndpointWorkflowsBankUnitTest(EntityEndpointsUnitTest):

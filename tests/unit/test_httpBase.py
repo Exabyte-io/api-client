@@ -1,7 +1,6 @@
 import mock
-from requests.exceptions import HTTPError
-
 from endpoints.http.http_base import Connection
+from requests.exceptions import HTTPError
 from tests.unit import EndpointBaseUnitTest
 
 
