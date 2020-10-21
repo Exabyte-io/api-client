@@ -1,7 +1,7 @@
 import mock
 from requests.exceptions import HTTPError
 
-from lib.http_base import Connection
+from endpoints.http.http_base import Connection
 from tests.unit import EndpointBaseUnitTest
 
 

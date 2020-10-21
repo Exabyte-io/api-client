@@ -1,6 +1,6 @@
 import json
 
-from lib.http_base import BaseConnection
+from endpoints.http.http_base import BaseConnection
 from endpoints.entity import EntityEndpoint
 from endpoints.utils import get_materialsproject_url
 from endpoints.enums import DEFAULT_API_VERSION, SECURE
