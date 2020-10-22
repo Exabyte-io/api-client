@@ -24,7 +24,6 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
 
     def get_compute_params(self, nodes=1, notify='n', ppn=1, queue='D', time_limit='00:05:00'):
         return {
-            "cluster": {"fqdn": "master-vagrant-cluster-001.exabyte.io"},
             "nodes": nodes,
             "notify": notify,
             "ppn": ppn,
