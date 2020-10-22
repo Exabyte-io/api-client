@@ -1,3 +1,4 @@
+import datetime
 import time
 
 from endpoints.jobs import JobEndpoints
@@ -18,7 +19,8 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         Returns the default entity config.
         Override upon inheritance.
         """
-        return {"name": "TEST JOB"}
+        now_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+        return {"name": "API-CLIENT TEST JOB {}".format(now_time)}
 
     def get_compute_params(self, nodes=1, notify='n', ppn=1, queue='D', time_limit='00:05:00'):
         return {
@@ -54,7 +56,7 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
             time.sleep(5)
         raise BaseException("job with ID {} did not finish within {} seconds".format(id_, timeout))
 
-    def test_submit_job(self):
+    def test_submit_job_and_wait_to_finish(self):
         job = self.create_entity()
         self.endpoints.submit(job['_id'])
         self.assertEqual('submitted', self.endpoints.get(job['_id'])['status'])
