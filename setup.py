@@ -5,7 +5,7 @@ with open('./README.md', 'r') as f:
 
 setup(
     name='exabyte-api-client',
-    version='1.0.0',
+    version='2020.10.19',
     description='Exabyte Python Client for RESTful API',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -24,6 +24,7 @@ setup(
     python_requires='>=3.6',
     classifiers=[
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development',
