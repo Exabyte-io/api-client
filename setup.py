@@ -1,19 +1,30 @@
 from setuptools import setup, find_packages
 
+with open('./README.md', 'r') as f:
+    long_description = f.read()
+
 setup(
     name='exabyte-api-client',
+    version='2020.10.19',
     description='Exabyte Python Client for RESTful API',
-    version='1.0.0',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url='http://github.com/Exabyte-io/exabyte-api-client',
     author='Exabyte Inc.',
     author_email='info@exabyte.io',
     packages=find_packages(exclude=['tests*']),
     install_requires=[
-        'mock==1.3.0',
         'requests==2.20.1'
     ],
+    extras_require={
+        "test": [
+            "mock==1.3.0",
+        ],
+    },
+    python_requires='>=3.6',
     classifiers=[
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development',

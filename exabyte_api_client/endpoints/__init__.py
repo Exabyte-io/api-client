@@ -1,6 +1,6 @@
 import json
 
-from lib.http_base import Connection
+from ..utils.http import Connection
 
 
 class BaseEndpoint(object):

@@ -1,5 +1,5 @@
-import urlparse
 import requests
+import urllib.parse
 
 
 class BaseConnection(object):
@@ -143,5 +143,5 @@ class Connection(BaseConnection):
             data (dict): the body to attach to the request.
             params (dict): URL parameters to append to the URL.
         """
-        url = urlparse.urljoin(self.preamble, endpoint_path)
+        url = urllib.parse.urljoin(self.preamble, endpoint_path)
         super(Connection, self).request(method, url, params, data, headers)

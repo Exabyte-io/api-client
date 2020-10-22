@@ -1,5 +1,5 @@
-from endpoints.bank_entity import BankEntityEndpoints
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
+from .bank_entity import BankEntityEndpoints
+from .enums import DEFAULT_API_VERSION, SECURE
 
 
 class BankWorkflowEndpoints(BankEntityEndpoints):

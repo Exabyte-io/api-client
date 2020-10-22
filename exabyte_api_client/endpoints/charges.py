@@ -1,11 +1,10 @@
-from endpoints.entity import EntityEndpoint
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.default import DefaultableEntityEndpointsMixin
+from .entity import EntityEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
 
 
-class ProjectEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
+class ChargeEndpoints(EntityEndpoint):
     """
-    Project endpoints.
+    Charge endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -25,8 +24,8 @@ class ProjectEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(ProjectEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'projects'
+        super(ChargeEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
+        self.name = 'charges'
 
     def delete(self, id_):
         raise NotImplemented
@@ -36,3 +35,6 @@ class ProjectEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
 
     def create(self, config):
         raise NotImplemented
+
+    def get_by_job(self, job):
+        return next(iter(self.list(query={"jid": job["compute"]["cluster"]["jid"]})), None)

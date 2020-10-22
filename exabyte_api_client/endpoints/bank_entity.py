@@ -1,10 +1,10 @@
-from endpoints.entity import EntityEndpoint
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
+from .entity import EntityEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
 
 
-class ChargeEndpoints(EntityEndpoint):
+class BankEntityEndpoints(EntityEndpoint):
     """
-    Charge endpoints.
+    Bank Entity endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -18,14 +18,10 @@ class ChargeEndpoints(EntityEndpoint):
 
     Attributes:
         name (str): endpoint name.
-        user_id (str): user ID.
-        auth_token (str): authentication token.
-        headers (dict): default HTTP headers.
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(ChargeEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'charges'
+        super(BankEntityEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
 
     def delete(self, id_):
         raise NotImplemented
@@ -36,5 +32,16 @@ class ChargeEndpoints(EntityEndpoint):
     def create(self, config):
         raise NotImplemented
 
-    def get_by_job(self, job):
-        return next(iter(self.list(query={"jid": job["compute"]["cluster"]["jid"]})), None)
+    def copy(self, id_, account_id=None):
+        """
+        Copies a bank entity with given ID into the account.
+
+        Args:
+            id_ (str): bank entity ID.
+            account_id (str): ID of account to copy the bank entity into.
+
+        Returns:
+             dict: new entity.
+        """
+        params = {"accountId": account_id}
+        return self.request('POST', '/'.join((self.name, id_, "copy")), params=params, headers=self.headers)
