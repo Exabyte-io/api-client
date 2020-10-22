@@ -1,6 +1,6 @@
 import json
 
-from exabyte_api_client.utils.http import Connection
+from ..utils.http import Connection
 
 
 class BaseEndpoint(object):
