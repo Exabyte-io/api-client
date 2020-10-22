@@ -1,5 +1,5 @@
-from endpoints.entity import EntityEndpoint
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
+from .entity import EntityEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
 
 
 class BasePropertiesEndpoints(EntityEndpoint):

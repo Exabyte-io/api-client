@@ -1,0 +1,40 @@
+name: Python package integration tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        pip install -r requirements-dev.txt --no-deps
+
+    - name: Integration tests
+      run: |
+        python -m unittest discover --verbose --catch --start-directory tests/integration
+      env:
+        TEST_HOST: platform.exabyte.io
+        TEST_PORT: 443
+        TEST_ACCOUNT_ID: ${{ secrets.DEMO_ACCOUNT_ID }}
+        TEST_AUTH_TOKEN: ${{ secrets.DEMO_AUTH_TOKEN }}
+        TEST_SECURE: true

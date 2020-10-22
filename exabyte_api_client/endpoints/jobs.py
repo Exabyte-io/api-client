@@ -1,8 +1,8 @@
 import json
 
-from endpoints.entity import EntityEndpoint
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.set import EntitySetEndpointsMixin
+from .entity import EntityEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
+from .mixins.set import EntitySetEndpointsMixin
 
 
 class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
@@ -83,7 +83,8 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             "name": name
         }
 
-        if compute: config.update({"compute": compute})
+        if compute:
+            config.update({"compute": compute})
         if is_multi_material:
             config.update({"_materials": [{"_id": id} for id in material_ids]})
         else:

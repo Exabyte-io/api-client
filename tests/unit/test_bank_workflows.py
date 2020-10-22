@@ -1,7 +1,6 @@
 import mock
-
+from exabyte_api_client.endpoints.bank_workflows import BankWorkflowEndpoints
 from tests.unit.entity import EntityEndpointsUnitTest
-from endpoints.bank_workflows import BankWorkflowEndpoints
 
 
 class EndpointWorkflowsBankUnitTest(EntityEndpointsUnitTest):

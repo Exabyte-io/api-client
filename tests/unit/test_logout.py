@@ -1,6 +1,6 @@
 import mock
 
-from endpoints.logout import LogoutEndpoint
+from exabyte_api_client.endpoints.logout import LogoutEndpoint
 from tests.unit import EndpointBaseUnitTest
 
 
