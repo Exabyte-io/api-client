@@ -1,6 +1,6 @@
 import urllib.parse
 
-from endpoints.enums import MATERIALSPROJECT_HOST, MATERIALSPROJECT_PORT, MATERIALSPROJECT_VERSION
+from ..endpoints.enums import MATERIALSPROJECT_HOST, MATERIALSPROJECT_PORT, MATERIALSPROJECT_VERSION
 
 
 def get_materialsproject_url(material_id):

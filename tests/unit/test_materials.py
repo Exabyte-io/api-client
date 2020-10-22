@@ -1,6 +1,6 @@
 import mock
 
-from endpoints.materials import MaterialEndpoints
+from exabyte_api_client.endpoints.materials import MaterialEndpoints
 from tests.unit.entity import EntityEndpointsUnitTest
 
 

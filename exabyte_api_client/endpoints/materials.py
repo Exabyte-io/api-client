@@ -1,10 +1,10 @@
 import json
-from endpoints.entity import EntityEndpoint
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.http.http_base import BaseConnection
-from endpoints.mixins.default import DefaultableEntityEndpointsMixin
-from endpoints.mixins.set import EntitySetEndpointsMixin
-from endpoints.utils import get_materialsproject_url
+from .entity import EntityEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
+from exabyte_api_client.utils.http import BaseConnection
+from .mixins.default import DefaultableEntityEndpointsMixin
+from .mixins.set import EntitySetEndpointsMixin
+from ..utils.materials import get_materialsproject_url
 
 
 class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin, EntityEndpoint):

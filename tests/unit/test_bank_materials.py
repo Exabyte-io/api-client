@@ -1,5 +1,5 @@
 import mock
-from endpoints.bank_materials import BankMaterialEndpoints
+from exabyte_api_client.endpoints.bank_materials import BankMaterialEndpoints
 from tests.unit.entity import EntityEndpointsUnitTest
 
 

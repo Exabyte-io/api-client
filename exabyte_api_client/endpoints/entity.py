@@ -1,7 +1,7 @@
 import json
 
-from endpoints import BaseEndpoint
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
+from . import BaseEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
 
 
 class EntityEndpoint(BaseEndpoint):

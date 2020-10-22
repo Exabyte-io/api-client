@@ -1,6 +1,6 @@
 import mock
 
-from endpoints.jobs import JobEndpoints
+from exabyte_api_client.endpoints.jobs import JobEndpoints
 from tests.unit.entity import EntityEndpointsUnitTest
 
 

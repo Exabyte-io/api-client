@@ -1,10 +1,10 @@
-from endpoints.bank_entity import BankEntityEndpoints
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
+from . import BaseEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
 
 
-class BankMaterialEndpoints(BankEntityEndpoints):
+class LogoutEndpoint(BaseEndpoint):
     """
-    Bank material endpoints.
+    Logout endpoint.
 
     Args:
         host (str): Exabyte API hostname.
@@ -18,8 +18,16 @@ class BankMaterialEndpoints(BankEntityEndpoints):
 
     Attributes:
         name (str): endpoint name.
+        headers (dict): default HTTP headers.
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(BankMaterialEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'bank-materials'
+        super(LogoutEndpoint, self).__init__(host, port, version, secure, **kwargs)
+        self.name = 'logout'
+        self.headers = self.get_headers(account_id, auth_token)
+
+    def logout(self):
+        """
+        Deletes current API token.
+        """
+        return self.request('POST', self.name, headers=self.headers)

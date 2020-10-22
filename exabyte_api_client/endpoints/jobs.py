@@ -1,8 +1,8 @@
 import json
 
-from endpoints.entity import EntityEndpoint
-from endpoints.enums import DEFAULT_API_VERSION, SECURE
-from endpoints.mixins.set import EntitySetEndpointsMixin
+from .entity import EntityEndpoint
+from .enums import DEFAULT_API_VERSION, SECURE
+from .mixins.set import EntitySetEndpointsMixin
 
 
 class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):

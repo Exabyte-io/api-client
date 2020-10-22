@@ -1,7 +1,7 @@
 import datetime
 import time
 
-from endpoints.jobs import JobEndpoints
+from exabyte_api_client.endpoints.jobs import JobEndpoints
 from tests.integration.entity import EntityIntegrationTest
 
 

@@ -1,5 +1,5 @@
 import mock
-from endpoints.refined_properties import RefinedPropertiesEndpoints
+from exabyte_api_client.endpoints.refined_properties import RefinedPropertiesEndpoints
 from tests.unit.entity import EntityEndpointsUnitTest
 
 
