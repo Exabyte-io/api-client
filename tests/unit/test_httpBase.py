@@ -26,7 +26,7 @@ class HTTPBaseUnitTest(EndpointBaseUnitTest):
 
     @mock.patch('requests.sessions.Session.request')
     def test_raise_http_error(self, mock_request):
-        mock_request.return_value = self.mock_response(b'', 401, reason='Unauthorized')
+        mock_request.return_value = self.mock_response('', 401, reason='Unauthorized')
         with self.assertRaises(HTTPError):
             conn = Connection(self.host, self.port, version='2018-10-1', secure=True)
             conn.request('POST', 'login', data={'username': '', 'password': ''})

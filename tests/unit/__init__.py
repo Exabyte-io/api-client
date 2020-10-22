@@ -18,7 +18,7 @@ class EndpointBaseUnitTest(EndpointBaseTest):
 
     def mock_response(self, content, status_code=200, reason='OK'):
         response = Response()
-        response._content = content
+        response._content = content.encode()
         response.status_code = status_code
         response.reason = reason
         return response
