@@ -18,7 +18,7 @@ setup(
     ],
     extras_require={
         "test": [
-            "mock==1.3.0",
+            "mock>=1.3.0",
         ],
     },
     python_requires='>=3.6',
