@@ -71,3 +71,9 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         job = self.create_entity({"compute": self.get_compute_params(notify='abe')})
         self.assertEqual(self.endpoints.get(job['_id'])['_id'], job['_id'])
         self.assertEqual(self.endpoints.get(job['_id'])['compute']['notify'], 'abe')
+
+    def test_list_files(self):
+        job = self.create_entity()
+        self.endpoints.submit(job['_id'])
+        self._wait_for_job_to_finish(job['_id'])
+        self.assertEqual(self.endpoints.list_files(job['_id'])['status'], 'success')
