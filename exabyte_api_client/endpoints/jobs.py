@@ -154,3 +154,16 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         data = json.dumps({"files": files})
         response = self.request('POST', '/'.join((self.name, id_, "presigned-urls")), data=data, headers=self.headers)
         return response["presignedURLs"]
+
+    def list_files(self, id_):
+        """
+        Returns a list of job files.
+
+        Args:
+            id_ (str): job ID.
+
+        Returns:
+            list: ???
+        """
+        response = self.request('GET', '/'.join(('jobs', id_, 'files')), headers=self.headers)
+        return response
