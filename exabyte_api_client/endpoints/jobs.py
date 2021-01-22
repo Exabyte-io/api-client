@@ -163,7 +163,8 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             id_ (str): job ID.
 
         Returns:
-            list: ???
+            list: [{ "key" : str, "size" : int, "bucket" : str, "region" : str,
+                     "provider" : str, "lastModified" : int, "name" : str, "signedURL" : str }]
         """
         response = self.request('GET', '/'.join(('jobs', id_, 'files')), headers=self.headers)
         return response
