@@ -76,4 +76,7 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         job = self.create_entity()
         self.endpoints.submit(job['_id'])
         self._wait_for_job_to_finish(job['_id'])
-        self.assertEqual(self.endpoints.list_files(job['_id'])['status'], 'success')
+        http_response_data = self.endpoints.list_files(job['_id'])
+        self.assertIsInstance(http_response_data, list)
+        self.assertGreater(len(http_response_data), 0)
+        self.assertIsInstance(http_response_data[0], dict)
