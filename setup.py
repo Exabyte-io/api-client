@@ -5,7 +5,7 @@ with open('./README.md', 'r') as f:
 
 setup(
     name='exabyte-api-client',
-    version='2021.01.22',
+    version='2021.01.18',
     description='Exabyte Python Client for RESTful API',
     long_description=long_description,
     long_description_content_type='text/markdown',
