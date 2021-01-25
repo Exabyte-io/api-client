@@ -1,11 +1,13 @@
 from setuptools import setup, find_packages
+import versioneer
 
 with open('./README.md', 'r') as f:
     long_description = f.read()
 
 setup(
     name='exabyte-api-client',
-    version='2021.01.18',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description='Exabyte Python Client for RESTful API',
     long_description=long_description,
     long_description_content_type='text/markdown',
