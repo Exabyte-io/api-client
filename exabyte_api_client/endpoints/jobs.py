@@ -168,3 +168,17 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         """
         response = self.request('GET', '/'.join(('jobs', id_, 'files')), headers=self.headers)
         return response
+
+    def insert_output_files(self, id_, data):
+        """
+        Inserts job output files.
+        Implements https://docs.exabyte.io/api/#!/Job/post_jobs_id_output_files
+
+        Args:
+            id_ (str): job ID.
+
+        Returns:
+            None
+
+        """
+        self.request("POST", "/".join(("jobs", id_, "output-files")), data=data, headers=self.headers)
