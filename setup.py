@@ -5,7 +5,10 @@ with open('./README.md', 'r') as f:
 
 setup(
     name='exabyte-api-client',
-    version='2021.01.18.1',
+    setup_requires=['setuptools_scm'],
+    use_scm_version={
+        'version_scheme': 'post-release',
+    },
     description='Exabyte Python Client for RESTful API',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -18,6 +21,7 @@ setup(
     ],
     extras_require={
         "test": [
+            "coverage[toml]>=5.3",
             "mock>=1.3.0",
         ],
     },

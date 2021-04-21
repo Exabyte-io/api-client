@@ -1,4 +1,10 @@
-.idea/
+*.pyc
+.idea
+Vagrantfile
+.vagrant
+htmlcov_*
+coverage_*.xml
+venv*/
 
 ### See: https://raw.githubusercontent.com/github/gitignore/master/Python.gitignore
 # Byte-compiled / optimized / DLL files
