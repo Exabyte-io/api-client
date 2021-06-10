@@ -28,7 +28,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
         Returns the default entity config.
         Override upon inheritance.
         """
-        raise NotImplemented
+        raise NotImplementedError
 
     def create_entity(self, kwargs=None):
         entity = self.get_default_config()

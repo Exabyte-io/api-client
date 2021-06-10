@@ -28,10 +28,10 @@ class RefinedPropertiesEndpoints(BasePropertiesEndpoints):
         self.name = 'refined-properties'
 
     def delete(self, id_):
-        raise NotImplemented
+        raise NotImplementedError
 
     def update(self, id_, modifier):
-        raise NotImplemented
+        raise NotImplementedError
 
     def create(self, config):
-        raise NotImplemented
+        raise NotImplementedError

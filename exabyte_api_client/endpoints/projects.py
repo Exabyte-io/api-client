@@ -29,10 +29,10 @@ class ProjectEndpoints(DefaultableEntityEndpointsMixin, EntityEndpoint):
         self.name = 'projects'
 
     def delete(self, id_):
-        raise NotImplemented
+        raise NotImplementedError
 
     def update(self, id_, modifier):
-        raise NotImplemented
+        raise NotImplementedError
 
     def create(self, config):
-        raise NotImplemented
+        raise NotImplementedError
