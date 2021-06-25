@@ -47,7 +47,7 @@ class RawPropertiesEndpoints(BasePropertiesEndpoints):
         self.name = 'raw-properties'
 
     def delete(self, id_):
-        raise NotImplemented
+        raise NotImplementedError
 
     def update(self, id_, modifier):
-        raise NotImplemented
+        raise NotImplementedError

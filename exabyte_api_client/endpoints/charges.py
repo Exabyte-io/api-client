@@ -28,13 +28,13 @@ class ChargeEndpoints(EntityEndpoint):
         self.name = 'charges'
 
     def delete(self, id_):
-        raise NotImplemented
+        raise NotImplementedError
 
     def update(self, id_, modifier):
-        raise NotImplemented
+        raise NotImplementedError
 
     def create(self, config):
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_by_job(self, job):
         return next(iter(self.list(query={"jid": job["compute"]["cluster"]["jid"]})), None)
