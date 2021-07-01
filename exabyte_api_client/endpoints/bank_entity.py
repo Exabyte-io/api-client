@@ -24,13 +24,13 @@ class BankEntityEndpoints(EntityEndpoint):
         super(BankEntityEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
 
     def delete(self, id_):
-        raise NotImplemented
+        raise NotImplementedError
 
     def update(self, id_, modifier):
-        raise NotImplemented
+        raise NotImplementedError
 
     def create(self, config):
-        raise NotImplemented
+        raise NotImplementedError
 
     def copy(self, id_, account_id=None):
         """
