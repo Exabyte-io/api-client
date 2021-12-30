@@ -28,11 +28,16 @@ jobs:
           token: ${{ secrets.BOT_GITHUB_TOKEN }}
           path: actions
 
-      - name: Run tests
+      - name: Run unit tests
         uses: ./actions/py/test
         with:
           python-version: ${{ matrix.python-version }}
           unit-test-directory: tests/unit
+
+      - name: Run integration tests
+        if: matrix.python-version == '3.8'
+        uses: ./actions/py/test
+        with:
           integration-test-directory: tests/integration
         env:
           TEST_HOST: platform.exabyte.io
