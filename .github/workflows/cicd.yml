@@ -34,6 +34,12 @@ jobs:
           python-version: ${{ matrix.python-version }}
           unit-test-directory: tests/unit
           integration-test-directory: tests/integration
+        env:
+          TEST_HOST: platform.exabyte.io
+          TEST_PORT: 443
+          TEST_ACCOUNT_ID: ${{ secrets.DEMO_ACCOUNT_ID }}
+          TEST_AUTH_TOKEN: ${{ secrets.DEMO_AUTH_TOKEN }}
+          TEST_SECURE: true
 
 
   publish:
