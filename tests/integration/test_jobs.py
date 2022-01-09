@@ -9,6 +9,7 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
     """
     Job endpoints integration tests.
     """
+    KNOWN_COMPLETED_JOB_ID = "9gyhfncWDhnSyzALv"
 
     def __init__(self, *args, **kwargs):
         super(JobEndpointsIntegrationTest, self).__init__(*args, **kwargs)
@@ -73,10 +74,9 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         self.assertEqual(self.endpoints.get(job['_id'])['compute']['notify'], 'abe')
 
     def test_list_files(self):
-        job = self.create_entity()
-        self.endpoints.submit(job['_id'])
-        self._wait_for_job_to_finish(job["_id"])
-        http_response_data = self.endpoints.list_files(job['_id'])
+        http_response_data = self.endpoints.list_files(
+            self.KNOWN_COMPLETED_JOB_ID
+        )
         self.assertIsInstance(http_response_data, list)
         self.assertGreater(len(http_response_data), 0)
         self.assertIsInstance(http_response_data[0], dict)
