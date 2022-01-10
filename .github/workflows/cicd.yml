@@ -1,0 +1,73 @@
+name: Continuous Testing and Publication from 'dev'
+
+on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  run-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Checkout actions repository
+        uses: actions/checkout@v2
+        with:
+          repository: Exabyte-io/actions
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          path: actions
+
+      - name: Run unit tests
+        uses: ./actions/py/test
+        with:
+          python-version: ${{ matrix.python-version }}
+          unit-test-directory: tests/unit
+
+      - name: Run integration tests
+        if: matrix.python-version == '3.8'
+        uses: ./actions/py/test
+        with:
+          integration-test-directory: tests/integration
+        env:
+          TEST_HOST: platform.exabyte.io
+          TEST_PORT: 443
+          TEST_ACCOUNT_ID: ${{ secrets.DEMO_ACCOUNT_ID }}
+          TEST_AUTH_TOKEN: ${{ secrets.DEMO_AUTH_TOKEN }}
+          TEST_SECURE: true
+
+
+  publish:
+    needs: run-tests
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'dev'
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Checkout actions repository
+        uses: actions/checkout@v2
+        with:
+          repository: Exabyte-io/actions
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          path: actions
+
+      - name: Publish release
+        uses: ./actions/py/publish
+        with:
+          python-version: 3.x
+          github-token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          pypi-username: ${{ secrets.PYPI_USERNAME }}
+          pypi-password: ${{ secrets.PYPI_PASSWORD }}

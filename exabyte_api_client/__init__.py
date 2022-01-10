@@ -1,3 +1,8 @@
+try:
+    from ._version import version as __version__
+except ModuleNotFoundError:
+    __version__ = None
+
 from exabyte_api_client.endpoints.bank_materials import BankMaterialEndpoints
 from exabyte_api_client.endpoints.bank_workflows import BankWorkflowEndpoints
 from exabyte_api_client.endpoints.jobs import JobEndpoints
