@@ -125,7 +125,7 @@ class Connection(BaseConnection):
             timeout (int): session timeout in seconds.
 
     Attributes:
-        preamble (str): common part of URL endpoints, e.g. https://platform.exabyte.io:4000/api/v1/.
+        preamble (str): common part of URL endpoints, e.g. https://platform.mat3ra.com:4000/api/v1/.
     """
 
     def __init__(self, host, port, version, secure, **kwargs):

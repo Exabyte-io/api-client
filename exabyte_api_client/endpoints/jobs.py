@@ -172,7 +172,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
     def insert_output_files(self, id_, data):
         """
         Inserts job output files.
-        Implements https://docs.exabyte.io/api/#!/Job/post_jobs_id_output_files
+        Implements https://docs.mat3ra.com/api/#!/Job/post_jobs_id_output_files
 
         Args:
             id_ (str): job ID.

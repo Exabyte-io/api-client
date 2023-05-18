@@ -1,6 +1,6 @@
 [![PyPI version](https://badge.fury.io/py/exabyte-api-client.svg)](https://badge.fury.io/py/exabyte-api-client)
 
-This package provides access to Exabyte.io [RESTful API](https://docs.exabyte.io/rest-api/overview/).
+This package provides access to Exabyte.io [RESTful API](https://docs.mat3ra.com/rest-api/overview/).
 
 # Installation
 
