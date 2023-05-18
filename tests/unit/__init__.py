@@ -12,7 +12,7 @@ class EndpointBaseUnitTest(EndpointBaseTest):
         super(EndpointBaseUnitTest, self).__init__(*args, **kwargs)
         self.port = 4000
         self.version = "2018-10-01"
-        self.host = 'platform.exabyte.io'
+        self.host = 'platform.mat3ra.com'
         self.account_id = 'ubxMkAyx37Rjn8qK9'
         self.auth_token = 'XihOnUA8EqytSui1icz6fYhsJ2tUsJGGTlV03upYPSF'
 
