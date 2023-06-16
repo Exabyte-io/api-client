@@ -24,7 +24,7 @@ class LoginEndpoint(BaseEndpoint):
 
     def __init__(self, host, port, username, password, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(LoginEndpoint, self).__init__(host, port, version, secure, **kwargs)
-        self.name = 'login'
+        self.name = "login"
         self.username = username
         self.password = password
 
@@ -35,8 +35,8 @@ class LoginEndpoint(BaseEndpoint):
         Returns:
              dict
         """
-        data = {'username': self.username, 'password': self.password}
-        return self.request('POST', self.name, data=data)
+        data = {"username": self.username, "password": self.password}
+        return self.request("POST", self.name, data=data)
 
     @staticmethod
     def get_endpoint_options(host, port, username, password, version=DEFAULT_API_VERSION, secure=SECURE):

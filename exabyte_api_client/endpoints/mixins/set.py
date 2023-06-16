@@ -16,8 +16,8 @@ class EntitySetEndpointsMixin(object):
         Returns:
              dict: new entity set.
         """
-        path_ = '/'.join((self.name, "create-set"))
-        return self.request('PUT', path_, data=json.dumps(config), headers=self.headers)
+        path_ = "/".join((self.name, "create-set"))
+        return self.request("PUT", path_, data=json.dumps(config), headers=self.headers)
 
     def move_to_set(self, _id, old_set_id, new_set_id):
         """
@@ -29,4 +29,4 @@ class EntitySetEndpointsMixin(object):
             new_set_id (str): new entity set ID.
         """
         params = {"oldSetId": old_set_id, "newSetId": new_set_id}
-        self.request('POST', '/'.join((self.name, _id, "move-to-set")), params=params, headers=self.headers)
+        self.request("POST", "/".join((self.name, _id, "move-to-set")), params=params, headers=self.headers)

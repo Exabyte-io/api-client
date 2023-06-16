@@ -38,5 +38,5 @@ def flatten_material(material):
         lattice["c"],
         lattice["alpha"],
         lattice["beta"],
-        lattice["gamma"]
+        lattice["gamma"],
     ]

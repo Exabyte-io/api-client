@@ -18,7 +18,7 @@ class BaseConnection(object):
     def __init__(self, **kwargs):
         self.response = None
         self.session = requests.Session()
-        self.session.timeout = kwargs.get('timeout', 60)
+        self.session.timeout = kwargs.get("timeout", 60)
 
     def request(self, method, url, params=None, data=None, headers=None):
         """
@@ -129,7 +129,7 @@ class Connection(BaseConnection):
     """
 
     def __init__(self, host, port, version, secure, **kwargs):
-        self.preamble = '{}://{}:{}/api/{}/'.format('https' if secure else 'http', host, port, version)
+        self.preamble = "{}://{}:{}/api/{}/".format("https" if secure else "http", host, port, version)
         super(Connection, self).__init__(**kwargs)
 
     def request(self, method, endpoint_path, params=None, data=None, headers=None):

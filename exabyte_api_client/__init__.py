@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 try:
     from ._version import version as __version__
 except ModuleNotFoundError:

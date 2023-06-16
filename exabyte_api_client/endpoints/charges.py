@@ -25,7 +25,7 @@ class ChargeEndpoints(EntityEndpoint):
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(ChargeEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'charges'
+        self.name = "charges"
 
     def delete(self, id_):
         raise NotImplementedError

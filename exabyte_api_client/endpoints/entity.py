@@ -40,7 +40,7 @@ class EntityEndpoint(BaseEndpoint):
             list[dict]
         """
         params = {"query": json.dumps(query or {}), "projection": json.dumps(projection or {})}
-        return self.request('GET', self.name, params=params, headers=self.headers)
+        return self.request("GET", self.name, params=params, headers=self.headers)
 
     def get(self, id_):
         """
@@ -52,7 +52,7 @@ class EntityEndpoint(BaseEndpoint):
         Returns:
              dict: entity.
         """
-        return self.request('GET', '/'.join((self.name, id_)), headers=self.headers)
+        return self.request("GET", "/".join((self.name, id_)), headers=self.headers)
 
     def delete(self, id_):
         """
@@ -61,7 +61,7 @@ class EntityEndpoint(BaseEndpoint):
         Args:
             id_ (str): entity ID.
         """
-        return self.request('DELETE', '/'.join((self.name, id_)), headers=self.headers)
+        return self.request("DELETE", "/".join((self.name, id_)), headers=self.headers)
 
     def update(self, id_, modifier):
         """
@@ -74,7 +74,7 @@ class EntityEndpoint(BaseEndpoint):
         Returns:
              dict: updated entity.
         """
-        return self.request('PATCH', '/'.join((self.name, id_)), data=json.dumps(modifier), headers=self.headers)
+        return self.request("PATCH", "/".join((self.name, id_)), data=json.dumps(modifier), headers=self.headers)
 
     def create(self, config):
         """
@@ -86,7 +86,7 @@ class EntityEndpoint(BaseEndpoint):
         Returns:
              dict: new entity.
         """
-        return self.request('PUT', '/'.join((self.name, "create")), data=json.dumps(config), headers=self.headers)
+        return self.request("PUT", "/".join((self.name, "create")), data=json.dumps(config), headers=self.headers)
 
     def copy(self, id_):
         """
@@ -98,4 +98,4 @@ class EntityEndpoint(BaseEndpoint):
         Returns:
              dict: new entity.
         """
-        return self.request('POST', '/'.join((self.name, id_, "copy")), headers=self.headers)
+        return self.request("POST", "/".join((self.name, id_, "copy")), headers=self.headers)
