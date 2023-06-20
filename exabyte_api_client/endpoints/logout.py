@@ -23,11 +23,11 @@ class LogoutEndpoint(BaseEndpoint):
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(LogoutEndpoint, self).__init__(host, port, version, secure, **kwargs)
-        self.name = 'logout'
+        self.name = "logout"
         self.headers = self.get_headers(account_id, auth_token)
 
     def logout(self):
         """
         Deletes current API token.
         """
-        return self.request('POST', self.name, headers=self.headers)
+        return self.request("POST", self.name, headers=self.headers)

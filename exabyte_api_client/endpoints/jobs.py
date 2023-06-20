@@ -25,7 +25,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(JobEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'jobs'
+        self.name = "jobs"
 
     def submit(self, id_):
         """
@@ -34,7 +34,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         Args:
             id_ (str): job ID.
         """
-        self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
+        self.request("POST", "/".join((self.name, id_, "submit")), headers=self.headers)
 
     def purge(self, id_):
         """
@@ -43,7 +43,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         Args:
             id_ (str): job ID.
         """
-        self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
+        self.request("POST", "/".join((self.name, id_, "submit")), headers=self.headers)
 
     def terminate(self, id_):
         """
@@ -52,7 +52,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         Args:
             id_ (str): job ID.
         """
-        self.request('POST', '/'.join((self.name, id_, "submit")), headers=self.headers)
+        self.request("POST", "/".join((self.name, id_, "submit")), headers=self.headers)
 
     def get_config(self, material_ids, workflow_id, project_id, owner_id, name, compute=None, is_multi_material=False):
         """
@@ -71,16 +71,10 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             dict
         """
         config = {
-            "_project": {
-                "_id": project_id
-            },
-            "workflow": {
-                "_id": workflow_id
-            },
-            "owner": {
-                "_id": owner_id
-            },
-            "name": name
+            "_project": {"_id": project_id},
+            "workflow": {"_id": workflow_id},
+            "owner": {"_id": owner_id},
+            "name": name,
         }
 
         if compute:
@@ -112,10 +106,8 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             "queue": queue,
             "timeLimit": time_limit,
             "notify": notify,
-            "cluster": {
-                "fqdn": cluster
-            },
-            "arguments": {}
+            "cluster": {"fqdn": cluster},
+            "arguments": {},
         }
 
     def create_by_ids(self, materials, workflow_id, project_id, owner_id, prefix, compute=None):
@@ -152,7 +144,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             list: [{"file": "", "URL": ""}]
         """
         data = json.dumps({"files": files})
-        response = self.request('POST', '/'.join((self.name, id_, "presigned-urls")), data=data, headers=self.headers)
+        response = self.request("POST", "/".join((self.name, id_, "presigned-urls")), data=data, headers=self.headers)
         return response["presignedURLs"]
 
     def list_files(self, id_):
@@ -166,7 +158,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             list: [{ "key" : str, "size" : int, "bucket" : str, "region" : str,
                      "provider" : str, "lastModified" : int, "name" : str, "signedURL" : str }]
         """
-        response = self.request('GET', '/'.join(('jobs', id_, 'files')), headers=self.headers)
+        response = self.request("GET", "/".join(("jobs", id_, "files")), headers=self.headers)
         return response
 
     def insert_output_files(self, id_, data):

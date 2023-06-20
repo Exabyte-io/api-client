@@ -9,6 +9,7 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
     """
     Job endpoints integration tests.
     """
+
     KNOWN_COMPLETED_JOB_ID = "9gyhfncWDhnSyzALv"
 
     def __init__(self, *args, **kwargs):
@@ -20,17 +21,11 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         Returns the default entity config.
         Override upon inheritance.
         """
-        now_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+        now_time = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         return {"name": "API-CLIENT TEST JOB {}".format(now_time)}
 
-    def get_compute_params(self, nodes=1, notify='n', ppn=1, queue='D', time_limit='00:05:00'):
-        return {
-            "nodes": nodes,
-            "notify": notify,
-            "ppn": ppn,
-            "queue": queue,
-            "timeLimit": time_limit
-        }
+    def get_compute_params(self, nodes=1, notify="n", ppn=1, queue="D", time_limit="00:05:00"):
+        return {"nodes": nodes, "notify": notify, "ppn": ppn, "queue": queue, "timeLimit": time_limit}
 
     def test_list_jobs(self):
         self.list_entities_test()
@@ -58,25 +53,23 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
 
     def test_submit_job_and_wait_to_finish(self):
         job = self.create_entity()
-        self.endpoints.submit(job['_id'])
-        self.assertEqual('submitted', self.endpoints.get(job['_id'])['status'])
+        self.endpoints.submit(job["_id"])
+        self.assertEqual("submitted", self.endpoints.get(job["_id"])["status"])
         self._wait_for_job_to_finish(job["_id"])
 
     def test_create_job_timeLimit(self):
         time_limit = "00:10:00"
         job = self.create_entity({"compute": self.get_compute_params(time_limit=time_limit)})
-        self.assertEqual(self.endpoints.get(job['_id'])['_id'], job['_id'])
-        self.assertEqual(self.endpoints.get(job['_id'])['compute']['timeLimit'], time_limit)
+        self.assertEqual(self.endpoints.get(job["_id"])["_id"], job["_id"])
+        self.assertEqual(self.endpoints.get(job["_id"])["compute"]["timeLimit"], time_limit)
 
     def test_create_job_notify(self):
-        job = self.create_entity({"compute": self.get_compute_params(notify='abe')})
-        self.assertEqual(self.endpoints.get(job['_id'])['_id'], job['_id'])
-        self.assertEqual(self.endpoints.get(job['_id'])['compute']['notify'], 'abe')
+        job = self.create_entity({"compute": self.get_compute_params(notify="abe")})
+        self.assertEqual(self.endpoints.get(job["_id"])["_id"], job["_id"])
+        self.assertEqual(self.endpoints.get(job["_id"])["compute"]["notify"], "abe")
 
     def test_list_files(self):
-        http_response_data = self.endpoints.list_files(
-            self.KNOWN_COMPLETED_JOB_ID
-        )
+        http_response_data = self.endpoints.list_files(self.KNOWN_COMPLETED_JOB_ID)
         self.assertIsInstance(http_response_data, list)
         self.assertGreater(len(http_response_data), 0)
         self.assertIsInstance(http_response_data[0], dict)

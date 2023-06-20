@@ -27,7 +27,7 @@ class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
         super(MaterialEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = 'materials'
+        self.name = "materials"
 
     def import_from_file(self, name, content, owner_id=None, format="poscar", tags=()):
         """
@@ -44,7 +44,7 @@ class MaterialEndpoints(EntitySetEndpointsMixin, DefaultableEntityEndpointsMixin
             dict
         """
         data = {"name": name, "content": content, "format": format, "ownerId": owner_id, "tags": tags}
-        return self.request('POST', "/".join((self.name, "import")), headers=self.headers, data=json.dumps(data))
+        return self.request("POST", "/".join((self.name, "import")), headers=self.headers, data=json.dumps(data))
 
     def import_from_materialsproject(self, api_key, material_ids, owner_id=None, tags=[]):
         """

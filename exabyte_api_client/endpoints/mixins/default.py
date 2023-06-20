@@ -13,4 +13,4 @@ class DefaultableEntityEndpointsMixin(object):
         Returns:
              dict: new entity.
         """
-        self.request('POST', '/'.join((self.name, id_, "set-default")), headers=self.headers)
+        self.request("POST", "/".join((self.name, id_, "set-default")), headers=self.headers)

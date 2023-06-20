@@ -12,7 +12,7 @@ class MaterialEndpointsIntegrationTest(EntityIntegrationTest):
         self.endpoints = MaterialEndpoints(**self.endpoint_kwargs)
 
     def get_default_config(self):
-        return self.get_content_in_json('material.json')
+        return self.get_content_in_json("material.json")
 
     def test_list_materials(self):
         self.list_entities_test()
@@ -31,5 +31,5 @@ class MaterialEndpointsIntegrationTest(EntityIntegrationTest):
 
     def test_get_material_by_formula(self):
         material = self.create_entity()
-        materials = self.endpoints.list(query={"_id": material["_id"], "formula": 'Si'})
-        self.assertIn(material['_id'], [m['_id'] for m in materials])
+        materials = self.endpoints.list(query={"_id": material["_id"], "formula": "Si"})
+        self.assertIn(material["_id"], [m["_id"] for m in materials])
