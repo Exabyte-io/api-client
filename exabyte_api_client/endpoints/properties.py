@@ -21,9 +21,9 @@ class BasePropertiesEndpoints(EntityEndpoint):
         return self.get_band_gap_by_type(job_id, unit_flowchart_id, "direct")
 
 
-class RawPropertiesEndpoints(BasePropertiesEndpoints):
+class PropertiesEndpoints(BasePropertiesEndpoints):
     """
-    RawProperties endpoints.
+    Properties endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -43,8 +43,8 @@ class RawPropertiesEndpoints(BasePropertiesEndpoints):
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(RawPropertiesEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = "raw-properties"
+        super(PropertiesEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
+        self.name = "properties"
 
     def delete(self, id_):
         raise NotImplementedError

@@ -10,7 +10,7 @@ from exabyte_api_client.endpoints.jobs import JobEndpoints
 from exabyte_api_client.endpoints.login import LoginEndpoint
 from exabyte_api_client.endpoints.logout import LogoutEndpoint
 from exabyte_api_client.endpoints.materials import MaterialEndpoints
+from exabyte_api_client.endpoints.metaproperties import MetaPropertiesEndpoints
 from exabyte_api_client.endpoints.projects import ProjectEndpoints
-from exabyte_api_client.endpoints.raw_properties import RawPropertiesEndpoints
-from exabyte_api_client.endpoints.refined_properties import RefinedPropertiesEndpoints
+from exabyte_api_client.endpoints.properties import PropertiesEndpoints
 from exabyte_api_client.endpoints.workflows import WorkflowEndpoints

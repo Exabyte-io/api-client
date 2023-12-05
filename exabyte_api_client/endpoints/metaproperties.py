@@ -1,10 +1,10 @@
 from .enums import DEFAULT_API_VERSION, SECURE
-from .raw_properties import BasePropertiesEndpoints
+from .properties import BasePropertiesEndpoints
 
 
-class RefinedPropertiesEndpoints(BasePropertiesEndpoints):
+class MetaPropertiesEndpoints(BasePropertiesEndpoints):
     """
-    RefinedProperties endpoints.
+    MetaProperties endpoints.
 
     Args:
         host (str): Exabyte API hostname.
@@ -24,8 +24,8 @@ class RefinedPropertiesEndpoints(BasePropertiesEndpoints):
     """
 
     def __init__(self, host, port, account_id, auth_token, version=DEFAULT_API_VERSION, secure=SECURE, **kwargs):
-        super(RefinedPropertiesEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
-        self.name = "refined-properties"
+        super(MetaPropertiesEndpoints, self).__init__(host, port, account_id, auth_token, version, secure, **kwargs)
+        self.name = "metaproperties"
 
     def delete(self, id_):
         raise NotImplementedError
