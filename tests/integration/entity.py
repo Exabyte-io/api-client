@@ -37,8 +37,9 @@ class EntityIntegrationTest(BaseIntegrationTest):
         entity.update(kwargs or {})
         entity["tags"] = entity.get("tags", [])
         entity["tags"].append("INTEGRATION-TEST")
-        self.entity_id = entity["_id"]
-        return self.endpoints.create(entity)
+        created_entity = self.endpoints.create(entity)
+        self.entity_id = created_entity["_id"]
+        return created_entity
 
     def list_entities_test(self):
         entity = self.create_entity()
