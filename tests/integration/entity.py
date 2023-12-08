@@ -1,5 +1,7 @@
 import time
 
+from requests.exceptions import HTTPError
+
 from tests.integration import BaseIntegrationTest
 
 
@@ -21,10 +23,21 @@ class EntityIntegrationTest(BaseIntegrationTest):
         return {"tags": "INTEGRATION-TEST"}
 
     def tearDown(self):
-        """Delete only the current test entity if it still exists after test."""
+        """Delete only the current test entity if it still exists after test.
+
+        Warn if the filtering fails, failsafe attempt to delete the entity anyways.
+        """
         tagged_test_entity_id_list = [["_id"] for e in self.endpoints.list(query=self.entities_selector())]
-        if self.entity_id in tagged_test_entity_id_list:
+        try:
+            if self.entity_id not in tagged_test_entity_id_list:
+                print(
+                    f"WARNING: Entity with ID {self.entity_id} not found in the list of tagged entities:"
+                    f" {tagged_test_entity_id_list}"
+                )
             self.endpoints.delete(self.entity_id)
+
+        except HTTPError as e:
+            print(f"Failed to delete entity with ID {self.entity_id}: {e}")
 
     def get_default_config(self):
         """
