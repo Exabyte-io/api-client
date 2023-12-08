@@ -21,7 +21,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
         return {"tags": "INTEGRATION-TEST"}
 
     def tearDown(self):
-        print([e for e in self.endpoints.list(query=self.entities_selector())])
+        [print(e["_id"]) for e in self.endpoints.list(query=self.entities_selector())]
         for entity in [e for e in self.endpoints.list(query=self.entities_selector())]:
             print(entity)
             self.endpoints.delete(entity["_id"])
@@ -59,6 +59,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
         entity = self.create_entity()
         print(self.entity)
         self.endpoints.delete(entity["_id"])
+        print(f"DELETED: {entity['_id']}")
         self.assertNotIn(entity["_id"], [e["_id"] for e in self.endpoints.list(query=self.entities_selector())])
 
     def update_entity_test(self):
