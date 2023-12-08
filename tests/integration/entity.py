@@ -11,7 +11,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
     def __init__(self, *args, **kwargs):
         super(EntityIntegrationTest, self).__init__(*args, **kwargs)
         self.endpoints = None
-        self.entity = None
+        self.entity_id: str = ""
 
     def entities_selector(self):
         """
@@ -22,9 +22,8 @@ class EntityIntegrationTest(BaseIntegrationTest):
 
     def tearDown(self):
         [print(e["_id"]) for e in self.endpoints.list(query=self.entities_selector())]
-        for entity in [e for e in self.endpoints.list(query=self.entities_selector())]:
-            print(entity)
-            self.endpoints.delete(entity["_id"])
+        # for entity in [e for e in self.endpoints.list(query=self.entities_selector())]:
+        self.endpoints.delete(self.entity_id)
 
     def get_default_config(self):
         """
@@ -38,7 +37,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
         entity.update(kwargs or {})
         entity["tags"] = entity.get("tags", [])
         entity["tags"].append("INTEGRATION-TEST")
-        self.entity = entity
+        self.entity_id = entity["_id"]
         return self.endpoints.create(entity)
 
     def list_entities_test(self):
@@ -57,7 +56,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
 
     def delete_entity_test(self):
         entity = self.create_entity()
-        print(self.entity)
+        print(self.entity_id)
         self.endpoints.delete(entity["_id"])
         print(f"DELETED: {entity['_id']}")
         self.assertNotIn(entity["_id"], [e["_id"] for e in self.endpoints.list(query=self.entities_selector())])
