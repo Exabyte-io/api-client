@@ -35,6 +35,7 @@ class BaseEndpoint(object):
             json: response
         """
         with self.conn:
+            print(method, endpoint_path, params, data, headers)
             self.conn.request(method, endpoint_path, params, data, headers)
             response = self.conn.json()
             if response["status"] != "success":
