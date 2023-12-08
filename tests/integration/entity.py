@@ -27,7 +27,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
 
         Warn if the filtering fails, failsafe attempt to delete the entity anyways.
         """
-        tagged_test_entity_id_list = [["_id"] for e in self.endpoints.list(query=self.entities_selector())]
+        tagged_test_entity_id_list = [e["_id"] for e in self.endpoints.list(query=self.entities_selector())]
         try:
             if self.entity_id not in tagged_test_entity_id_list:
                 print(
@@ -37,7 +37,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
             self.endpoints.delete(self.entity_id)
 
         except HTTPError as e:
-            print(f"Failed to delete entity with ID {self.entity_id}: {e}")
+            print(f"WARNING: Failed to delete entity with ID {self.entity_id}: {e}")
 
     def get_default_config(self):
         """
