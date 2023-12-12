@@ -49,8 +49,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
     def create_entity(self, kwargs=None):
         entity = self.get_default_config()
         entity.update(kwargs or {})
-        entity["tags"] = entity.get("tags", [])
-        entity["tags"].append("INTEGRATION-TEST")
+        entity.setdefault("tags", []).append("INTEGRATION-TEST")
         created_entity = self.endpoints.create(entity)
         self.entity_id = created_entity["_id"]
         return created_entity
@@ -68,6 +67,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
         entity = self.create_entity({"name": name})
         self.assertEqual(entity["name"], name)
         self.assertIsNotNone(entity["_id"])
+        self.assertIn(entity["tags"], "INTEGRATION-TEST")
 
     def delete_entity_test(self):
         entity = self.create_entity()
