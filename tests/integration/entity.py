@@ -67,7 +67,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
         entity = self.create_entity({"name": name})
         self.assertEqual(entity["name"], name)
         self.assertIsNotNone(entity["_id"])
-        self.assertIn(entity["tags"], "INTEGRATION-TEST")
+        self.assertIn("INTEGRATION-TEST", entity["tags"])
 
     def delete_entity_test(self):
         entity = self.create_entity()
