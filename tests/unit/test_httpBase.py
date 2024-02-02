@@ -1,4 +1,4 @@
-import mock
+from unittest import mock
 from exabyte_api_client.utils.http import Connection
 from requests.exceptions import HTTPError
 from tests.unit import EndpointBaseUnitTest

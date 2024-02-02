@@ -1,4 +1,4 @@
-import mock
+from unittest import mock
 
 from exabyte_api_client.endpoints.login import LoginEndpoint
 from tests.unit import EndpointBaseUnitTest

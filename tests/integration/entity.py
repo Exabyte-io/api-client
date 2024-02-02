@@ -1,5 +1,7 @@
 import time
 
+from requests.exceptions import HTTPError
+
 from tests.integration import BaseIntegrationTest
 
 
@@ -11,6 +13,7 @@ class EntityIntegrationTest(BaseIntegrationTest):
     def __init__(self, *args, **kwargs):
         super(EntityIntegrationTest, self).__init__(*args, **kwargs)
         self.endpoints = None
+        self.entity_id: str = ""
 
     def entities_selector(self):
         """
@@ -20,8 +23,21 @@ class EntityIntegrationTest(BaseIntegrationTest):
         return {"tags": "INTEGRATION-TEST"}
 
     def tearDown(self):
-        for entity in [e for e in self.endpoints.list(query=self.entities_selector())]:
-            self.endpoints.delete(entity["_id"])
+        """Delete only the current test entity if it still exists after test.
+
+        Warn if the filtering fails, failsafe attempt to delete the entity anyways.
+        """
+        tagged_test_entity_id_list = [e["_id"] for e in self.endpoints.list(query=self.entities_selector())]
+        try:
+            if self.entity_id not in tagged_test_entity_id_list:
+                print(
+                    f"WARNING: Entity with ID {self.entity_id} not found in the list of tagged entities:"
+                    f" {tagged_test_entity_id_list}"
+                )
+            self.endpoints.delete(self.entity_id)
+
+        except HTTPError as e:
+            print(f"WARNING: Failed to delete entity with ID {self.entity_id}: {e}")
 
     def get_default_config(self):
         """
@@ -33,9 +49,10 @@ class EntityIntegrationTest(BaseIntegrationTest):
     def create_entity(self, kwargs=None):
         entity = self.get_default_config()
         entity.update(kwargs or {})
-        entity["tags"] = entity.get("tags", [])
-        entity["tags"].append("INTEGRATION-TEST")
-        return self.endpoints.create(entity)
+        entity.setdefault("tags", []).append("INTEGRATION-TEST")
+        created_entity = self.endpoints.create(entity)
+        self.entity_id = created_entity["_id"]
+        return created_entity
 
     def list_entities_test(self):
         entity = self.create_entity()
@@ -47,9 +64,10 @@ class EntityIntegrationTest(BaseIntegrationTest):
 
     def create_entity_test(self):
         name = "test-{}".format(time.time())
-        job = self.create_entity({"name": name})
-        self.assertEqual(job["name"], name)
-        self.assertIsNotNone(job["_id"])
+        entity = self.create_entity({"name": name})
+        self.assertEqual(entity["name"], name)
+        self.assertIsNotNone(entity["_id"])
+        self.assertIn("INTEGRATION-TEST", entity["tags"])
 
     def delete_entity_test(self):
         entity = self.create_entity()
