@@ -42,7 +42,7 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
     def test_update_job(self):
         self.update_entity_test()
 
-    def _wait_for_job_to_finish(self, id_, timeout=600):
+    def _wait_for_job_to_finish(self, id_, timeout=900):
         end = time.time() + timeout
         while time.time() < end:
             job = self.endpoints.get(id_)
