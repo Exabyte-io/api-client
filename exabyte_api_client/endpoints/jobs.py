@@ -110,7 +110,7 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             "arguments": {},
         }
 
-    def create_by_ids(self, materials, workflow_id, project_id, owner_id, prefix, compute=None):
+    def create_by_ids(self, materials, workflow_id, project_id, prefix, owner_id=None, compute=None):
         """
         Creates jobs from the given materials
 
@@ -118,12 +118,12 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
             materials (list[dict]): list of materials.
             workflow_id (str): workflow ID.
             project_id (str): project ID.
-            owner_id (str): owner ID.
-            compute (dict): compute configuration.
             prefix (str): job prefix.
+            owner_id (str, optional): owner ID.
+            compute (dict, optional): compute configuration.
 
         Returns:
-            list
+            list: List of created jobs.
         """
         jobs = []
         for material in materials:

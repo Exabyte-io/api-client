@@ -76,16 +76,19 @@ class EntityEndpoint(BaseEndpoint):
         """
         return self.request("PATCH", "/".join((self.name, id_)), data=json.dumps(modifier), headers=self.headers)
 
-    def create(self, config):
+    def create(self, config, owner_id=None):
         """
         Creates a new entity.
 
         Args:
             config (dict): entity config.
+            owner_id (str): owner ID. Entity is created under user's default account if not specified.
 
         Returns:
              dict: new entity.
         """
+        if owner_id:
+            config["owner"] = {"_id": owner_id}
         return self.request("PUT", "/".join((self.name, "create")), data=json.dumps(config), headers=self.headers)
 
     def copy(self, id_):
