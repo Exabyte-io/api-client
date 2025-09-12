@@ -75,7 +75,8 @@ class EntityEndpoint(BaseEndpoint):
         Returns:
              dict: updated entity.
         """
-        return self.request("PATCH", "/".join((self.name, id_)), data=json.dumps(modifier), headers=self.headers, parameters=parameters)
+        return self.request("PATCH", "/".join((self.name, id_)), data=json.dumps(modifier), headers=self.headers,
+                            params=parameters)
 
     def create(self, config, owner_id=None):
         """
