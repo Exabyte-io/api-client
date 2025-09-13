@@ -63,18 +63,20 @@ class EntityEndpoint(BaseEndpoint):
         """
         return self.request("DELETE", "/".join((self.name, id_)), headers=self.headers)
 
-    def update(self, id_, modifier):
+    def update(self, id_, modifier, parameters=None):
         """
         Updates a entity with given ID.
 
         Args:
             id_ (str): entity ID.
             modifier (dict): a dictionary of key-values to update entity with.
+            parameters (dict): additional request parameters.
 
         Returns:
              dict: updated entity.
         """
-        return self.request("PATCH", "/".join((self.name, id_)), data=json.dumps(modifier), headers=self.headers)
+        return self.request("PATCH", "/".join((self.name, id_)), data=json.dumps(modifier), headers=self.headers,
+                            params=parameters)
 
     def create(self, config, owner_id=None):
         """
