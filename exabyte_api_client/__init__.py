@@ -14,3 +14,5 @@ from exabyte_api_client.endpoints.metaproperties import MetaPropertiesEndpoints
 from exabyte_api_client.endpoints.projects import ProjectEndpoints
 from exabyte_api_client.endpoints.properties import PropertiesEndpoints
 from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
+
+from exabyte_api_client.client import APIClient

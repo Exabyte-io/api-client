@@ -18,7 +18,14 @@ class BaseEndpoint(object):
     """
 
     def __init__(self, host, port, version="2018-10-1", secure=True, **kwargs):
+        self._auth = kwargs.get("auth")
         self.conn = Connection(host, port, version=version, secure=secure, **kwargs)
+
+    def _get_bearer_headers(self):
+        access_token = getattr(self._auth, "access_token", None)
+        if access_token:
+            return {"Authorization": f"Bearer {access_token}"}
+        return {}
 
     def request(self, method, endpoint_path, params=None, data=None, headers=None):
         """
@@ -34,8 +41,14 @@ class BaseEndpoint(object):
         Returns:
             json: response
         """
+        request_headers = dict(headers or {})
+        bearer_headers = self._get_bearer_headers()
+        if bearer_headers:
+            request_headers.update(bearer_headers)
+            request_headers.pop("X-Account-Id", None)
+            request_headers.pop("X-Auth-Token", None)
         with self.conn:
-            self.conn.request(method, endpoint_path, params, data, headers)
+            self.conn.request(method, endpoint_path, params, data, request_headers or None)
             response = self.conn.json()
             if response["status"] != "success":
                 raise BaseException(response["data"]["message"])
