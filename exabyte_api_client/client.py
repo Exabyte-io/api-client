@@ -13,6 +13,14 @@ from exabyte_api_client.endpoints.projects import ProjectEndpoints
 from exabyte_api_client.endpoints.properties import PropertiesEndpoints
 from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
 
+# Default OIDC Configuration
+OIDC_BASE_URL = "http://localhost:3000/oidc"
+CLIENT_ID = "default-client"
+CLIENT_SECRET = "default-secret"
+SCOPE = "openid profile email"
+
+# Environment Variable Names
+ACCESS_TOKEN_ENV_VAR = "OIDC_ACCESS_TOKEN"
 
 class AuthContext(BaseModel):
     access_token: Optional[str] = None
@@ -32,7 +40,7 @@ class APIEnv(BaseModel):
 
 
 class AuthEnv(BaseModel):
-    access_token: Optional[str] = Field(None, validation_alias="OIDC_ACCESS_TOKEN")
+    access_token: Optional[str] = Field(None, validation_alias=ACCESS_TOKEN_ENV_VAR)
     account_id: Optional[str] = Field(None, validation_alias="ACCOUNT_ID")
     auth_token: Optional[str] = Field(None, validation_alias="AUTH_TOKEN")
 
@@ -185,7 +193,7 @@ class APIClient(BaseModel):
             self.auth.account_id = account_id
             return account_id
 
-        access_token = self.auth.access_token or os.environ.get("OIDC_ACCESS_TOKEN")
+        access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
         if not access_token:
             raise ValueError("ACCOUNT_ID is not set and no OIDC access token is available.")
 
