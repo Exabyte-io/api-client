@@ -21,6 +21,30 @@ SCOPE = "openid profile email"
 
 # Environment Variable Names
 ACCESS_TOKEN_ENV_VAR = "OIDC_ACCESS_TOKEN"
+API_HOST_ENV_VAR = "API_HOST"
+API_PORT_ENV_VAR = "API_PORT"
+API_VERSION_ENV_VAR = "API_VERSION"
+API_SECURE_ENV_VAR = "API_SECURE"
+ACCOUNT_ID_ENV_VAR = "ACCOUNT_ID"
+AUTH_TOKEN_ENV_VAR = "AUTH_TOKEN"
+
+# Protocol Constants
+PROTOCOL_HTTPS = "https"
+PROTOCOL_HTTP = "http"
+
+# API Paths
+USERS_ME_PATH = "/api/v1/users/me"
+
+# JSON Response Keys
+JSON_KEY_DATA = "data"
+JSON_KEY_USER = "user"
+JSON_KEY_ENTITY = "entity"
+JSON_KEY_DEFAULT_ACCOUNT_ID = "defaultAccountId"
+
+# Error Messages
+ERROR_MISSING_AUTH = "Missing auth. Provide OIDC_ACCESS_TOKEN or ACCOUNT_ID and AUTH_TOKEN."
+ERROR_NO_ACCOUNT_ID_OR_TOKEN = "ACCOUNT_ID is not set and no OIDC access token is available."
+
 
 class AuthContext(BaseModel):
     access_token: Optional[str] = None
@@ -29,10 +53,10 @@ class AuthContext(BaseModel):
 
 
 class APIEnv(BaseModel):
-    host: str = Field(validation_alias="API_HOST")
-    port: int = Field(validation_alias="API_PORT")
-    version: str = Field(validation_alias="API_VERSION")
-    secure: bool = Field(validation_alias="API_SECURE")
+    host: str = Field(validation_alias=API_HOST_ENV_VAR)
+    port: int = Field(validation_alias=API_PORT_ENV_VAR)
+    version: str = Field(validation_alias=API_VERSION_ENV_VAR)
+    secure: bool = Field(validation_alias=API_SECURE_ENV_VAR)
 
     @classmethod
     def from_env(cls) -> "APIEnv":
@@ -41,8 +65,8 @@ class APIEnv(BaseModel):
 
 class AuthEnv(BaseModel):
     access_token: Optional[str] = Field(None, validation_alias=ACCESS_TOKEN_ENV_VAR)
-    account_id: Optional[str] = Field(None, validation_alias="ACCOUNT_ID")
-    auth_token: Optional[str] = Field(None, validation_alias="AUTH_TOKEN")
+    account_id: Optional[str] = Field(None, validation_alias=ACCOUNT_ID_ENV_VAR)
+    auth_token: Optional[str] = Field(None, validation_alias=AUTH_TOKEN_ENV_VAR)
 
     @classmethod
     def from_env(cls) -> "AuthEnv":
@@ -66,9 +90,9 @@ class Account(BaseModel):
 
 
 def _build_users_me_url(host: str, port: int, secure: bool) -> str:
-    protocol = "https" if secure else "http"
+    protocol = PROTOCOL_HTTPS if secure else PROTOCOL_HTTP
     port_str = f":{port}" if port not in [80, 443] else ""
-    return f"{protocol}://{host}{port_str}/api/v1/users/me"
+    return f"{protocol}://{host}{port_str}{USERS_ME_PATH}"
 
 
 class APIClient(BaseModel):
@@ -165,7 +189,7 @@ class APIClient(BaseModel):
             return
         if auth.account_id and auth.auth_token:
             return
-        raise ValueError("Missing auth. Provide OIDC_ACCESS_TOKEN or ACCOUNT_ID and AUTH_TOKEN.")
+        raise ValueError(ERROR_MISSING_AUTH)
 
     @classmethod
     def authenticate(
@@ -188,19 +212,19 @@ class APIClient(BaseModel):
                    timeout_seconds=timeout_seconds)
 
     def _resolve_account_id(self) -> str:
-        account_id = self.auth.account_id or os.environ.get("ACCOUNT_ID")
+        account_id = self.auth.account_id or os.environ.get(ACCOUNT_ID_ENV_VAR)
         if account_id:
             self.auth.account_id = account_id
             return account_id
 
         access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
         if not access_token:
-            raise ValueError("ACCOUNT_ID is not set and no OIDC access token is available.")
+            raise ValueError(ERROR_NO_ACCOUNT_ID_OR_TOKEN)
 
         url = _build_users_me_url(self.host, self.port, self.secure)
         response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
         response.raise_for_status()
-        account_id = response.json()["data"]["user"]["entity"]["defaultAccountId"]
-        os.environ["ACCOUNT_ID"] = account_id
+        account_id = response.json()[JSON_KEY_DATA][JSON_KEY_USER][JSON_KEY_ENTITY][JSON_KEY_DEFAULT_ACCOUNT_ID]
+        os.environ[ACCOUNT_ID_ENV_VAR] = account_id
         self.auth.account_id = account_id
         return account_id
