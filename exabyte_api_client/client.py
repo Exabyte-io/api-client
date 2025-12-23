@@ -123,11 +123,11 @@ class APIClient(BaseModel):
 
     @staticmethod
     def _resolve_config(
-        host: Optional[str],
-        port: Optional[int],
-        version: Optional[str],
-        secure: Optional[bool],
-        env: APIEnv,
+            host: Optional[str],
+            port: Optional[int],
+            version: Optional[str],
+            secure: Optional[bool],
+            env: APIEnv,
     ) -> Tuple[str, int, str, bool]:
         return (
             host if host is not None else env.host,
@@ -138,11 +138,11 @@ class APIClient(BaseModel):
 
     @classmethod
     def _auth_from_env(
-        cls,
-        *,
-        access_token: Optional[str],
-        account_id: Optional[str],
-        auth_token: Optional[str],
+            cls,
+            *,
+            access_token: Optional[str],
+            account_id: Optional[str],
+            auth_token: Optional[str],
     ) -> AuthContext:
         env = cls.auth_env()
         return AuthContext(
@@ -161,21 +161,23 @@ class APIClient(BaseModel):
 
     @classmethod
     def authenticate(
-        cls,
-        *,
-        host: Optional[str] = None,
-        port: Optional[int] = None,
-        version: Optional[str] = None,
-        secure: Optional[bool] = None,
-        access_token: Optional[str] = None,
-        account_id: Optional[str] = None,
-        auth_token: Optional[str] = None,
-        timeout_seconds: int = 60,
+            cls,
+            *,
+            host: Optional[str] = None,
+            port: Optional[int] = None,
+            version: Optional[str] = None,
+            secure: Optional[bool] = None,
+            access_token: Optional[str] = None,
+            account_id: Optional[str] = None,
+            auth_token: Optional[str] = None,
+            timeout_seconds: int = 60,
     ) -> "APIClient":
-        host_value, port_value, version_value, secure_value = cls._resolve_config(host, port, version, secure, cls.env())
+        host_value, port_value, version_value, secure_value = cls._resolve_config(host, port, version, secure,
+                                                                                  cls.env())
         auth = cls._auth_from_env(access_token=access_token, account_id=account_id, auth_token=auth_token)
         cls._validate_auth(auth)
-        return cls(host=host_value, port=port_value, version=version_value, secure=secure_value, auth=auth, timeout_seconds=timeout_seconds)
+        return cls(host=host_value, port=port_value, version=version_value, secure=secure_value, auth=auth,
+                   timeout_seconds=timeout_seconds)
 
     def _resolve_account_id(self) -> str:
         account_id = self.auth.account_id or os.environ.get("ACCOUNT_ID")
@@ -194,5 +196,3 @@ class APIClient(BaseModel):
         os.environ["ACCOUNT_ID"] = account_id
         self.auth.account_id = account_id
         return account_id
-
-
