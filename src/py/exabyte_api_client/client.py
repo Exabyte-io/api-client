@@ -74,12 +74,10 @@ class AuthEnv(BaseModel):
 
 
 class Account(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
+
     client: Any = Field(exclude=True, repr=False)
     id_cache: Optional[str] = None
-
-    class Config:
-        arbitrary_types_allowed = True
-        validate_assignment = True
 
     @property
     def id(self) -> str:
