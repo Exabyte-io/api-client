@@ -1,5 +1,8 @@
 from exabyte_api_client.endpoints.materials import MaterialEndpoints
-from tests.integration.entity import EntityIntegrationTest
+from tests.py.integration.entity import EntityIntegrationTest
+
+MATERIAL_DATA_FILE = "material.json"
+TEST_FORMULA = "Si"
 
 
 class MaterialEndpointsIntegrationTest(EntityIntegrationTest):
@@ -12,7 +15,7 @@ class MaterialEndpointsIntegrationTest(EntityIntegrationTest):
         self.endpoints = MaterialEndpoints(**self.endpoint_kwargs)
 
     def get_default_config(self):
-        return self.get_content_in_json("material.json")
+        return self.get_content_in_json(MATERIAL_DATA_FILE)
 
     def test_list_materials(self):
         self.list_entities_test()
@@ -31,5 +34,5 @@ class MaterialEndpointsIntegrationTest(EntityIntegrationTest):
 
     def test_get_material_by_formula(self):
         material = self.create_entity()
-        materials = self.endpoints.list(query={"_id": material["_id"], "formula": "Si"})
+        materials = self.endpoints.list(query={"_id": material["_id"], "formula": TEST_FORMULA})
         self.assertIn(material["_id"], [m["_id"] for m in materials])

@@ -1,6 +1,9 @@
 from unittest import mock
+
 from exabyte_api_client.endpoints.properties import PropertiesEndpoints
-from tests.unit.entity import EntityEndpointsUnitTest
+from tests.py.unit.entity import EntityEndpointsUnitTest
+
+ENDPOINT_NAME = "properties"
 
 
 class EndpointCharacteristicUnitTest(EntityEndpointsUnitTest):
@@ -10,7 +13,7 @@ class EndpointCharacteristicUnitTest(EntityEndpointsUnitTest):
 
     def __init__(self, *args, **kwargs):
         super(EndpointCharacteristicUnitTest, self).__init__(*args, **kwargs)
-        self.endpoint_name = "properties"
+        self.endpoint_name = ENDPOINT_NAME
         self.endpoints = PropertiesEndpoints(self.host, self.port, self.account_id, self.auth_token)
 
     @mock.patch("requests.sessions.Session.request")

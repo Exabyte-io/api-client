@@ -1,18 +1,20 @@
 from unittest import mock
 
-from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
-from tests.unit.entity import EntityEndpointsUnitTest
+from exabyte_api_client.endpoints.materials import MaterialEndpoints
+from tests.py.unit.entity import EntityEndpointsUnitTest
+
+ENDPOINT_NAME = "materials"
 
 
-class EndpointWorkflowsUnitTest(EntityEndpointsUnitTest):
+class EndpointMaterialsUnitTest(EntityEndpointsUnitTest):
     """
-    Class for testing workflows endpoint.
+    Class for testing materials endpoint.
     """
 
     def __init__(self, *args, **kwargs):
-        super(EndpointWorkflowsUnitTest, self).__init__(*args, **kwargs)
-        self.endpoint_name = "workflows"
-        self.endpoints = WorkflowEndpoints(self.host, self.port, self.account_id, self.auth_token)
+        super(EndpointMaterialsUnitTest, self).__init__(*args, **kwargs)
+        self.endpoint_name = ENDPOINT_NAME
+        self.endpoints = MaterialEndpoints(self.host, self.port, self.account_id, self.auth_token)
 
     @mock.patch("requests.sessions.Session.request")
     def test_list(self, mock_request):
@@ -28,4 +30,4 @@ class EndpointWorkflowsUnitTest(EntityEndpointsUnitTest):
 
     @mock.patch("requests.sessions.Session.request")
     def test_delete(self, mock_request):
-        self.delete(mock_request)
+        self.create(mock_request)

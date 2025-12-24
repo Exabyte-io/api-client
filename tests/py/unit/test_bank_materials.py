@@ -1,6 +1,9 @@
 from unittest import mock
+
 from exabyte_api_client.endpoints.bank_materials import BankMaterialEndpoints
-from tests.unit.entity import EntityEndpointsUnitTest
+from tests.py.unit.entity import EntityEndpointsUnitTest
+
+ENDPOINT_NAME = "bank-materials"
 
 
 class EndpointMaterialsBankUnitTest(EntityEndpointsUnitTest):
@@ -10,7 +13,7 @@ class EndpointMaterialsBankUnitTest(EntityEndpointsUnitTest):
 
     def __init__(self, *args, **kwargs):
         super(EndpointMaterialsBankUnitTest, self).__init__(*args, **kwargs)
-        self.endpoint_name = "bank-materials"
+        self.endpoint_name = ENDPOINT_NAME
         self.endpoints = BankMaterialEndpoints(self.host, self.port, self.account_id, self.auth_token)
 
     @mock.patch("requests.sessions.Session.request")

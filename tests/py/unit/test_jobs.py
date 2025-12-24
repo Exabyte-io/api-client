@@ -1,7 +1,9 @@
 from unittest import mock
 
 from exabyte_api_client.endpoints.jobs import JobEndpoints
-from tests.unit.entity import EntityEndpointsUnitTest
+from tests.py.unit.entity import EntityEndpointsUnitTest
+
+ENDPOINT_NAME = "jobs"
 
 
 class EndpointJobsUnitTest(EntityEndpointsUnitTest):
@@ -11,7 +13,7 @@ class EndpointJobsUnitTest(EntityEndpointsUnitTest):
 
     def __init__(self, *args, **kwargs):
         super(EndpointJobsUnitTest, self).__init__(*args, **kwargs)
-        self.endpoint_name = "jobs"
+        self.endpoint_name = ENDPOINT_NAME
         self.endpoints = JobEndpoints(self.host, self.port, self.account_id, self.auth_token)
 
     @mock.patch("requests.sessions.Session.request")

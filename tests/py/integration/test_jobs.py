@@ -2,15 +2,29 @@ import datetime
 import time
 
 from exabyte_api_client.endpoints.jobs import JobEndpoints
-from tests.integration.entity import EntityIntegrationTest
+from tests.py.integration.entity import EntityIntegrationTest
+
+KNOWN_COMPLETED_JOB_ID = "9gyhfncWDhnSyzALv"
+JOB_NAME_PREFIX = "API-CLIENT TEST JOB"
+DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+DEFAULT_NODES = 1
+DEFAULT_NOTIFY = "n"
+DEFAULT_PPN = 1
+DEFAULT_QUEUE = "D"
+DEFAULT_TIME_LIMIT = "00:05:00"
+TEST_TIME_LIMIT = "00:10:00"
+TEST_NOTIFY = "abe"
+JOB_STATUS_SUBMITTED = "submitted"
+JOB_STATUS_FINISHED = "finished"
+JOB_WAIT_TIMEOUT = 900
+JOB_WAIT_SLEEP_INTERVAL = 5
+JOB_TIMEOUT_ERROR = "job with ID {} did not finish within {} seconds"
 
 
 class JobEndpointsIntegrationTest(EntityIntegrationTest):
     """
     Job endpoints integration tests.
     """
-
-    KNOWN_COMPLETED_JOB_ID = "9gyhfncWDhnSyzALv"
 
     def __init__(self, *args, **kwargs):
         super(JobEndpointsIntegrationTest, self).__init__(*args, **kwargs)
@@ -21,10 +35,10 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         Returns the default entity config.
         Override upon inheritance.
         """
-        now_time = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-        return {"name": "API-CLIENT TEST JOB {}".format(now_time)}
+        now_time = datetime.datetime.today().strftime(DATETIME_FORMAT)
+        return {"name": f"{JOB_NAME_PREFIX} {now_time}"}
 
-    def get_compute_params(self, nodes=1, notify="n", ppn=1, queue="D", time_limit="00:05:00"):
+    def get_compute_params(self, nodes=DEFAULT_NODES, notify=DEFAULT_NOTIFY, ppn=DEFAULT_PPN, queue=DEFAULT_QUEUE, time_limit=DEFAULT_TIME_LIMIT):
         return {"nodes": nodes, "notify": notify, "ppn": ppn, "queue": queue, "timeLimit": time_limit}
 
     def test_list_jobs(self):
@@ -42,34 +56,33 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
     def test_update_job(self):
         self.update_entity_test()
 
-    def _wait_for_job_to_finish(self, id_, timeout=900):
+    def _wait_for_job_to_finish(self, id_, timeout=JOB_WAIT_TIMEOUT):
         end = time.time() + timeout
         while time.time() < end:
             job = self.endpoints.get(id_)
-            if job["status"] == "finished":
+            if job["status"] == JOB_STATUS_FINISHED:
                 return
-            time.sleep(5)
-        raise BaseException("job with ID {} did not finish within {} seconds".format(id_, timeout))
+            time.sleep(JOB_WAIT_SLEEP_INTERVAL)
+        raise BaseException(JOB_TIMEOUT_ERROR.format(id_, timeout))
 
     def test_submit_job_and_wait_to_finish(self):
         job = self.create_entity()
         self.endpoints.submit(job["_id"])
-        self.assertEqual("submitted", self.endpoints.get(job["_id"])["status"])
+        self.assertEqual(JOB_STATUS_SUBMITTED, self.endpoints.get(job["_id"])["status"])
         self._wait_for_job_to_finish(job["_id"])
 
     def test_create_job_timeLimit(self):
-        time_limit = "00:10:00"
-        job = self.create_entity({"compute": self.get_compute_params(time_limit=time_limit)})
+        job = self.create_entity({"compute": self.get_compute_params(time_limit=TEST_TIME_LIMIT)})
         self.assertEqual(self.endpoints.get(job["_id"])["_id"], job["_id"])
-        self.assertEqual(self.endpoints.get(job["_id"])["compute"]["timeLimit"], time_limit)
+        self.assertEqual(self.endpoints.get(job["_id"])["compute"]["timeLimit"], TEST_TIME_LIMIT)
 
     def test_create_job_notify(self):
-        job = self.create_entity({"compute": self.get_compute_params(notify="abe")})
+        job = self.create_entity({"compute": self.get_compute_params(notify=TEST_NOTIFY)})
         self.assertEqual(self.endpoints.get(job["_id"])["_id"], job["_id"])
-        self.assertEqual(self.endpoints.get(job["_id"])["compute"]["notify"], "abe")
+        self.assertEqual(self.endpoints.get(job["_id"])["compute"]["notify"], TEST_NOTIFY)
 
     def test_list_files(self):
-        http_response_data = self.endpoints.list_files(self.KNOWN_COMPLETED_JOB_ID)
+        http_response_data = self.endpoints.list_files(KNOWN_COMPLETED_JOB_ID)
         self.assertIsInstance(http_response_data, list)
         self.assertGreater(len(http_response_data), 0)
         self.assertIsInstance(http_response_data[0], dict)

@@ -4,7 +4,7 @@ from unittest import mock
 from pydantic import ValidationError
 
 from exabyte_api_client import APIClient
-from tests.unit import EndpointBaseUnitTest
+from tests.py.unit import EndpointBaseUnitTest
 
 API_HOST = "platform.mat3ra.com"
 API_PORT = "4000"

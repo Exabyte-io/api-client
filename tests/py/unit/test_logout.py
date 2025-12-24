@@ -1,7 +1,13 @@
 from unittest import mock
 
 from exabyte_api_client.endpoints.logout import LogoutEndpoint
-from tests.unit import EndpointBaseUnitTest
+from tests.py.unit import EndpointBaseUnitTest
+
+LOGOUT_RESPONSE_FILE = "logout.json"
+
+EXPECTED_LOGOUT_RESULT = {
+    "message": "You are successfully logged out"
+}
 
 
 class EndpointLogoutUnitTest(EndpointBaseUnitTest):
@@ -15,7 +21,7 @@ class EndpointLogoutUnitTest(EndpointBaseUnitTest):
 
     @mock.patch("requests.sessions.Session.request")
     def test_logout(self, mock_request):
-        mock_request.return_value = self.mock_response(self.get_content("logout.json"))
-        self.assertEqual(self.logout_endpoint.logout(), {"message": "You are successfully logged out"})
+        mock_request.return_value = self.mock_response(self.get_content(LOGOUT_RESPONSE_FILE))
+        self.assertEqual(self.logout_endpoint.logout(), EXPECTED_LOGOUT_RESULT)
         self.assertEqual(mock_request.call_args[1]["headers"]["X-Account-Id"], self.account_id)
         self.assertEqual(mock_request.call_args[1]["headers"]["X-Auth-Token"], self.auth_token)
