@@ -15,7 +15,7 @@ class EndpointBaseTest(unittest.TestCase):
         super(EndpointBaseTest, self).__init__(*args, **kwargs)
 
     def get_file_path(self, filename):
-        return os.path.join(os.path.dirname(__file__), "py", "data", filename)
+        return os.path.join(os.path.dirname(__file__), "data", filename)
 
     def get_content(self, filename):
         with open(self.get_file_path(filename)) as f:

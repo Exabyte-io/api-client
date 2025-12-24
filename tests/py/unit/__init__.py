@@ -1,6 +1,6 @@
 from requests import Response
 
-from tests.conftest import EndpointBaseTest
+from tests.py.conftest import EndpointBaseTest
 
 
 class EndpointBaseUnitTest(EndpointBaseTest):

@@ -1,7 +1,7 @@
 import os
 
 import pytest
-from tests.conftest import EndpointBaseTest
+from tests.py.conftest import EndpointBaseTest
 
 DEFAULT_TEST_SECURE = "False"
 DEFAULT_TEST_VERSION = "2018-10-01"
