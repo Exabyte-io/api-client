@@ -44,11 +44,6 @@ Run all unit tests:
 pytest tests/py/unit
 ```
 
-Or using the test script:
-```bash
-./run-tests.sh -t=unit
-```
-
 ### Integration Tests (Requires API credentials)
 
 Integration tests require the following environment variables to be set:
@@ -69,14 +64,18 @@ export TEST_AUTH_TOKEN=your-auth-token
 export TEST_SECURE=true
 
 pytest tests/py/integration
-# Or: ./run-tests.sh -t=integration
 ```
 
 ### Run All Tests
 
 ```bash
 pytest tests/py
-# Or: ./run-tests.sh -t=all
+```
+
+### Run Tests with Coverage
+
+```bash
+pytest tests/py/unit --cov=exabyte_api_client --cov-report=term --cov-report=html
 ```
 
 **Note:** Integration tests will be automatically skipped if required environment variables are not set.
