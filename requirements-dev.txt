@@ -1,9 +1,0 @@
-certifi==2020.12.5
-chardet==3.0.4
-coverage==5.5
-idna==2.7
-mock==4.0.3
-requests>=2.26.0
-pydantic>=2,<3
-toml==0.10.2
-urllib3==1.26.5

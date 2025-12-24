@@ -32,19 +32,54 @@ pip install -e .
 [exabyte-api-examples](https://github.com/Exabyte-io/exabyte-api-examples) repository contains examples for performing most-common tasks in the Exabyte.io platform through its RESTful API in Jupyter Notebook format.
 
 # Testing
-A Virtualenv environment can be created and the tests run with the included `run-tests.sh` script.
-To run the unit tests in Python 3, you can:
-```
-./run-tests -t=unit
+
+The package uses pytest for testing. Tests are organized into unit and integration tests.
+
+## Running Tests
+
+### Unit Tests (No environment setup required)
+
+Run all unit tests:
+```bash
+pytest tests/py/unit
 ```
 
-To run the integration tests in Python 2, you can:
+Or using the test script:
+```bash
+./run-tests.sh -t=unit
 ```
-./run-tests -p=python2 -t=integration
-```
-(assuming you have a `python2` binary in your PATH environment).
 
-Note that the integration tests require a REST API service against which the live tests will run. See `tests/integration/__init__.py` for the environment variable details.
+### Integration Tests (Requires API credentials)
+
+Integration tests require the following environment variables to be set:
+
+- `TEST_HOST` - API host (e.g., `platform.mat3ra.com`)
+- `TEST_PORT` - API port (e.g., `443`)
+- `TEST_ACCOUNT_ID` - Your account ID
+- `TEST_AUTH_TOKEN` - Your authentication token
+- `TEST_SECURE` - Use HTTPS (optional, default: `False`)
+- `TEST_VERSION` - API version (optional, default: `2018-10-01`)
+
+To run integration tests:
+```bash
+export TEST_HOST=platform.mat3ra.com
+export TEST_PORT=443
+export TEST_ACCOUNT_ID=your-account-id
+export TEST_AUTH_TOKEN=your-auth-token
+export TEST_SECURE=true
+
+pytest tests/py/integration
+# Or: ./run-tests.sh -t=integration
+```
+
+### Run All Tests
+
+```bash
+pytest tests/py
+# Or: ./run-tests.sh -t=all
+```
+
+**Note:** Integration tests will be automatically skipped if required environment variables are not set.
 
 
 © 2020 Exabyte Inc.
