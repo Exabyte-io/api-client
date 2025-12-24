@@ -1,6 +1,6 @@
 from unittest import mock
 
-from exabyte_api_client.utils.http import Connection
+from mat3ra_api_client.utils.http import Connection
 from requests.exceptions import HTTPError
 from tests.py.unit import EndpointBaseUnitTest
 

@@ -8,13 +8,13 @@ class BaseEndpoint(object):
     Base class for Exabyte RESTful API endpoints.
 
     Args:
-        host (str): Exabyte API hostname.
-        port (int): Exabyte API port number.
-        version (str): Exabyte API version. Defaults to 2018-10-1.
+        host (str): Mat3ra API hostname.
+        port (int): Mat3ra API port number.
+        version (str): Mat3ra API version. Defaults to 2018-10-1.
         secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
 
     Attributes:
-        conn (httplib.ExabyteConnection): ExabyteConnection instance.
+        conn (httplib.Mat3raConnection): Mat3raConnection instance.
     """
 
     def __init__(self, host, port, version="2018-10-1", secure=True, **kwargs):

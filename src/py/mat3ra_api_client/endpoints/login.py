@@ -7,11 +7,11 @@ class LoginEndpoint(BaseEndpoint):
     Login endpoint.
 
     Args:
-        host (str): Exabyte API hostname.
-        port (int): Exabyte API port number.
+        host (str): Mat3ra API hostname.
+        port (int): Mat3ra API port number.
         username (str): username.
         password (str): password.
-        version (str): Exabyte API version.
+        version (str): Mat3ra API version.
         secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.
@@ -44,11 +44,11 @@ class LoginEndpoint(BaseEndpoint):
         Logs in with given parameters and returns options to use for further calls to the RESTful API.
 
         Args:
-            host (str): Exabyte API hostname.
-            port (int): Exabyte API port number.
+            host (str): Mat3ra API hostname.
+            port (int): Mat3ra API port number.
             username (str): username.
             password (str): password.
-            version (str): Exabyte API version.
+            version (str): Mat3ra API version.
             secure (bool): whether to use secure http protocol (https vs http).
 
         Returns:

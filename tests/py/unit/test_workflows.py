@@ -1,6 +1,6 @@
 from unittest import mock
 
-from exabyte_api_client.endpoints.workflows import WorkflowEndpoints
+from mat3ra_api_client.endpoints.workflows import WorkflowEndpoints
 from tests.py.unit.entity import EntityEndpointsUnitTest
 
 ENDPOINT_NAME = "workflows"

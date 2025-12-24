@@ -1,7 +1,7 @@
 [project]
-name = "exabyte-api-client"
+name = "mat3ra-api-client"
 dynamic = ["version"]
-description = "Exabyte Python Client for RESTful API"
+description = "Mat3ra.com Python Client for RESTful API"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE.md"}
@@ -41,8 +41,8 @@ tests = [
     "mock>=4.0.3",
 ]
 all = [
-    "exabyte-api-client[tests]",
-    "exabyte-api-client[dev]",
+    "mat3ra-api-client[tests]",
+    "mat3ra-api-client[dev]",
 ]
 
 [build-system]
@@ -54,7 +54,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
 git_describe_command = "git describe --tags --long"
-write_to = "src/py/exabyte_api_client/_version.py"
+write_to = "src/py/mat3ra_api_client/_version.py"
 
 [tool.setuptools.packages.find]
 where = ["src/py"]
@@ -93,7 +93,7 @@ testpaths = [
 
 [tool.coverage.run]
 source = ["src/py"]
-omit = ["env*/*", "venv*/*", "tests/*", "src/py/exabyte_api_client/_version.py"]
+omit = ["env*/*", "venv*/*", "tests/*", "src/py/mat3ra_api_client/_version.py"]
 
 [tool.coverage.report]
 exclude_lines = [

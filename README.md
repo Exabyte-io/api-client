@@ -1,6 +1,6 @@
-[![PyPI version](https://badge.fury.io/py/exabyte-api-client.svg)](https://badge.fury.io/py/exabyte-api-client)
+[![PyPI version](https://badge.fury.io/py/mat3ra-api-client.svg)](https://badge.fury.io/py/mat3ra-api-client)
 
-This package provides access to Exabyte.io [RESTful API](https://docs.mat3ra.com/rest-api/overview/).
+This package provides access to Mat3ra.com [RESTful API](https://docs.mat3ra.com/rest-api/overview/).
 
 # Installation
 
@@ -16,20 +16,20 @@ Install using pip:
 - from PyPI:
 
 ```bash
-pip install exabyte-api-client
+pip install mat3ra-api-client
 ```
 
 - from source code in development mode:
 
 ```bash
-git clone git@github.com:Exabyte-io/exabyte-api-client.git
-cd exabyte-api-client
+git clone git@github.com:Exabyte-io/api-client.git
+cd api-client
 pip install -e .
 ```
 
 # Examples
 
-[exabyte-api-examples](https://github.com/Exabyte-io/exabyte-api-examples) repository contains examples for performing most-common tasks in the Exabyte.io platform through its RESTful API in Jupyter Notebook format.
+[api-examples](https://github.com/Exabyte-io/api-examples) repository contains examples for performing most-common tasks in the Mat3ra.com platform through its RESTful API in Jupyter Notebook format.
 
 # Testing
 
@@ -75,7 +75,7 @@ pytest tests/py
 ### Run Tests with Coverage
 
 ```bash
-pytest tests/py/unit --cov=exabyte_api_client --cov-report=term --cov-report=html
+pytest tests/py/unit --cov=mat3ra_api_client --cov-report=term --cov-report=html
 ```
 
 **Note:** Integration tests will be automatically skipped if required environment variables are not set.
