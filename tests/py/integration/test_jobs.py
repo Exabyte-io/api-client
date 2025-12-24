@@ -38,7 +38,8 @@ class JobEndpointsIntegrationTest(EntityIntegrationTest):
         now_time = datetime.datetime.today().strftime(DATETIME_FORMAT)
         return {"name": f"{JOB_NAME_PREFIX} {now_time}"}
 
-    def get_compute_params(self, nodes=DEFAULT_NODES, notify=DEFAULT_NOTIFY, ppn=DEFAULT_PPN, queue=DEFAULT_QUEUE, time_limit=DEFAULT_TIME_LIMIT):
+    def get_compute_params(self, nodes=DEFAULT_NODES, notify=DEFAULT_NOTIFY, ppn=DEFAULT_PPN, queue=DEFAULT_QUEUE,
+                           time_limit=DEFAULT_TIME_LIMIT):
         return {"nodes": nodes, "notify": notify, "ppn": ppn, "queue": queue, "timeLimit": time_limit}
 
     def test_list_jobs(self):

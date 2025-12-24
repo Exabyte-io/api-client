@@ -62,7 +62,8 @@ class EntityIntegrationTest(BaseIntegrationTest):
 
     def list_entities_test(self):
         entity = self.create_entity()
-        self.assertIn(entity[ENTITY_ID_KEY], [e[ENTITY_ID_KEY] for e in self.endpoints.list(query=self.entities_selector())])
+        self.assertIn(entity[ENTITY_ID_KEY],
+                      [e[ENTITY_ID_KEY] for e in self.endpoints.list(query=self.entities_selector())])
 
     def get_entity_by_id_test(self):
         entity = self.create_entity()
@@ -78,7 +79,8 @@ class EntityIntegrationTest(BaseIntegrationTest):
     def delete_entity_test(self):
         entity = self.create_entity()
         self.endpoints.delete(entity[ENTITY_ID_KEY])
-        self.assertNotIn(entity[ENTITY_ID_KEY], [e[ENTITY_ID_KEY] for e in self.endpoints.list(query=self.entities_selector())])
+        self.assertNotIn(entity[ENTITY_ID_KEY],
+                         [e[ENTITY_ID_KEY] for e in self.endpoints.list(query=self.entities_selector())])
 
     def update_entity_test(self):
         entity = self.create_entity()
