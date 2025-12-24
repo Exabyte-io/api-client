@@ -2,14 +2,6 @@ from requests import Response
 
 from tests.conftest import EndpointBaseTest
 
-DEFAULT_TEST_PORT = 4000
-DEFAULT_TEST_VERSION = "2018-10-01"
-DEFAULT_TEST_HOST = "platform.mat3ra.com"
-DEFAULT_TEST_ACCOUNT_ID = "ubxMkAyx37Rjn8qK9"
-DEFAULT_TEST_AUTH_TOKEN = "XihOnUA8EqytSui1icz6fYhsJ2tUsJGGTlV03upYPSF"
-HTTP_STATUS_OK = 200
-HTTP_REASON_OK = "OK"
-
 
 class EndpointBaseUnitTest(EndpointBaseTest):
     """
@@ -18,13 +10,13 @@ class EndpointBaseUnitTest(EndpointBaseTest):
 
     def __init__(self, *args, **kwargs):
         super(EndpointBaseUnitTest, self).__init__(*args, **kwargs)
-        self.port = DEFAULT_TEST_PORT
-        self.version = DEFAULT_TEST_VERSION
-        self.host = DEFAULT_TEST_HOST
-        self.account_id = DEFAULT_TEST_ACCOUNT_ID
-        self.auth_token = DEFAULT_TEST_AUTH_TOKEN
+        self.port = 4000
+        self.version = "2018-10-01"
+        self.host = "platform.mat3ra.com"
+        self.account_id = "ubxMkAyx37Rjn8qK9"
+        self.auth_token = "XihOnUA8EqytSui1icz6fYhsJ2tUsJGGTlV03upYPSF"
 
-    def mock_response(self, content, status_code=HTTP_STATUS_OK, reason=HTTP_REASON_OK):
+    def mock_response(self, content, status_code=200, reason="OK"):
         response = Response()
         response._content = content.encode()
         response.status_code = status_code
