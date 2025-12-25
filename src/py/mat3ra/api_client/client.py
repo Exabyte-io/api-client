@@ -13,6 +13,12 @@ from mat3ra.api_client.endpoints.projects import ProjectEndpoints
 from mat3ra.api_client.endpoints.properties import PropertiesEndpoints
 from mat3ra.api_client.endpoints.workflows import WorkflowEndpoints
 
+# Default API Configuration
+DEFAULT_API_HOST = "platform.mat3ra.com"
+DEFAULT_API_PORT = 443
+DEFAULT_API_VERSION = "2018-10-01"
+DEFAULT_API_SECURE = True
+
 # Default OIDC Configuration
 OIDC_BASE_URL = "http://localhost:3000/oidc"
 CLIENT_ID = "default-client"
@@ -53,10 +59,10 @@ class AuthContext(BaseModel):
 
 
 class APIEnv(BaseModel):
-    host: str = Field(validation_alias=API_HOST_ENV_VAR)
-    port: int = Field(validation_alias=API_PORT_ENV_VAR)
-    version: str = Field(validation_alias=API_VERSION_ENV_VAR)
-    secure: bool = Field(validation_alias=API_SECURE_ENV_VAR)
+    host: str = Field(default=DEFAULT_API_HOST, validation_alias=API_HOST_ENV_VAR)
+    port: int = Field(default=DEFAULT_API_PORT, validation_alias=API_PORT_ENV_VAR)
+    version: str = Field(default=DEFAULT_API_VERSION, validation_alias=API_VERSION_ENV_VAR)
+    secure: bool = Field(default=DEFAULT_API_SECURE, validation_alias=API_SECURE_ENV_VAR)
 
     @classmethod
     def from_env(cls) -> "APIEnv":
