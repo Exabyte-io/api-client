@@ -19,11 +19,6 @@ DEFAULT_API_PORT = 443
 DEFAULT_API_VERSION = "2018-10-01"
 DEFAULT_API_SECURE = True
 
-# Default OIDC Configuration
-CLIENT_ID = "default-client"
-CLIENT_SECRET = "default-secret"
-SCOPE = "openid profile email"
-
 # Environment Variable Names
 ACCESS_TOKEN_ENV_VAR = "OIDC_ACCESS_TOKEN"
 API_HOST_ENV_VAR = "API_HOST"
@@ -33,22 +28,13 @@ API_SECURE_ENV_VAR = "API_SECURE"
 ACCOUNT_ID_ENV_VAR = "ACCOUNT_ID"
 AUTH_TOKEN_ENV_VAR = "AUTH_TOKEN"
 
-# Protocol Constants
-PROTOCOL_HTTPS = "https"
-PROTOCOL_HTTP = "http"
+# Default OIDC Configuration
+CLIENT_ID = "default-client"
+CLIENT_SECRET = "default-secret"
+SCOPE = "openid profile email"
 
 # API Paths
 USERS_ME_PATH = "/api/v1/users/me"
-
-# JSON Response Keys
-JSON_KEY_DATA = "data"
-JSON_KEY_USER = "user"
-JSON_KEY_ENTITY = "entity"
-JSON_KEY_DEFAULT_ACCOUNT_ID = "defaultAccountId"
-
-# Error Messages
-ERROR_MISSING_AUTH = "Missing auth. Provide OIDC_ACCESS_TOKEN or ACCOUNT_ID and AUTH_TOKEN."
-ERROR_NO_ACCOUNT_ID_OR_TOKEN = "ACCOUNT_ID is not set and no OIDC access token is available."
 
 
 class AuthContext(BaseModel):
@@ -93,7 +79,7 @@ class Account(BaseModel):
 
 
 def _build_users_me_url(host: str, port: int, secure: bool) -> str:
-    protocol = PROTOCOL_HTTPS if secure else PROTOCOL_HTTP
+    protocol = "https" if secure else "http"
     port_str = f":{port}" if port not in [80, 443] else ""
     return f"{protocol}://{host}{port_str}{USERS_ME_PATH}"
 
@@ -198,7 +184,7 @@ class APIClient(BaseModel):
             return
         if auth.account_id and auth.auth_token:
             return
-        raise ValueError(ERROR_MISSING_AUTH)
+        raise ValueError("Missing auth. Provide OIDC_ACCESS_TOKEN or ACCOUNT_ID and AUTH_TOKEN.")
 
     @classmethod
     def authenticate(
@@ -228,12 +214,12 @@ class APIClient(BaseModel):
 
         access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
         if not access_token:
-            raise ValueError(ERROR_NO_ACCOUNT_ID_OR_TOKEN)
+            raise ValueError("ACCOUNT_ID is not set and no OIDC access token is available.")
 
         url = _build_users_me_url(self.host, self.port, self.secure)
         response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
         response.raise_for_status()
-        account_id = response.json()[JSON_KEY_DATA][JSON_KEY_USER][JSON_KEY_ENTITY][JSON_KEY_DEFAULT_ACCOUNT_ID]
+        account_id = response.json()["data"]["user"]["entity"]["defaultAccountId"]
         os.environ[ACCOUNT_ID_ENV_VAR] = account_id
         self.auth.account_id = account_id
         return account_id
