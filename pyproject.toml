@@ -1,5 +1,5 @@
 [project]
-name = "mat3ra.api-client"
+name = "mat3ra-api-client"
 dynamic = ["version"]
 description = "Mat3ra.com Python Client for RESTful API"
 readme = "README.md"
