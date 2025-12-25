@@ -55,12 +55,12 @@ jobs:
         uses: ./actions/py/test
         with:
           python-version: ${{ matrix.python-version }}
-          unit-test-directory: tests/unit
+          unit-test-directory: tests/py/unit
       # TMP disabled to allow publishing to PyPi 
-      # - name: Run integration tests]
+      # - name: Run integration tests
       #   uses: ./actions/py/test
       #   with:
-      #     integration-test-directory: tests/integration
+      #     integration-test-directory: tests/py/integration
       #   env:
       #     TEST_HOST: platform.mat3ra.com
       #     TEST_PORT: 443
