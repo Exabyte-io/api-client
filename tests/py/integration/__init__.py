@@ -13,8 +13,8 @@ def _check_integration_env():
     """Check if required integration test environment variables are set."""
     missing = [var for var in REQUIRED_ENV_VARS if var not in os.environ]
     if missing:
-        pytest.skip(f"Integration tests require environment variables: TEST_HOST, TEST_PORT, " +
-                    f"TEST_ACCOUNT_ID, TEST_AUTH_TOKEN. Set them to run integration tests. Missing: {', '.join(missing)}")
+        pytest.skip("Integration tests require environment variables: TEST_HOST, TEST_PORT, TEST_ACCOUNT_ID, " +
+                    f"TEST_AUTH_TOKEN. Set them to run integration tests. Missing: {', '.join(missing)}")
 
 
 class BaseIntegrationTest(EndpointBaseTest):

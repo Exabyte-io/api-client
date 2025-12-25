@@ -117,9 +117,9 @@ class Connection(BaseConnection):
     Exabyte connection class.
 
     Args:
-        host (str): Mat3ra API hostname.
-        port (int): Mat3ra API port number.
-        version (str): Mat3ra API version.
+        host (str): API hostname.
+        port (int): API port number.
+        version (str): API version.
         secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.

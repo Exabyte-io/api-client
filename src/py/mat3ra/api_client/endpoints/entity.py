@@ -9,11 +9,11 @@ class EntityEndpoint(BaseEndpoint):
     Exabyte Entity endpoint.
 
     Args:
-        host (str): Mat3ra API hostname.
-        port (int): Mat3ra API port number.
+        host (str): API hostname.
+        port (int): API port number.
         account_id (str): account ID.
         auth_token (str): authentication token.
-        version (str): Mat3ra API version.
+        version (str): API version.
         secure (bool): whether to use secure http protocol (https vs http).
         kwargs (dict): a dictionary of HTTP session options.
             timeout (int): session timeout in seconds.

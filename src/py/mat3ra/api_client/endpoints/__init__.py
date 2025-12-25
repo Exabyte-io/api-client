@@ -8,9 +8,9 @@ class BaseEndpoint(object):
     Base class for Exabyte RESTful API endpoints.
 
     Args:
-        host (str): Mat3ra API hostname.
-        port (int): Mat3ra API port number.
-        version (str): Mat3ra API version. Defaults to 2018-10-1.
+        host (str): API hostname.
+        port (int): API port number.
+        version (str): API version. Defaults to 2018-10-1.
         secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
 
     Attributes:
