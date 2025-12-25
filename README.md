@@ -27,6 +27,18 @@ cd api-client
 pip install -e .
 ```
 
+# Usage
+
+```python
+from mat3ra.api_client import APIClient
+
+# Authenticate with OIDC token
+client = APIClient.authenticate()
+
+# Access endpoints
+materials = client.materials.list()
+```
+
 # Examples
 
 [api-examples](https://github.com/Exabyte-io/api-examples) repository contains examples for performing most-common tasks in the Mat3ra.com platform through its RESTful API in Jupyter Notebook format.
@@ -75,7 +87,7 @@ pytest tests/py
 ### Run Tests with Coverage
 
 ```bash
-pytest tests/py/unit --cov=mat3ra_api_client --cov-report=term --cov-report=html
+pytest tests/py/unit --cov=mat3ra.api_client --cov-report=term --cov-report=html
 ```
 
 **Note:** Integration tests will be automatically skipped if required environment variables are not set.

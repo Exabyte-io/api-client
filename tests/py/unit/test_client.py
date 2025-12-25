@@ -3,7 +3,7 @@ from unittest import mock
 
 from pydantic import ValidationError
 
-from mat3ra_api_client import APIClient
+from mat3ra.api_client import APIClient
 from tests.py.unit import EndpointBaseUnitTest
 
 API_HOST = "platform.mat3ra.com"

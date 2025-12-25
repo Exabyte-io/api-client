@@ -1,6 +1,6 @@
 from unittest import mock
 
-from mat3ra_api_client.endpoints.materials import MaterialEndpoints
+from mat3ra.api_client.endpoints.materials import MaterialEndpoints
 from tests.py.unit.entity import EntityEndpointsUnitTest
 
 ENDPOINT_NAME = "materials"

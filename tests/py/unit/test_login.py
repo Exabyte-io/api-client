@@ -1,6 +1,6 @@
 from unittest import mock
 
-from mat3ra_api_client.endpoints.login import LoginEndpoint
+from mat3ra.api_client.endpoints.login import LoginEndpoint
 from tests.py.unit import EndpointBaseUnitTest
 
 TEST_USERNAME = "test"

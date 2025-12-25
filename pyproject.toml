@@ -1,5 +1,5 @@
 [project]
-name = "mat3ra-api-client"
+name = "mat3ra.api-client"
 dynamic = ["version"]
 description = "Mat3ra.com Python Client for RESTful API"
 readme = "README.md"
@@ -54,7 +54,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
 git_describe_command = "git describe --tags --long"
-write_to = "src/py/mat3ra_api_client/_version.py"
+write_to = "src/py/mat3ra/api_client/_version.py"
 
 [tool.setuptools.packages.find]
 where = ["src/py"]
@@ -93,7 +93,7 @@ testpaths = [
 
 [tool.coverage.run]
 source = ["src/py"]
-omit = ["env*/*", "venv*/*", "tests/*", "src/py/mat3ra_api_client/_version.py"]
+omit = ["env*/*", "venv*/*", "tests/*", "src/py/mat3ra/api_client/_version.py"]
 
 [tool.coverage.report]
 exclude_lines = [

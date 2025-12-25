@@ -1,6 +1,6 @@
 from unittest import mock
 
-from mat3ra_api_client.endpoints.logout import LogoutEndpoint
+from mat3ra.api_client.endpoints.logout import LogoutEndpoint
 from tests.py.unit import EndpointBaseUnitTest
 
 LOGOUT_RESPONSE_FILE = "logout.json"

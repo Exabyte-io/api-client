@@ -1,7 +1,7 @@
 import datetime
 import time
 
-from mat3ra_api_client.endpoints.jobs import JobEndpoints
+from mat3ra.api_client.endpoints.jobs import JobEndpoints
 from tests.py.integration.entity import EntityIntegrationTest
 
 KNOWN_COMPLETED_JOB_ID = "9gyhfncWDhnSyzALv"

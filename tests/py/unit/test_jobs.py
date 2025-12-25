@@ -1,6 +1,6 @@
 from unittest import mock
 
-from mat3ra_api_client.endpoints.jobs import JobEndpoints
+from mat3ra.api_client.endpoints.jobs import JobEndpoints
 from tests.py.unit.entity import EntityEndpointsUnitTest
 
 ENDPOINT_NAME = "jobs"

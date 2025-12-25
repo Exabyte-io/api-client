@@ -1,4 +1,4 @@
-from mat3ra_api_client.endpoints.materials import MaterialEndpoints
+from mat3ra.api_client.endpoints.materials import MaterialEndpoints
 from tests.py.integration.entity import EntityIntegrationTest
 
 MATERIAL_DATA_FILE = "material.json"
