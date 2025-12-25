@@ -1,10 +1,105 @@
+[project]
+name = "mat3ra.api-client"
+dynamic = ["version"]
+description = "Mat3ra.com Python Client for RESTful API"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE.md"}
+authors = [
+    { name = "Exabyte Inc.", email = "info@mat3ra.com" }
+]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "License :: OSI Approved :: Apache Software License",
+]
+dependencies = [
+    "requests>=2.26.0",
+    "pydantic>=2,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "black",
+    "ruff",
+    "isort",
+    "mypy",
+    "pip-tools",
+]
+tests = [
+    "coverage[toml]>=5.3",
+    "pytest",
+    "pytest-cov",
+    "mock>=4.0.3",
+]
+all = [
+    "mat3ra-api-client[tests]",
+    "mat3ra-api-client[dev]",
+]
+
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
+requires = [
+    "setuptools>=42",
+    "setuptools-scm[toml]>=3.4"
+]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-write_to = "exabyte_api_client/_version.py"
+git_describe_command = "git describe --tags --long"
+write_to = "src/py/mat3ra/api_client/_version.py"
+
+[tool.setuptools.packages.find]
+where = ["src/py"]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+extend-exclude = '''
+(
+    tests\/fixtures*
+)
+'''
+
+[tool.ruff]
+extend-exclude = [
+    "tests/fixtures"
+]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+
+[tool.pytest.ini_options]
+pythonpath = [
+    "src/py",
+]
+testpaths = [
+    "tests/py"
+]
 
 [tool.coverage.run]
-source = ['.']
-omit = ['env*/*', 'venv*/*', 'tests/*']
+source = ["src/py"]
+omit = ["env*/*", "venv*/*", "tests/*", "src/py/mat3ra/api_client/_version.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
