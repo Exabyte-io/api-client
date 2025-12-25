@@ -78,17 +78,14 @@ class Account(BaseModel):
         return self.id_cache
 
 
-def _build_users_me_url(host: str, port: int, secure: bool) -> str:
+def _build_base_url(host: str, port: int, secure: bool, path: str) -> str:
     protocol = "https" if secure else "http"
-    port_str = f":{port}" if port not in [80, 443] else ""
-    return f"{protocol}://{host}{port_str}{USERS_ME_PATH}"
+    port_str = f":{port}" if port not in (80, 443) else ""
+    return f"{protocol}://{host}{port_str}{path}"
 
-
-def _build_oidc_base_url(host: str, port: int, secure: bool) -> str:
-    protocol = PROTOCOL_HTTPS if secure else PROTOCOL_HTTP
-    port_str = f":{port}" if port not in [80, 443] else ""
-    return f"{protocol}://{host}{port_str}/oidc"
-
+# Used in API-examples utils
+def build_oidc_base_url(host: str, port: int, secure: bool) -> str:
+    return _build_base_url(host, port, secure, "/oidc")
 
 class APIClient(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True, extra="allow", validate_assignment=True)
@@ -216,7 +213,7 @@ class APIClient(BaseModel):
         if not access_token:
             raise ValueError("ACCOUNT_ID is not set and no OIDC access token is available.")
 
-        url = _build_users_me_url(self.host, self.port, self.secure)
+        url = _build_base_url(self.host, self.port, self.secure, USERS_ME_PATH)
         response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
         response.raise_for_status()
         account_id = response.json()["data"]["user"]["entity"]["defaultAccountId"]
