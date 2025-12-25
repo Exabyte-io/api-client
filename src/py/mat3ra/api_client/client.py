@@ -20,7 +20,6 @@ DEFAULT_API_VERSION = "2018-10-01"
 DEFAULT_API_SECURE = True
 
 # Default OIDC Configuration
-OIDC_BASE_URL = "http://localhost:3000/oidc"
 CLIENT_ID = "default-client"
 CLIENT_SECRET = "default-secret"
 SCOPE = "openid profile email"
@@ -97,6 +96,12 @@ def _build_users_me_url(host: str, port: int, secure: bool) -> str:
     protocol = PROTOCOL_HTTPS if secure else PROTOCOL_HTTP
     port_str = f":{port}" if port not in [80, 443] else ""
     return f"{protocol}://{host}{port_str}{USERS_ME_PATH}"
+
+
+def _build_oidc_base_url(host: str, port: int, secure: bool) -> str:
+    protocol = PROTOCOL_HTTPS if secure else PROTOCOL_HTTP
+    port_str = f":{port}" if port not in [80, 443] else ""
+    return f"{protocol}://{host}{port_str}/oidc"
 
 
 class APIClient(BaseModel):
