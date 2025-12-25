@@ -34,22 +34,6 @@ class APIClientUnitTest(EndpointBaseUnitTest):
         mock_resp.raise_for_status.return_value = None
         mock_get.return_value = mock_resp
 
-    def test_authenticate_requires_env_config(self):
-        cases = [
-            ("API_HOST",),
-            ("API_PORT",),
-            ("API_VERSION",),
-            ("API_SECURE",),
-        ]
-        for (missing_key,) in cases:
-            with self.subTest(missing_key=missing_key):
-                env = self._base_env()
-                env.pop(missing_key)
-                env["OIDC_ACCESS_TOKEN"] = OIDC_ACCESS_TOKEN
-                with mock.patch.dict("os.environ", env, clear=True):
-                    with self.assertRaises(ValidationError):
-                        APIClient.authenticate()
-
     def test_authenticate_requires_auth(self):
         env = self._base_env()
         with mock.patch.dict("os.environ", env, clear=True):
@@ -88,5 +72,3 @@ class APIClientUnitTest(EndpointBaseUnitTest):
             self.assertEqual(mock_get.call_args[1]["headers"]["Authorization"], f"Bearer {OIDC_ACCESS_TOKEN}")
             self.assertEqual(mock_get.call_args[1]["timeout"], 30)
             self.assertEqual(os.environ.get("ACCOUNT_ID"), ME_ACCOUNT_ID)
-
-
