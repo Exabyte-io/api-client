@@ -14,7 +14,7 @@ class BaseEndpoint(object):
         secure (bool): whether to use secure http protocol (https vs http). Defaults to True.
 
     Attributes:
-        conn (httplib.Mat3raConnection): Mat3raConnection instance.
+        conn (httplib.Connection): Connection instance.
     """
 
     def __init__(self, host, port, version="2018-10-1", secure=True, **kwargs):
