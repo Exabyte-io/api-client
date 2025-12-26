@@ -14,7 +14,7 @@ from mat3ra.api_client.endpoints.properties import PropertiesEndpoints
 from mat3ra.api_client.endpoints.workflows import WorkflowEndpoints
 
 # Default API Configuration
-DEFAULT_API_HOST = "platform.mat3ra.com"
+DEFAULT_API_HOST = "platform-new.mat3ra.com"
 DEFAULT_API_PORT = 443
 DEFAULT_API_VERSION = "2018-10-01"
 DEFAULT_API_SECURE = True
@@ -29,8 +29,7 @@ ACCOUNT_ID_ENV_VAR = "ACCOUNT_ID"
 AUTH_TOKEN_ENV_VAR = "AUTH_TOKEN"
 
 # Default OIDC Configuration
-CLIENT_ID = "default-client"
-CLIENT_SECRET = "default-secret"
+CLIENT_ID = "cli-device-client"
 SCOPE = "openid profile email"
 
 # API Paths
