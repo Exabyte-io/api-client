@@ -2,15 +2,14 @@ from typing import Any, Optional, Tuple
 
 from pydantic import BaseModel, ConfigDict
 
-from ..endpoints.bank_materials import BankMaterialEndpoints
-from ..endpoints.bank_workflows import BankWorkflowEndpoints
-from ..endpoints.jobs import JobEndpoints
-from ..endpoints.materials import MaterialEndpoints
-from ..endpoints.metaproperties import MetaPropertiesEndpoints
-from ..endpoints.projects import ProjectEndpoints
-from ..endpoints.properties import PropertiesEndpoints
-from ..endpoints.workflows import WorkflowEndpoints
-
+from .endpoints.bank_materials import BankMaterialEndpoints
+from .endpoints.bank_workflows import BankWorkflowEndpoints
+from .endpoints.jobs import JobEndpoints
+from .endpoints.materials import MaterialEndpoints
+from .endpoints.metaproperties import MetaPropertiesEndpoints
+from .endpoints.projects import ProjectEndpoints
+from .endpoints.properties import PropertiesEndpoints
+from .endpoints.workflows import WorkflowEndpoints
 from .models import Account, APIEnv, AuthContext, AuthEnv
 
 
@@ -129,4 +128,3 @@ class APIClient(BaseModel):
         cls._validate_auth(auth)
         return cls(host=host_value, port=port_value, version=version_value, secure=secure_value, auth=auth,
                    timeout_seconds=timeout_seconds)
-
