@@ -17,6 +17,28 @@ ACCOUNT_ID = "ubxMkAyx37Rjn8qK9"
 ME_ACCOUNT_ID = "my-account-id"
 USERS_ME_RESPONSE = {"data": {"user": {"entity": {"defaultAccountId": ME_ACCOUNT_ID}}}}
 
+ACCOUNTS_RESPONSE = {
+    "data": {
+        "user": {
+            "entity": {"defaultAccountId": ME_ACCOUNT_ID},
+            "accounts": [
+                {
+                    "entity": {"_id": "user-acc-1", "name": "John Doe", "type": "user"},
+                    "isDefault": True,
+                },
+                {
+                    "entity": {"_id": "org-acc-1", "name": "Acme Corp", "type": "organization"},
+                    "isDefault": True,
+                },
+                {
+                    "entity": {"_id": "org-acc-2", "name": "Beta Industries", "type": "organization"},
+                    "isDefault": False,
+                },
+            ],
+        }
+    }
+}
+
 
 class APIClientUnitTest(EndpointBaseUnitTest):
     def _base_env(self):
@@ -71,3 +93,169 @@ class APIClientUnitTest(EndpointBaseUnitTest):
             self.assertEqual(mock_get.call_args[1]["headers"]["Authorization"], f"Bearer {OIDC_ACCESS_TOKEN}")
             self.assertEqual(mock_get.call_args[1]["timeout"], 30)
             self.assertEqual(os.environ.get("ACCOUNT_ID"), ME_ACCOUNT_ID)
+
+    @mock.patch("requests.get")
+    def test_list_accounts(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = ACCOUNTS_RESPONSE
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            accounts = client.list_accounts()
+
+            self.assertEqual(len(accounts), 3)
+            self.assertEqual(accounts[0]["id"], "user-acc-1")
+            self.assertEqual(accounts[0]["name"], "John Doe")
+            self.assertEqual(accounts[0]["type"], "user")
+            self.assertTrue(accounts[0]["isDefault"])
+            self.assertEqual(accounts[1]["id"], "org-acc-1")
+            self.assertEqual(accounts[1]["name"], "Acme Corp")
+            self.assertEqual(accounts[1]["type"], "organization")
+
+    @mock.patch("requests.get")
+    def test_get_account_by_index(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = ACCOUNTS_RESPONSE
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            account = client.get_account(index=1)
+            self.assertEqual(account.id_cache, "org-acc-1")
+
+    @mock.patch("requests.get")
+    def test_get_account_by_name(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = ACCOUNTS_RESPONSE
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            account = client.get_account(name="Acme")
+            self.assertEqual(account.id_cache, "org-acc-1")
+
+    @mock.patch("requests.get")
+    def test_get_account_by_name_regex(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = ACCOUNTS_RESPONSE
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            account = client.get_account(name="Beta.*")
+            self.assertEqual(account.id_cache, "org-acc-2")
+
+    @mock.patch("requests.get")
+    def test_get_account_no_params_raises(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            client = APIClient.authenticate()
+            with self.assertRaises(ValueError) as ctx:
+                client.get_account()
+            self.assertIn("Either 'name' or 'index' must be provided", str(ctx.exception))
+
+    @mock.patch("requests.get")
+    def test_get_account_no_match_raises(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = ACCOUNTS_RESPONSE
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            with self.assertRaises(ValueError) as ctx:
+                client.get_account(name="NonExistent")
+            self.assertIn("No account found matching 'NonExistent'", str(ctx.exception))
+
+    @mock.patch("requests.get")
+    def test_get_account_multiple_matches_raises(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = ACCOUNTS_RESPONSE
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            with self.assertRaises(ValueError) as ctx:
+                client.get_account(name=".*")
+            self.assertIn("Multiple accounts match", str(ctx.exception))
+
+    @mock.patch("requests.get")
+    def test_my_organization_returns_default(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = ACCOUNTS_RESPONSE
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            org = client.my_organization
+            self.assertEqual(org.id_cache, "org-acc-1")
+
+    @mock.patch("requests.get")
+    def test_my_organization_returns_first_if_no_default(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            response_no_default = {
+                "data": {
+                    "user": {
+                        "entity": {"defaultAccountId": ME_ACCOUNT_ID},
+                        "accounts": [
+                            {
+                                "entity": {"_id": "org-acc-1", "name": "Org 1", "type": "organization"},
+                                "isDefault": False,
+                            },
+                            {
+                                "entity": {"_id": "org-acc-2", "name": "Org 2", "type": "organization"},
+                                "isDefault": False,
+                            },
+                        ],
+                    }
+                }
+            }
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = response_no_default
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            org = client.my_organization
+            self.assertEqual(org.id_cache, "org-acc-1")
+
+    @mock.patch("requests.get")
+    def test_my_organization_returns_none_if_no_orgs(self, mock_get):
+        env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        with mock.patch.dict("os.environ", env, clear=True):
+            response_no_orgs = {
+                "data": {
+                    "user": {
+                        "entity": {"defaultAccountId": ME_ACCOUNT_ID},
+                        "accounts": [
+                            {
+                                "entity": {"_id": "user-acc-1", "name": "User", "type": "user"},
+                                "isDefault": True,
+                            },
+                        ],
+                    }
+                }
+            }
+            mock_resp = mock.Mock()
+            mock_resp.json.return_value = response_no_orgs
+            mock_resp.raise_for_status.return_value = None
+            mock_get.return_value = mock_resp
+
+            client = APIClient.authenticate()
+            org = client.my_organization
+            self.assertIsNone(org)
