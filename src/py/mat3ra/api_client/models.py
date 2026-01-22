@@ -1,10 +1,9 @@
 import os
 from typing import Any, Optional
 
-import requests
 from pydantic import BaseModel, ConfigDict, Field
 
-from .constants import ACCESS_TOKEN_ENV_VAR, ACCOUNT_ID_ENV_VAR, AUTH_TOKEN_ENV_VAR, _build_base_url
+from .constants import ACCESS_TOKEN_ENV_VAR, ACCOUNT_ID_ENV_VAR, AUTH_TOKEN_ENV_VAR
 
 
 class AuthContext(BaseModel):
@@ -53,14 +52,11 @@ class Account(BaseModel):
             self.client.auth.account_id = account_id
             return account_id
 
-        access_token = self.client.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
-        if not access_token:
+        if not (self.client.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)):
             raise ValueError("ACCOUNT_ID is not set and no OIDC access token is available.")
 
-        url = _build_base_url(self.client.host, self.client.port, self.client.secure, "/api/v1/users/me")
-        response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
-        response.raise_for_status()
-        account_id = response.json()["data"]["user"]["entity"]["defaultAccountId"]
+        user_data = self.client._fetch_user_data()
+        account_id = user_data["entity"]["defaultAccountId"]
         os.environ[ACCOUNT_ID_ENV_VAR] = account_id
         self.client.auth.account_id = account_id
         return account_id

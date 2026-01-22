@@ -5,7 +5,7 @@ from typing import Any, List, Optional, Tuple
 import requests
 from pydantic import BaseModel, ConfigDict
 
-from .constants import ACCESS_TOKEN_ENV_VAR
+from .constants import ACCESS_TOKEN_ENV_VAR, _build_base_url
 from .endpoints.bank_materials import BankMaterialEndpoints
 from .endpoints.bank_workflows import BankWorkflowEndpoints
 from .endpoints.jobs import JobEndpoints
@@ -140,18 +140,18 @@ class APIClient(BaseModel):
         return cls(host=host_value, port=port_value, version=version_value, secure=secure_value, auth=auth,
                    timeout_seconds=timeout_seconds)
 
-    def _fetch_user_accounts(self) -> List[dict]:
+    def _fetch_user_data(self) -> dict:
         access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
         if not access_token:
-            raise ValueError("Access token is required to fetch accounts")
+            raise ValueError("Access token is required to fetch user data")
 
-        protocol = "https" if self.secure else "http"
-        port_str = f":{self.port}" if self.port not in (80, 443) else ""
-        url = f"{protocol}://{self.host}{port_str}/api/v1/users/me"
-
+        url = _build_base_url(self.host, self.port, self.secure, "/api/v1/users/me")
         response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
         response.raise_for_status()
-        return response.json()["data"]["user"].get("accounts", [])
+        return response.json()["data"]["user"]
+
+    def _fetch_user_accounts(self) -> List[dict]:
+        return self._fetch_user_data().get("accounts", [])
 
     def list_accounts(self) -> List[dict]:
         accounts = self._fetch_user_accounts()
