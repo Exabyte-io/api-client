@@ -1,4 +1,5 @@
 import os
+import re
 from typing import Any, List, Optional, Tuple
 
 import requests
@@ -164,15 +165,36 @@ class APIClient(BaseModel):
             for acc in accounts
         ]
 
+    def get_account(self, name: Optional[str] = None, index: Optional[int] = None) -> Account:
+        """Get account by name (partial regex match) or index from the list of user accounts."""
+        if name is None and index is None:
+            raise ValueError("Either 'name' or 'index' must be provided")
+
+        accounts = self._fetch_user_accounts()
+
+        if index is not None:
+            return Account(client=self, id_cache=accounts[index]["entity"]["_id"])
+
+        pattern = re.compile(name, re.IGNORECASE)
+        matches = [acc for acc in accounts if pattern.search(acc["entity"].get("name", ""))]
+
+        if not matches:
+            raise ValueError(f"No account found matching '{name}'")
+        if len(matches) > 1:
+            names = [acc["entity"].get("name", "") for acc in matches]
+            raise ValueError(f"Multiple accounts match '{name}': {names}")
+
+        return Account(client=self, id_cache=matches[0]["entity"]["_id"])
+
     def get_default_organization(self) -> Optional[Account]:
         accounts = self._fetch_user_accounts()
         organizations = [acc for acc in accounts if acc["entity"].get("type") == "organization"]
-        
+
         if not organizations:
             return None
-        
+
         for org in organizations:
             if org.get("isDefault"):
                 return Account(client=self, id_cache=org["entity"]["_id"])
-        
+
         return Account(client=self, id_cache=organizations[0]["entity"]["_id"])
