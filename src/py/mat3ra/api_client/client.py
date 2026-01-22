@@ -48,39 +48,17 @@ class APIClient(BaseModel):
         return AuthEnv.from_env()
 
     def _init_endpoints(self, timeout_seconds: int) -> None:
-        kwargs = {"timeout": timeout_seconds, "auth": self.auth}
-        account_id = self.auth.account_id or ""
-        auth_token = self.auth.auth_token or ""
-        self._init_core_endpoints(kwargs, account_id, auth_token)
-        self._init_bank_endpoints(kwargs, account_id, auth_token)
-
-    def _init_core_endpoints(self, kwargs: dict, account_id: str, auth_token: str) -> None:
-        self.materials = MaterialEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
-        self.workflows = WorkflowEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
-        self.jobs = JobEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
-        self.projects = ProjectEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
-        self.properties = PropertiesEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
-        self.metaproperties = MetaPropertiesEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
-
-    def _init_bank_endpoints(self, kwargs: dict, account_id: str, auth_token: str) -> None:
-        self.bank_materials = BankMaterialEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
-        self.bank_workflows = BankWorkflowEndpoints(
-            self.host, self.port, account_id, auth_token, version=self.version, secure=self.secure, **kwargs
-        )
+        base_args = (self.host, self.port, self.auth.account_id or "", self.auth.auth_token or "")
+        base_kwargs = {"version": self.version, "secure": self.secure, "timeout": timeout_seconds, "auth": self.auth}
+        
+        self.materials = MaterialEndpoints(*base_args, **base_kwargs)
+        self.workflows = WorkflowEndpoints(*base_args, **base_kwargs)
+        self.jobs = JobEndpoints(*base_args, **base_kwargs)
+        self.projects = ProjectEndpoints(*base_args, **base_kwargs)
+        self.properties = PropertiesEndpoints(*base_args, **base_kwargs)
+        self.metaproperties = MetaPropertiesEndpoints(*base_args, **base_kwargs)
+        self.bank_materials = BankMaterialEndpoints(*base_args, **base_kwargs)
+        self.bank_workflows = BankWorkflowEndpoints(*base_args, **base_kwargs)
 
     @staticmethod
     def _resolve_config(
@@ -133,12 +111,19 @@ class APIClient(BaseModel):
             auth_token: Optional[str] = None,
             timeout_seconds: int = 60,
     ) -> "APIClient":
-        host_value, port_value, version_value, secure_value = cls._resolve_config(host, port, version, secure,
-                                                                                  cls.env())
+        host_value, port_value, version_value, secure_value = cls._resolve_config(
+            host, port, version, secure, cls.env()
+        )
         auth = cls._auth_from_env(access_token=access_token, account_id=account_id, auth_token=auth_token)
         cls._validate_auth(auth)
-        return cls(host=host_value, port=port_value, version=version_value, secure=secure_value, auth=auth,
-                   timeout_seconds=timeout_seconds)
+        return cls(
+            host=host_value,
+            port=port_value,
+            version=version_value,
+            secure=secure_value,
+            auth=auth,
+            timeout_seconds=timeout_seconds,
+        )
 
     def _fetch_user_data(self) -> dict:
         access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
@@ -193,8 +178,5 @@ class APIClient(BaseModel):
         if not organizations:
             return None
 
-        for org in organizations:
-            if org.get("isDefault"):
-                return Account(client=self, id_cache=org["entity"]["_id"])
-
-        return Account(client=self, id_cache=organizations[0]["entity"]["_id"])
+        default_org = next((org for org in organizations if org.get("isDefault")), organizations[0])
+        return Account(client=self, id_cache=default_org["entity"]["_id"])
