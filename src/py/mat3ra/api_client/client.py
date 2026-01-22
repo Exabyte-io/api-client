@@ -1,7 +1,10 @@
-from typing import Any, Optional, Tuple
+import os
+from typing import Any, List, Optional, Tuple
 
+import requests
 from pydantic import BaseModel, ConfigDict
 
+from .constants import ACCESS_TOKEN_ENV_VAR
 from .endpoints.bank_materials import BankMaterialEndpoints
 from .endpoints.bank_workflows import BankWorkflowEndpoints
 from .endpoints.jobs import JobEndpoints
@@ -26,7 +29,14 @@ class APIClient(BaseModel):
     def model_post_init(self, __context: Any) -> None:
         self.my_account = Account(client=self)
         self.account = self.my_account
+        self._my_organization: Optional[Account] = None
         self._init_endpoints(self.timeout_seconds)
+
+    @property
+    def my_organization(self) -> Optional[Account]:
+        if self._my_organization is None:
+            self._my_organization = self.get_default_organization()
+        return self._my_organization
 
     @classmethod
     def env(cls) -> APIEnv:
@@ -128,3 +138,43 @@ class APIClient(BaseModel):
         cls._validate_auth(auth)
         return cls(host=host_value, port=port_value, version=version_value, secure=secure_value, auth=auth,
                    timeout_seconds=timeout_seconds)
+
+    def _fetch_user_accounts(self) -> List[dict]:
+        access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
+        if not access_token:
+            raise ValueError("Access token is required to fetch accounts")
+
+        protocol = "https" if self.secure else "http"
+        port_str = f":{self.port}" if self.port not in (80, 443) else ""
+        url = f"{protocol}://{self.host}{port_str}/api/v1/users/me"
+
+        response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
+        response.raise_for_status()
+        return response.json()["data"]["user"].get("accounts", [])
+
+    def list_accounts(self) -> List[dict]:
+        accounts = self._fetch_user_accounts()
+        return [
+            {
+                "id": acc["entity"]["_id"],
+                "name": acc["entity"].get("name", ""),
+                "type": acc["entity"].get("type", "user"),
+                "isDefault": acc.get("isDefault", False),
+            }
+            for acc in accounts
+        ]
+
+    def get_default_organization(self) -> Optional[Account]:
+        accounts = self._fetch_user_accounts()
+        organizations = [acc for acc in accounts if acc["entity"].get("type") == "organization"]
+        
+        if not organizations:
+            return None
+        
+        # Try to find default organization first
+        for org in organizations:
+            if org.get("isDefault"):
+                return Account(client=self, account_entity_id=org["entity"]["_id"])
+        
+        # If no default, return first organization
+        return Account(client=self, account_entity_id=organizations[0]["entity"]["_id"])

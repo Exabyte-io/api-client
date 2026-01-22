@@ -39,9 +39,12 @@ class Account(BaseModel):
 
     client: Any = Field(exclude=True, repr=False)
     id_cache: Optional[str] = None
+    account_entity_id: Optional[str] = None
 
     @property
     def id(self) -> str:
+        if self.account_entity_id:
+            return self.account_entity_id
         if self.id_cache:
             return self.id_cache
         self.id_cache = self._resolve_account_id()
@@ -60,7 +63,8 @@ class Account(BaseModel):
         url = _build_base_url(self.client.host, self.client.port, self.client.secure, "/api/v1/users/me")
         response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
         response.raise_for_status()
-        account_id = response.json()["data"]["user"]["entity"]["defaultAccountId"]
+        user_data = response.json()["data"]["user"]
+        account_id = user_data["entity"]["defaultAccountId"]
         os.environ[ACCOUNT_ID_ENV_VAR] = account_id
         self.client.auth.account_id = account_id
         return account_id
