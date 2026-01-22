@@ -54,7 +54,8 @@ class JobEndpoints(EntitySetEndpointsMixin, EntityEndpoint):
         """
         self.request("POST", "/".join((self.name, id_, "submit")), headers=self.headers)
 
-    def build_config(self, material_ids, workflow_id, project_id, owner_id, name, compute=None, is_multi_material=False):
+    def build_config(self, material_ids, workflow_id, project_id, owner_id, name, compute=None,
+                     is_multi_material=False):
         """
         Returns a job config based on the given parameters.
 
