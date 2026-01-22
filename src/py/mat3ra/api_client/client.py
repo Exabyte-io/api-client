@@ -171,10 +171,8 @@ class APIClient(BaseModel):
         if not organizations:
             return None
         
-        # Try to find default organization first
         for org in organizations:
             if org.get("isDefault"):
-                return Account(client=self, account_entity_id=org["entity"]["_id"])
+                return Account(client=self, id_cache=org["entity"]["_id"])
         
-        # If no default, return first organization
-        return Account(client=self, account_entity_id=organizations[0]["entity"]["_id"])
+        return Account(client=self, id_cache=organizations[0]["entity"]["_id"])
