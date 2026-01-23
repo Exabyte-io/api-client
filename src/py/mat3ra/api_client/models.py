@@ -37,27 +37,47 @@ class Account(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
 
     client: Any = Field(exclude=True, repr=False)
-    id_cache: Optional[str] = None
+    entity_cache: Optional[dict] = None
 
     @property
     def id(self) -> str:
-        if self.id_cache:
-            return self.id_cache
-        self.id_cache = self._resolve_account_id()
-        return self.id_cache
+        if not self.entity_cache:
+            self._get_entity()
+        return self.entity_cache["_id"]
 
-    def _resolve_account_id(self) -> str:
+    @property
+    def name(self) -> str:
+        if not self.entity_cache:
+            self._get_entity()
+        return self.entity_cache.get("name", "")
+
+    def _get_entity(self) -> None:
+        account_id, accounts = self._get_account_id_and_accounts()
+        self.entity_cache = self._find_account_entity(account_id, accounts)
+
+    def _get_account_id_and_accounts(self) -> tuple[str, Optional[list]]:
         account_id = self.client.auth.account_id or os.environ.get(ACCOUNT_ID_ENV_VAR)
+        
         if account_id:
-            self.client.auth.account_id = account_id
-            return account_id
-
+            return account_id, None
+        
         if not (self.client.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)):
             raise ValueError("ACCOUNT_ID is not set and no OIDC access token is available.")
-
+        
         data = self.client._fetch_data()
         account_id = data["user"]["entity"]["defaultAccountId"]
         os.environ[ACCOUNT_ID_ENV_VAR] = account_id
         self.client.auth.account_id = account_id
-        return account_id
+        return account_id, data.get("accounts", [])
+
+    def _find_account_entity(self, account_id: str, accounts: Optional[list]) -> dict:
+        if accounts is None and (self.client.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)):
+            accounts = self.client._fetch_user_accounts()
+
+        if accounts:
+            for account in accounts:
+                if account["entity"]["_id"] == account_id:
+                    return account["entity"]
+        
+        return {"_id": account_id}
 

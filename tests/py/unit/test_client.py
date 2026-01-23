@@ -83,8 +83,16 @@ class APIClientUnitTest(EndpointBaseUnitTest):
     @mock.patch("requests.get")
     def test_my_account_id_fetches_and_caches(self, mock_get):
         env = self._base_env() | {"OIDC_ACCESS_TOKEN": OIDC_ACCESS_TOKEN}
+        response_with_account = {
+            "data": {
+                "user": {"entity": {"defaultAccountId": ME_ACCOUNT_ID}},
+                "accounts": [
+                    {"entity": {"_id": ME_ACCOUNT_ID, "name": "Test User", "type": "personal"}, "isDefault": True}
+                ],
+            }
+        }
         with mock.patch.dict("os.environ", env, clear=True):
-            self._mock_users_me(mock_get)
+            self._mock_users_me(mock_get, response_with_account)
             client = APIClient.authenticate()
             self.assertEqual(client.my_account.id, ME_ACCOUNT_ID)
             self.assertEqual(client.my_account.id, ME_ACCOUNT_ID)
@@ -118,9 +126,12 @@ class APIClientUnitTest(EndpointBaseUnitTest):
             self._mock_users_me(mock_get, ACCOUNTS_RESPONSE)
             client = APIClient.authenticate()
             
-            self.assertEqual(client.get_account(index=1).id_cache, "org-acc-1")
-            self.assertEqual(client.get_account(name="Acme").id_cache, "org-acc-1")
-            self.assertEqual(client.get_account(name="Beta.*").id_cache, "org-acc-2")
+            account = client.get_account(index=1)
+            self.assertEqual(account.id, "org-acc-1")
+            self.assertEqual(account.name, "Acme Corp")
+            
+            self.assertEqual(client.get_account(name="Acme").id, "org-acc-1")
+            self.assertEqual(client.get_account(name="Beta.*").id, "org-acc-2")
 
     @mock.patch("requests.get")
     def test_my_organization(self, mock_get):
@@ -129,4 +140,5 @@ class APIClientUnitTest(EndpointBaseUnitTest):
             self._mock_users_me(mock_get, ACCOUNTS_RESPONSE)
             client = APIClient.authenticate()
             org = client.my_organization
-            self.assertEqual(org.id_cache, "org-acc-1")
+            self.assertEqual(org.id, "org-acc-1")
+            self.assertEqual(org.name, "Acme Corp")

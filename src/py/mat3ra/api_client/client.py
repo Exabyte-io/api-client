@@ -158,7 +158,7 @@ class APIClient(BaseModel):
         accounts = self._fetch_user_accounts()
 
         if index is not None:
-            return Account(client=self, id_cache=accounts[index]["entity"]["_id"])
+            return Account(client=self, entity_cache=accounts[index]["entity"])
 
         pattern = re.compile(name, re.IGNORECASE)
         matches = [account for account in accounts if pattern.search(account["entity"].get("name", ""))]
@@ -169,7 +169,7 @@ class APIClient(BaseModel):
             names = [acc["entity"].get("name", "") for acc in matches]
             raise ValueError(f"Multiple accounts match '{name}': {names}")
 
-        return Account(client=self, id_cache=matches[0]["entity"]["_id"])
+        return Account(client=self, entity_cache=matches[0]["entity"])
 
     def get_default_organization(self) -> Optional[Account]:
         accounts = self._fetch_user_accounts()
@@ -179,4 +179,4 @@ class APIClient(BaseModel):
             return None
 
         default_org = next((org for org in organizations if org.get("isDefault")), organizations[0])
-        return Account(client=self, id_cache=default_org["entity"]["_id"])
+        return Account(client=self, entity_cache=default_org["entity"])
