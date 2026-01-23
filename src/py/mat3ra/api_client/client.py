@@ -125,7 +125,7 @@ class APIClient(BaseModel):
             timeout_seconds=timeout_seconds,
         )
 
-    def _fetch_data(self) -> dict:
+    def _fetch_user_data(self) -> dict:
         access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
         if not access_token:
             raise ValueError("Access token is required to fetch user data")
@@ -133,22 +133,21 @@ class APIClient(BaseModel):
         url = _build_base_url(self.host, self.port, self.secure, "/api/v1/users/me")
         response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
         response.raise_for_status()
-
-        return response.json()["data"]
+        return response.json()["data"]["user"]
 
     def _fetch_user_accounts(self) -> List[dict]:
-        return self._fetch_data().get("accounts", [])
+        return self._fetch_user_data().get("accounts", [])
 
     def list_accounts(self) -> List[dict]:
         accounts = self._fetch_user_accounts()
         return [
             {
-                "id": acc["entity"]["_id"],
-                "name": acc["entity"].get("name", ""),
-                "type": acc["entity"].get("type", "user"),
-                "isDefault": acc.get("isDefault", False),
+                "id": account["entity"]["_id"],
+                "name": account["entity"].get("name", ""),
+                "type": account["entity"].get("type", "personal"),
+                "isDefault": account.get("isDefault", False),
             }
-            for acc in accounts
+            for account in accounts
         ]
 
     def get_account(self, name: Optional[str] = None, index: Optional[int] = None) -> Account:
@@ -162,7 +161,7 @@ class APIClient(BaseModel):
             return Account(client=self, id_cache=accounts[index]["entity"]["_id"])
 
         pattern = re.compile(name, re.IGNORECASE)
-        matches = [acc for acc in accounts if pattern.search(acc["entity"].get("name", ""))]
+        matches = [account for account in accounts if pattern.search(account["entity"].get("name", ""))]
 
         if not matches:
             raise ValueError(f"No account found matching '{name}'")
@@ -174,7 +173,7 @@ class APIClient(BaseModel):
 
     def get_default_organization(self) -> Optional[Account]:
         accounts = self._fetch_user_accounts()
-        organizations = [acc for acc in accounts if acc["entity"].get("type") == "organization"]
+        organizations = [account for account in accounts if account["entity"].get("type") in ("organization", "enterprise")]
 
         if not organizations:
             return None

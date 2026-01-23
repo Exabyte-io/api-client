@@ -23,11 +23,11 @@ ACCOUNTS_RESPONSE = {
             "entity": {"defaultAccountId": ME_ACCOUNT_ID},
             "accounts": [
                 {
-                    "entity": {"_id": "user-acc-1", "name": "John Doe", "type": "user"},
+                    "entity": {"_id": "user-acc-1", "name": "John Doe", "type": "personal"},
                     "isDefault": True,
                 },
                 {
-                    "entity": {"_id": "org-acc-1", "name": "Acme Corp", "type": "organization"},
+                    "entity": {"_id": "org-acc-1", "name": "Acme Corp", "type": "enterprise"},
                     "isDefault": True,
                 },
                 {
@@ -105,11 +105,11 @@ class APIClientUnitTest(EndpointBaseUnitTest):
             self.assertEqual(len(accounts), 3)
             self.assertEqual(accounts[0]["id"], "user-acc-1")
             self.assertEqual(accounts[0]["name"], "John Doe")
-            self.assertEqual(accounts[0]["type"], "user")
+            self.assertEqual(accounts[0]["type"], "personal")
             self.assertTrue(accounts[0]["isDefault"])
             self.assertEqual(accounts[1]["id"], "org-acc-1")
             self.assertEqual(accounts[1]["name"], "Acme Corp")
-            self.assertEqual(accounts[1]["type"], "organization")
+            self.assertEqual(accounts[1]["type"], "enterprise")
 
     @mock.patch("requests.get")
     def test_get_account(self, mock_get):
