@@ -142,7 +142,7 @@ class APIClient(BaseModel):
         accounts = self._fetch_user_accounts()
         return [
             {
-                "id": account["entity"]["_id"],
+                "_id": account["entity"]["_id"],
                 "name": account["entity"].get("name", ""),
                 "type": account["entity"].get("type", "personal"),
                 "isDefault": account.get("isDefault", False),
@@ -173,7 +173,8 @@ class APIClient(BaseModel):
 
     def get_default_organization(self) -> Optional[Account]:
         accounts = self._fetch_user_accounts()
-        organizations = [account for account in accounts if account["entity"].get("type") in ("organization", "enterprise")]
+        organizations = [account for account in accounts if
+                         account["entity"].get("type") in ("organization", "enterprise")]
 
         if not organizations:
             return None

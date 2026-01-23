@@ -111,11 +111,11 @@ class APIClientUnitTest(EndpointBaseUnitTest):
             accounts = client.list_accounts()
 
             self.assertEqual(len(accounts), 3)
-            self.assertEqual(accounts[0]["id"], "user-acc-1")
+            self.assertEqual(accounts[0]["_id"], "user-acc-1")
             self.assertEqual(accounts[0]["name"], "John Doe")
             self.assertEqual(accounts[0]["type"], "personal")
             self.assertTrue(accounts[0]["isDefault"])
-            self.assertEqual(accounts[1]["id"], "org-acc-1")
+            self.assertEqual(accounts[1]["_id"], "org-acc-1")
             self.assertEqual(accounts[1]["name"], "Acme Corp")
             self.assertEqual(accounts[1]["type"], "enterprise")
 
