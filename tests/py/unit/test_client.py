@@ -20,22 +20,22 @@ USERS_ME_RESPONSE = {"data": {"user": {"entity": {"defaultAccountId": ME_ACCOUNT
 ACCOUNTS_RESPONSE = {
     "data": {
         "user": {
-            "entity": {"defaultAccountId": ME_ACCOUNT_ID},
-            "accounts": [
-                {
-                    "entity": {"_id": "user-acc-1", "name": "John Doe", "type": "personal"},
-                    "isDefault": True,
-                },
-                {
-                    "entity": {"_id": "org-acc-1", "name": "Acme Corp", "type": "enterprise"},
-                    "isDefault": True,
-                },
-                {
-                    "entity": {"_id": "org-acc-2", "name": "Beta Industries", "type": "organization"},
-                    "isDefault": False,
-                },
-            ],
-        }
+            "entity": {"defaultAccountId": ME_ACCOUNT_ID}
+        },
+        "accounts": [
+            {
+                "entity": {"_id": "user-acc-1", "name": "John Doe", "type": "personal"},
+                "isDefault": True,
+            },
+            {
+                "entity": {"_id": "org-acc-1", "name": "Acme Corp", "type": "enterprise"},
+                "isDefault": True,
+            },
+            {
+                "entity": {"_id": "org-acc-2", "name": "Beta Industries", "type": "organization"},
+                "isDefault": False,
+            },
+        ],
     }
 }
 

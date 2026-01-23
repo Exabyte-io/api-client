@@ -55,8 +55,8 @@ class Account(BaseModel):
         if not (self.client.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)):
             raise ValueError("ACCOUNT_ID is not set and no OIDC access token is available.")
 
-        user_data = self.client._fetch_user_data()
-        account_id = user_data["entity"]["defaultAccountId"]
+        data = self.client._fetch_data()
+        account_id = data["user"]["entity"]["defaultAccountId"]
         os.environ[ACCOUNT_ID_ENV_VAR] = account_id
         self.client.auth.account_id = account_id
         return account_id
