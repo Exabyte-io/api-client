@@ -3,11 +3,11 @@ from .enums import DEFAULT_API_VERSION, SECURE
 
 
 class BasePropertiesEndpoints(EntityEndpoint):
-    def get_property_selector(self, job_id, unit_flowchart_id, property_name):
+    def build_property_selector(self, job_id, unit_flowchart_id, property_name):
         return {"source.info.jobId": job_id, "source.info.unitId": unit_flowchart_id, "data.name": property_name}
 
     def get_property(self, job_id, unit_flowchart_id, property_name):
-        selector = self.get_property_selector(job_id, unit_flowchart_id, property_name)
+        selector = self.build_property_selector(job_id, unit_flowchart_id, property_name)
         return self.list(query=selector)[0]
 
     def get_band_gap_by_type(self, job_id, unit_flowchart_id, type):
