@@ -50,7 +50,7 @@ class APIClient(BaseModel):
     def _init_endpoints(self, timeout_seconds: int) -> None:
         base_args = (self.host, self.port, self.auth.account_id or "", self.auth.auth_token or "")
         base_kwargs = {"version": self.version, "secure": self.secure, "timeout": timeout_seconds, "auth": self.auth}
-        
+
         self.materials = MaterialEndpoints(*base_args, **base_kwargs)
         self.workflows = WorkflowEndpoints(*base_args, **base_kwargs)
         self.jobs = JobEndpoints(*base_args, **base_kwargs)
@@ -125,7 +125,7 @@ class APIClient(BaseModel):
             timeout_seconds=timeout_seconds,
         )
 
-    def _fetch_user_data(self) -> dict:
+    def _fetch_data(self) -> dict:
         access_token = self.auth.access_token or os.environ.get(ACCESS_TOKEN_ENV_VAR)
         if not access_token:
             raise ValueError("Access token is required to fetch user data")
@@ -133,10 +133,11 @@ class APIClient(BaseModel):
         url = _build_base_url(self.host, self.port, self.secure, "/api/v1/users/me")
         response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"}, timeout=30)
         response.raise_for_status()
-        return response.json()["data"]["user"]
+
+        return response.json()["data"]
 
     def _fetch_user_accounts(self) -> List[dict]:
-        return self._fetch_user_data().get("accounts", [])
+        return self._fetch_data().get("accounts", [])
 
     def list_accounts(self) -> List[dict]:
         accounts = self._fetch_user_accounts()
