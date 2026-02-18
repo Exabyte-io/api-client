@@ -1,5 +1,3 @@
-import re
-
 from .entity import EntityEndpoint
 from .enums import DEFAULT_API_VERSION, SECURE
 
@@ -56,29 +54,38 @@ class PropertiesEndpoints(BasePropertiesEndpoints):
 
     def list_for_job(self, job_id):
         """
-        List all properties for a job.
+        List properties for a job grouped by unit.
 
         Args:
             job_id (str): Job ID.
 
         Returns:
-            list[dict]: List of all property names for the job.
+            list[dict]: List of {"unit_id": str, "properties": [str, ...]}.
         """
-        properties_list = self.list(query={"source.info.jobId": job_id})
-        return [prop["data"]["name"] for prop in properties_list]
+        properties = self.list(query={"source.info.jobId": job_id})
+        units = {}
+        for prop in properties:
+            unit_id = prop["source"]["info"]["unitId"]
+            if unit_id not in units:
+                units[unit_id] = []
+            units[unit_id].append(prop["data"]["name"])
+        return [{"unit_id": unit_id, "properties": names} for unit_id, names in units.items()]
 
-    def get_for_job(self, job_id, property_name):
+    def get_for_job(self, job_id, property_name=None, unit_id=None):
         """
-        Get all properties with a specific name for a job.
+        Get property data for a job, optionally filtered by property name and/or unit.
 
         Args:
             job_id (str): Job ID.
-            property_name (str): Property name (e.g., "band_gaps", "total_energy").
+            property_name (str, optional): Property name (e.g., "band_gaps", "total_energy").
+            unit_id (str, optional): Unit flowchart ID (e.g., "pw-nscf").
 
         Returns:
-            list[dict]: List of property data.
+            list[dict]: List of property data dicts.
         """
-        properties = self.list(query={"source.info.jobId": job_id, "data.name": property_name})
-        return [prop["data"] for prop in properties]
-
-
+        query = {"source.info.jobId": job_id}
+        if property_name:
+            query["data.name"] = property_name
+        if unit_id:
+            query["source.info.unitId"] = unit_id
+        return [prop["data"] for prop in self.list(query=query)]
