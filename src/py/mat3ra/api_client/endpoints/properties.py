@@ -1,3 +1,5 @@
+import re
+
 from .entity import EntityEndpoint
 from .enums import DEFAULT_API_VERSION, SECURE
 
@@ -51,3 +53,32 @@ class PropertiesEndpoints(BasePropertiesEndpoints):
 
     def update(self, id_, modifier):
         raise NotImplementedError
+
+    def list_for_job(self, job_id):
+        """
+        List all properties for a job.
+
+        Args:
+            job_id (str): Job ID.
+
+        Returns:
+            list[dict]: List of all property names for the job.
+        """
+        properties_list = self.list(query={"source.info.jobId": job_id})
+        return [prop["data"]["name"] for prop in properties_list]
+
+    def get_for_job(self, job_id, property_name):
+        """
+        Get all properties with a specific name for a job.
+
+        Args:
+            job_id (str): Job ID.
+            property_name (str): Property name (e.g., "band_gaps", "total_energy").
+
+        Returns:
+            list[dict]: List of property data.
+        """
+        properties = self.list(query={"source.info.jobId": job_id, "data.name": property_name})
+        return [prop["data"] for prop in properties]
+
+
