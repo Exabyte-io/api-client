@@ -31,10 +31,11 @@ class ClustersEndpoint(BaseEndpoint):
 
     def list(self) -> List[Cluster]:
         """
-        Returns a list of available clusters.
+        Returns a list of available clusters with their queues.
 
         Returns:
-            list[Cluster]: List of Cluster objects with fqdn set to the cluster hostname.
+            list[Cluster]: Cluster objects with fqdn and Queue objects for available queues.
         """
         response = self.request("GET", "infrastructure/clusters", headers=self.headers)
-        return [Cluster(fqdn=cluster_data["hostname"]) for cluster_data in response]
+        return [Cluster.from_config(cluster_data) for cluster_data in response]
+
