@@ -37,5 +37,5 @@ class ClustersEndpoint(BaseEndpoint):
             list[Cluster]: Cluster objects with fqdn and Queue objects for available queues.
         """
         response = self.request("GET", "infrastructure/clusters", headers=self.headers)
-        return [Cluster.from_config(cluster_data) for cluster_data in response]
+        return [Cluster.from_api_data(cluster_data) for cluster_data in response]
 
