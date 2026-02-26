@@ -29,13 +29,11 @@ class ClustersEndpoint(BaseEndpoint):
         super(ClustersEndpoint, self).__init__(host, port, version, secure, **kwargs)
         self.headers = self.get_headers(account_id, auth_token)
 
-    def list(self) -> List[Cluster]:
+    def list(self):
         """
         Returns a list of available clusters with their queues.
 
         Returns:
-            list[Cluster]: Cluster objects with fqdn and Queue objects for available queues.
+            list[Dict]: Cluster information, including queues.
         """
-        response = self.request("GET", "infrastructure/clusters", headers=self.headers)
-        return [Cluster.from_api_data(cluster_data) for cluster_data in response]
-
+        return self.request("GET", "infrastructure/clusters", headers=self.headers)

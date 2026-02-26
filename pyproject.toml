@@ -23,7 +23,6 @@ classifiers = [
 dependencies = [
     "requests>=2.26.0",
     "pydantic>=2,<3",
-    "mat3ra-ide @ git+https://github.com/Exabyte-io/ide.git@5aa105e705c878ccaa8339828ee630bb391c4bd5",
 ]
 
 [project.optional-dependencies]
