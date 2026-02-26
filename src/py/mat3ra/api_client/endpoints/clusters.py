@@ -1,7 +1,3 @@
-from typing import List
-
-from mat3ra.ide import Cluster
-
 from . import BaseEndpoint
 from .enums import DEFAULT_API_VERSION, SECURE
 
