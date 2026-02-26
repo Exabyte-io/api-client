@@ -32,4 +32,4 @@ class ClustersEndpoint(BaseEndpoint):
         Returns:
             list[Dict]: Cluster information, including queues.
         """
-        return self.request("GET", "infrastructure/clusters", headers=self.headers)
+        return self.request("GET", "other/clusters", headers=self.headers)
