@@ -1,6 +1,8 @@
 import requests
 import urllib.parse
 
+from mat3ra.api_client.settings import HTTP_ERROR_MAP
+
 
 class BaseConnection(object):
     """
@@ -32,7 +34,15 @@ class BaseConnection(object):
             params (dict): URL parameters to append to the URL.
         """
         self.response = self.session.request(method=method.lower(), url=url, params=params, data=data, headers=headers)
-        self.response.raise_for_status()
+        try:
+            self.response.raise_for_status()
+        except requests.HTTPError as e:
+            status_code = self.response.status_code
+            display_text, suggestion = HTTP_ERROR_MAP.get(status_code, ("HTTP Error", ""))
+            message = f"Error {status_code}: {display_text}."
+            if suggestion:
+                message += f" {suggestion}"
+            raise requests.HTTPError(message, response=self.response) from e
 
     def get_response(self):
         """
