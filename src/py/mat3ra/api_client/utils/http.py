@@ -53,7 +53,7 @@ class BaseConnection(object):
             message = f"Error {status_code}: {detail}."
             if suggestion:
                 message += f" {suggestion}"
-            raise requests.HTTPError(message, response=self.response) from e
+            raise requests.HTTPError(message, response=self.response) from None
 
     def get_response(self):
         """
