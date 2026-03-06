@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict
 from .constants import ACCESS_TOKEN_ENV_VAR, _build_base_url
 from .endpoints.bank_materials import BankMaterialEndpoints
 from .endpoints.bank_workflows import BankWorkflowEndpoints
+from .endpoints.clusters import ClustersEndpoint
 from .endpoints.jobs import JobEndpoints
 from .endpoints.materials import MaterialEndpoints
 from .endpoints.metaproperties import MetaPropertiesEndpoints
@@ -59,6 +60,7 @@ class APIClient(BaseModel):
         self.metaproperties = MetaPropertiesEndpoints(*base_args, **base_kwargs)
         self.bank_materials = BankMaterialEndpoints(*base_args, **base_kwargs)
         self.bank_workflows = BankWorkflowEndpoints(*base_args, **base_kwargs)
+        self.clusters = ClustersEndpoint(*base_args, **base_kwargs)
 
     @staticmethod
     def _resolve_config(
