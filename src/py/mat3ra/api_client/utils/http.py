@@ -4,6 +4,15 @@ import urllib.parse
 from mat3ra.api_client.settings import HTTP_ERROR_MAP
 
 
+def _extract_server_message(response: requests.Response) -> str:
+    """Extract human-readable message from a JSEND-formatted error response body."""
+    try:
+        body = response.json()
+        return body.get("data", {}).get("message") or body.get("message") or ""
+    except Exception:
+        return ""
+
+
 class BaseConnection(object):
     """
     Base connection class to inherit from. This class should not be instantiated directly.
@@ -39,7 +48,9 @@ class BaseConnection(object):
         except requests.HTTPError as e:
             status_code = self.response.status_code
             display_text, suggestion = HTTP_ERROR_MAP.get(status_code, ("HTTP Error", ""))
-            message = f"Error {status_code}: {display_text}."
+            server_message = _extract_server_message(self.response)
+            detail = server_message or display_text
+            message = f"Error {status_code}: {detail}."
             if suggestion:
                 message += f" {suggestion}"
             raise requests.HTTPError(message, response=self.response) from e

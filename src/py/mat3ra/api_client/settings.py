@@ -8,15 +8,19 @@ HTTP_ERROR_MAP: Dict[int, Tuple[str, str]] = {
     ),
     401: (
         "Unauthorized",
-        "Check your authentication token or log in again.",
+        "Check your authentication credentials or run `mat3ra login` to re-authenticate.",
+    ),
+    402: (
+        "Payment Required",
+        "Insufficient account balance. Please make a payment or reduce the job time limit.",
     ),
     403: (
         "Forbidden",
-        "You do not have permission to access this resource. Set the correct project or check your account permissions.",
+        "You do not have permission. Ensure the correct project is set and your account has the required permissions.",
     ),
     404: (
         "Not Found",
-        "The requested resource does not exist. Check the ID or path.",
+        "The requested resource does not exist. Verify the ID or path, and ensure the correct project is set.",
     ),
     409: (
         "Conflict",
