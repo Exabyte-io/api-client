@@ -59,7 +59,7 @@ class HTTPBaseUnitTest(EndpointBaseUnitTest):
             conn.request("POST", "login", data={"username": EMPTY_USERNAME, "password": EMPTY_PASSWORD})
         self.assertIn("Error 401", str(ctx.exception))
         self.assertIn("Unauthorized", str(ctx.exception))
-        self.assertIn("authentication token", str(ctx.exception))
+        self.assertIn("authentication credentials", str(ctx.exception))
 
     @mock.patch("requests.sessions.Session.request")
     def test_http_error_message_500(self, mock_request):

@@ -45,7 +45,7 @@ class BaseConnection(object):
         self.response = self.session.request(method=method.lower(), url=url, params=params, data=data, headers=headers)
         try:
             self.response.raise_for_status()
-        except requests.HTTPError as e:
+        except requests.HTTPError:
             status_code = self.response.status_code
             display_text, suggestion = HTTP_ERROR_MAP.get(status_code, ("HTTP Error", ""))
             server_message = _extract_server_message(self.response)
