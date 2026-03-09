@@ -1,8 +1,6 @@
 import requests
 import urllib.parse
 
-from mat3ra.api_client.settings import HTTP_ERROR_MAP
-
 
 def _extract_server_message(response: requests.Response) -> str:
     """Extract human-readable message from a JSEND-formatted error response body."""
@@ -47,12 +45,9 @@ class BaseConnection(object):
             self.response.raise_for_status()
         except requests.HTTPError:
             status_code = self.response.status_code
-            display_text, suggestion = HTTP_ERROR_MAP.get(status_code, ("HTTP Error", ""))
             server_message = _extract_server_message(self.response)
-            detail = server_message or display_text
+            detail = server_message or "HTTP Error"
             message = f"Error {status_code}: {detail}."
-            if suggestion:
-                message += f" {suggestion}"
             raise requests.HTTPError(message, response=self.response) from None
 
     def get_response(self):
