@@ -1,3 +1,4 @@
+import json
 from unittest import mock
 
 from mat3ra.api_client.utils.http import Connection
@@ -10,6 +11,7 @@ HTTP_STATUS_UNAUTHORIZED = 401
 HTTP_STATUS_UNKNOWN = 418
 EMPTY_CONTENT = ""
 SERVER_MESSAGE = "Custom server error message"
+SERVER_ERROR_RESPONSE = json.dumps({"message": SERVER_MESSAGE})
 
 
 class HTTPBaseUnitTest(EndpointBaseUnitTest):
@@ -41,8 +43,7 @@ class HTTPBaseUnitTest(EndpointBaseUnitTest):
 
     @mock.patch("requests.sessions.Session.request")
     def test_http_error_message_with_server_message(self, mock_request):
-        response_body = {"message": SERVER_MESSAGE}
-        mock_request.return_value = self.mock_response(response_body, HTTP_STATUS_UNAUTHORIZED)
+        mock_request.return_value = self.mock_response(SERVER_ERROR_RESPONSE, HTTP_STATUS_UNAUTHORIZED)
         with self.assertRaises(HTTPError) as ctx:
             conn = Connection(self.host, self.port, version=API_VERSION_1, secure=True)
             conn.request("POST", "login")
