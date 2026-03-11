@@ -1,3 +1,4 @@
+import json
 from unittest import mock
 
 from mat3ra.api_client.utils.http import Connection
@@ -7,11 +8,10 @@ from tests.py.unit import EndpointBaseUnitTest
 API_VERSION_1 = "2018-10-1"
 API_VERSION_2 = "2018-10-2"
 HTTP_STATUS_UNAUTHORIZED = 401
-HTTP_REASON_UNAUTHORIZED = "Unauthorized"
+HTTP_STATUS_UNKNOWN = 418
 EMPTY_CONTENT = ""
-TEST_ENTITY_ID = "28FMvD5knJZZx452H"
-EMPTY_USERNAME = ""
-EMPTY_PASSWORD = ""
+SERVER_MESSAGE = "Custom server error message"
+SERVER_ERROR_RESPONSE = json.dumps({"message": SERVER_MESSAGE})
 
 
 class HTTPBaseUnitTest(EndpointBaseUnitTest):
@@ -36,8 +36,26 @@ class HTTPBaseUnitTest(EndpointBaseUnitTest):
 
     @mock.patch("requests.sessions.Session.request")
     def test_raise_http_error(self, mock_request):
-        mock_request.return_value = self.mock_response(EMPTY_CONTENT, HTTP_STATUS_UNAUTHORIZED,
-                                                       reason=HTTP_REASON_UNAUTHORIZED)
+        mock_request.return_value = self.mock_response(EMPTY_CONTENT, HTTP_STATUS_UNAUTHORIZED)
         with self.assertRaises(HTTPError):
             conn = Connection(self.host, self.port, version=API_VERSION_1, secure=True)
-            conn.request("POST", "login", data={"username": EMPTY_USERNAME, "password": EMPTY_PASSWORD})
+            conn.request("POST", "login")
+
+    @mock.patch("requests.sessions.Session.request")
+    def test_http_error_message_with_server_message(self, mock_request):
+        mock_request.return_value = self.mock_response(SERVER_ERROR_RESPONSE, HTTP_STATUS_UNAUTHORIZED)
+        with self.assertRaises(HTTPError) as ctx:
+            conn = Connection(self.host, self.port, version=API_VERSION_1, secure=True)
+            conn.request("POST", "login")
+        self.assertIn("Error 401", str(ctx.exception))
+        self.assertIn(SERVER_MESSAGE, str(ctx.exception))
+
+    @mock.patch("requests.sessions.Session.request")
+    def test_http_error_message_without_server_message(self, mock_request):
+        mock_request.return_value = self.mock_response(EMPTY_CONTENT, HTTP_STATUS_UNKNOWN)
+        with self.assertRaises(HTTPError) as ctx:
+            conn = Connection(self.host, self.port, version=API_VERSION_1, secure=True)
+            conn.request("GET", "materials")
+        self.assertIn("Error 418", str(ctx.exception))
+        self.assertIn("HTTP Error", str(ctx.exception))
+

@@ -2,6 +2,15 @@ import requests
 import urllib.parse
 
 
+def _extract_server_message(response: requests.Response) -> str:
+    """Extract human-readable message from a JSEND-formatted error response body."""
+    try:
+        body = response.json()
+        return body.get("data", {}).get("message") or body.get("message") or ""
+    except Exception:
+        return ""
+
+
 class BaseConnection(object):
     """
     Base connection class to inherit from. This class should not be instantiated directly.
@@ -32,7 +41,14 @@ class BaseConnection(object):
             params (dict): URL parameters to append to the URL.
         """
         self.response = self.session.request(method=method.lower(), url=url, params=params, data=data, headers=headers)
-        self.response.raise_for_status()
+        try:
+            self.response.raise_for_status()
+        except requests.HTTPError:
+            status_code = self.response.status_code
+            server_message = _extract_server_message(self.response)
+            detail = server_message or "HTTP Error"
+            message = f"Error {status_code}: {detail}."
+            raise requests.HTTPError(message, response=self.response) from None
 
     def get_response(self):
         """
