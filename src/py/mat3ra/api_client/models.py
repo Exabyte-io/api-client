@@ -13,7 +13,7 @@ class AuthContext(BaseModel):
 
 
 class APIEnv(BaseModel):
-    host: str = Field(default="platform-new.mat3ra.com", validation_alias="API_HOST")
+    host: str = Field(default="platform.mat3ra.com", validation_alias="API_HOST")
     port: int = Field(default=443, validation_alias="API_PORT")
     version: str = Field(default="2018-10-01", validation_alias="API_VERSION")
     secure: bool = Field(default=True, validation_alias="API_SECURE")
